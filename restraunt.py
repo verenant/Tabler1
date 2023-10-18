@@ -131,6 +131,9 @@ def get_category(soup):
 # images = #ссылки
 def get_image(soup,main_url,headers,addUrl):
     get_main_image = soup.find("div", class_="gallery__main").find("img").get("src")
+    dir_path = "Main_png/" + addUrl[addUrl.rfind("/") + 1:]
+    if not os.path.isdir(dir_path):
+        os.mkdir(dir_path)
     if not(get_main_image is None):
         #если у get_main_image перед /uploads есть base_url(restoclub.ru), то его чистим
         if ".ru/" in get_main_image:
@@ -141,8 +144,9 @@ def get_image(soup,main_url,headers,addUrl):
         main_image_jpeg = requests.get(main_image_url, headers = headers)
         #response = requests.get(url)
         if main_image_jpeg.status_code == 200:
+
             jpeg_name = addUrl[addUrl.rfind("/")+1:]+"+"
-            with open(jpeg_name + "main_image.jpg", 'wb') as f:
+            with open(dir_path + "/" + jpeg_name + "main_image.jpg", 'wb') as f:
                 f.write(main_image_jpeg.content)
         #download_wget(main_image_url)  # https://www.restoclub.ru/uploads/place_thumbnail_big/d/9/6/e/d96e3f0f868f21b03f2a50ecbb621b41.jpg
         return jpeg_name + "main_image.jpg"  #main_image_url
@@ -151,14 +155,15 @@ def get_image(soup,main_url,headers,addUrl):
 
 def get_album(soup,main_url,headers,addUrl):
     div_slide_images = soup.findAll("div", class_="slide")
+    dir_path = "Png/" + addUrl[addUrl.rfind("/") + 1:]
+    if not os.path.isdir(dir_path):
+        os.mkdir(dir_path)
     if not (div_slide_images is None):
         i = -1
         for div in div_slide_images:
             image = div.find("a").get("data-src")
             if image == '':
                 image = div.find("img").get("src")
-
-
 
             if not (image is None):
                 # очистка от restoclub.ru
@@ -175,7 +180,7 @@ def get_album(soup,main_url,headers,addUrl):
                     i += 1
                     if i==0:
                         continue
-                    with open(jpeg_name + str(i)+".jpg", 'wb') as f:
+                    with open(dir_path + "/" + jpeg_name + str(i)+".jpg", 'wb') as f:
                         f.write(main_image_jpeg.content)
             if i == 10:
                 break
@@ -204,6 +209,9 @@ def checkIP():
 
 def get_menu(soup,addUrl):
     menu_link_list = soup.findAll("a", class_ ="file-link")
+    dir_path = "Menu_png/" + addUrl[addUrl.rfind("/") + 1:]
+    if not os.path.isdir(dir_path):
+        os.mkdir(dir_path)
     if menu_link_list:
         user_agent_list = [
             'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36',
@@ -213,6 +221,8 @@ def get_menu(soup,addUrl):
         ]
         print(menu_link_list)
         for link in menu_link_list:
+            if not os.path.isdir(dir_path + link.find("span",class_ ="file-link__name").text):
+                os.mkdir(dir_path + "/" +  link.find("span",class_ ="file-link__name").text)
             agent = random.choice(user_agent_list)
            # print(agent)
             headers = {
@@ -270,11 +280,11 @@ def get_menu(soup,addUrl):
                 download_menu.click()
                 time.sleep(5)
 
-                list_of_files = glob.glob('C:/Users/User/Downloads/*')  # * means all if need specific format then *.csv
+                list_of_files = glob.glob('C:/Users/Admin/Downloads/*')  # * means all if need specific format then *.csv
                 latest_file = max(list_of_files, key=os.path.getctime)
 
 
-                images = convert_from_path(latest_file,500, poppler_path=r"J:\poppler-23.08.0\Library\bin")
+                images = convert_from_path(latest_file,500, poppler_path=r"G:\poppler-23.08.0\Library\bin")
 
 
 
@@ -282,11 +292,11 @@ def get_menu(soup,addUrl):
 
             #укажите свой путь к poppler`y чтобы работало
             if images == False:
-                images = convert_from_path("pdftest.pdf", 500, poppler_path=r"J:\poppler-23.08.0\Library\bin")
+                images = convert_from_path("pdftest.pdf", 500, poppler_path=r"G:\poppler-23.08.0\Library\bin")
             for i in range(len(images)):
                     # Save pages as images in the pdf
-                images[i].save(addUrl[addUrl.rfind("/") + 1:] + "+" +link.find("span",class_ ="file-link__name").text + str(i) + '.jpg', 'JPEG')
+                images[i].save(dir_path + "/" + link.find("span",class_ ="file-link__name").text + "/" + str(i) + '.jpg', 'JPEG')
             time.sleep(3)
-            return "complete"
+        return "complete"
     else:
         return "no_menu"

@@ -43,6 +43,10 @@ soup_main = get_soup(main_page_1)
 ul_links = soup_main.find( "ul" , class_="page-search__list")
 li = ul_links.findAll("li")
 additional_links = []
+os.mkdir("Jsons")
+os.mkdir("Main_png")
+os.mkdir("Menu_png")
+os.mkdir("Png")
 
 i=0
 
@@ -78,9 +82,8 @@ for link in additional_links:
     i +=1
 
 
-
     rest_name = link[link.rfind("/") + 1:]
-    with open(rest_name +".json","w",encoding='UTF-8') as rest_JSON_file:
+    with open("Jsons/" + rest_name +".json","w",encoding='UTF-8') as rest_JSON_file:
         w = jsons.dump(rest)
 
         w.pop('soup')
