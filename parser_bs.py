@@ -12,7 +12,14 @@ import urllib.request
 
 import restraunt
 from restraunt import Restraunt
-main_page_1 = "https://www.restoclub.ru/msk/search/1?expertChoice=false&types%5B%5D=3&types%5B%5D=30&types%5B%5D=23&types%5B%5D=38&types%5B%5D=16&types%5B%5D=46&types%5B%5D=2&types%5B%5D=33&types%5B%5D=7&types%5B%5D=14&types%5B%5D=4&types%5B%5D=24&types%5B%5D=15&types%5B%5D=39&types%5B%5D=1&types%5B%5D=17&types%5B%5D=37&types%5B%5D=22&types%5B%5D=13&types%5B%5D=25"
+import glob
+import os
+
+
+
+
+i=165
+main_page_1 = "https://www.restoclub.ru/msk/search/"+str(i)+"?expertChoice=false&types%5B%5D=3&types%5B%5D=30&types%5B%5D=23&types%5B%5D=38&types%5B%5D=16&types%5B%5D=46&types%5B%5D=2&types%5B%5D=33&types%5B%5D=7&types%5B%5D=14&types%5B%5D=4&types%5B%5D=24&types%5B%5D=15&types%5B%5D=39&types%5B%5D=1&types%5B%5D=17&types%5B%5D=37&types%5B%5D=22&types%5B%5D=13&types%5B%5D=25"
 main_url = "https://www.restoclub.ru"
 headers = {'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5845.967 YaBrowser/23.9.1.967 Yowser/2.5 Safari/537.36"}
 """
@@ -70,6 +77,8 @@ for link in additional_links:
     rest = Restraunt(main_url,link, headers)
     i +=1
 
+
+
     rest_name = link[link.rfind("/") + 1:]
     with open(rest_name +".json","w",encoding='UTF-8') as rest_JSON_file:
         w = jsons.dump(rest)
@@ -79,6 +88,8 @@ for link in additional_links:
         json.dump(w, rest_JSON_file,indent = 4, ensure_ascii=False)
        # rest_JSON_file.write(w)
         rest.printRest()
-    if i == 10:
+    if i == 3:
         break
 pass
+
+

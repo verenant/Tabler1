@@ -8,6 +8,8 @@ from bs4 import BeautifulSoup
 import time
 import re
 import requests
+import os
+import glob
 import random
 from pdf2image import convert_from_path
 import wget
@@ -225,6 +227,7 @@ def get_menu(soup,addUrl):
             src = req.text
             menu_soup = BeautifulSoup(src, "html.parser")
             pdf_link = "https://www.restoclub.ru" + menu_soup.find("a", class_="load-menu-link").get("href")
+
             pdf = open("pdf" + "test" + ".pdf", "wb")
 
 
@@ -250,11 +253,7 @@ def get_menu(soup,addUrl):
             print(headers)
 
             binary_yandex_driver_file = "yandexdriver.exe"  # path to YandexDriver
-            driver = webdriver.Chrome()
-            driver.get(url)
-            time.sleep(3)
-            download_menu = driver.find_element(By.CSS_SELECTOR,"a.load-menu-link")
-            download_menu.click()
+
 
             responce_menu = requests.get(pdf_link,headers)
 
@@ -262,12 +261,32 @@ def get_menu(soup,addUrl):
             pdf.write(responce_menu.content)
             pdf.close()
             print(f" {addUrl} ,{responce_menu.status_code} ")
+            images = False
+            if responce_menu.status_code != 200:
+                driver = webdriver.Chrome()
+                driver.get(url)
+                time.sleep(3)
+                download_menu = driver.find_element(By.CSS_SELECTOR, "a.load-menu-link")
+                download_menu.click()
+                time.sleep(5)
+
+                list_of_files = glob.glob('C:/Users/User/Downloads/*')  # * means all if need specific format then *.csv
+                latest_file = max(list_of_files, key=os.path.getctime)
+
+
+                images = convert_from_path(latest_file,500, poppler_path=r"J:\poppler-23.08.0\Library\bin")
+
+
+
+                os.remove(latest_file)
+
             #укажите свой путь к poppler`y чтобы работало
-            images = convert_from_path("pdftest.pdf", 500, poppler_path=r"J:\poppler-23.08.0\Library\bin")
+            if images == False:
+                images = convert_from_path("pdftest.pdf", 500, poppler_path=r"J:\poppler-23.08.0\Library\bin")
             for i in range(len(images)):
-                # Save pages as images in the pdf
+                    # Save pages as images in the pdf
                 images[i].save(addUrl[addUrl.rfind("/") + 1:] + "+" +link.find("span",class_ ="file-link__name").text + str(i) + '.jpg', 'JPEG')
             time.sleep(3)
-        return "complete"
+            return "complete"
     else:
         return "no_menu"
