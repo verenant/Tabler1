@@ -12,7 +12,7 @@ import urllib.request
 
 import restraunt
 from restraunt import Restraunt
-main_page_1 = "https://www.restoclub.ru/msk/search/1?expertChoice=false&types%5B%5D=3&types%5B%5D=30&types%5B%5D=23&types%5B%5D=38&types%5B%5D=16&types%5B%5D=46&types%5B%5D=2&types%5B%5D=33&types%5B%5D=7&types%5B%5D=14&types%5B%5D=4&types%5B%5D=24&types%5B%5D=15&types%5B%5D=39&types%5B%5D=1&types%5B%5D=17&types%5B%5D=37&types%5B%5D=22&types%5B%5D=13&types%5B%5D=25"
+main_page_1 = "https://www.restoclub.ru/msk/search/165?expertChoice=false&types%5B%5D=3&types%5B%5D=30&types%5B%5D=23&types%5B%5D=38&types%5B%5D=16&types%5B%5D=46&types%5B%5D=2&types%5B%5D=33&types%5B%5D=7&types%5B%5D=14&types%5B%5D=4&types%5B%5D=24&types%5B%5D=15&types%5B%5D=39&types%5B%5D=1&types%5B%5D=17&types%5B%5D=37&types%5B%5D=22&types%5B%5D=13&types%5B%5D=25"
 main_url = "https://www.restoclub.ru"
 headers = {'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5845.967 YaBrowser/23.9.1.967 Yowser/2.5 Safari/537.36"}
 """
@@ -30,7 +30,7 @@ def get_soup(url):
 
 def download_wget(url=''):
     wget.download(url=url)
-"""
+
 #получение коротких ссылок (URL) всех ресторанов на странице
 soup_main = get_soup(main_page_1)
 ul_links = soup_main.find( "ul" , class_="page-search__list")
@@ -53,19 +53,24 @@ with open("add_links.txt", "w") as f:
                 if i>10:
                     break
 
-"""
-
-""" Временная заглушка для проверки работы с ссылками, чтобы не закидывать сервер запросами"""
+    """
+ #Временная заглушка для проверки работы с ссылками, чтобы не закидывать сервер запросами
+ """
+""""
 with open("add_links.txt") as fileLinks:
     additional_links = fileLinks.readlines()
-""""""
+"""
+
+
+# обход всех ресторанов с текущей страницы и создание обьекта Restraunt и его json
+# (с ограничением в несколько файлов link[:-1] для работы с ссылками файлов, которые берутся из файла add_links.txt)
 i=0
 for link in additional_links:
   #  rest = Restraunt(main_url,"place/dymzavod-rassvet",headers)
-    rest = Restraunt(main_url,link[:-1], headers)
+    rest = Restraunt(main_url,link, headers)
     i +=1
 
-    rest_name = link[:-1][link[:-1].rfind("/") + 1:]
+    rest_name = link[link.rfind("/") + 1:]
     with open(rest_name +".json","w",encoding='UTF-8') as rest_JSON_file:
         w = jsons.dump(rest)
 
@@ -74,6 +79,6 @@ for link in additional_links:
         json.dump(w, rest_JSON_file,indent = 4, ensure_ascii=False)
        # rest_JSON_file.write(w)
         rest.printRest()
-    if i == 1:
+    if i == 10:
         break
 pass
