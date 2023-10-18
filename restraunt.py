@@ -3,6 +3,7 @@
 
 import bs4
 from selenium import webdriver
+from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
 import time
 import re
@@ -215,6 +216,7 @@ def get_menu(soup,addUrl):
             headers = {
                 "User-Agent": agent
             }
+
             #socks.set_default_proxy(socks.SOCKS5, "localhost", 9150)
            # socket.socket = socks.socksocket
            # checkIP()
@@ -224,10 +226,42 @@ def get_menu(soup,addUrl):
             menu_soup = BeautifulSoup(src, "html.parser")
             pdf_link = "https://www.restoclub.ru" + menu_soup.find("a", class_="load-menu-link").get("href")
             pdf = open("pdf" + "test" + ".pdf", "wb")
-            responce_menu = requests.get(pdf_link)
-            print(responce_menu)
+
+
+            # s = requests.Session()
+            # s.headers.update({'referer': my_referer})
+            # s.get(url)
+
+
+            headers.update({
+
+                'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+                'Accept-Encoding': "gzip, deflate, br",
+                "Accept-Language": "ru,en;q=0.9",
+                "Cache-Control": "max-age=0",
+                "Referer":url,
+                "Sec-Ch-Ua":' "Chromium";v="116", "Not)A;Brand";v="24", "YaBrowser";v="23"',
+                "Sec-Fetch-User": "?1",
+                "Sec-Fetch-Site":"same-origin",
+                "Upgrade-Insecure-Requests":"1",
+                "Cookie":'__ddg1_=bVfoar7vIFWeBimtByJh; PHPSESSID=3bv61h771pd42d35m0ojm33ip0; device_view=full; g_state={"i_p":1697482304790,"i_l":2}'
+
+            })
+            print(headers)
+
+            binary_yandex_driver_file = "yandexdriver.exe"  # path to YandexDriver
+            driver = webdriver.Chrome()
+            driver.get(url)
+            time.sleep(3)
+            download_menu = driver.find_element(By.CSS_SELECTOR,"a.load-menu-link")
+            download_menu.click()
+
+            responce_menu = requests.get(pdf_link,headers)
+
+
             pdf.write(responce_menu.content)
             pdf.close()
+            print(f" {addUrl} ,{responce_menu.status_code} ")
             #укажите свой путь к poppler`y чтобы работало
             images = convert_from_path("pdftest.pdf", 500, poppler_path=r"J:\poppler-23.08.0\Library\bin")
             for i in range(len(images)):
