@@ -1,7 +1,6 @@
-
-
-
+import PIL.Image
 import bs4
+import selenium.common.exceptions
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from bs4 import BeautifulSoup
@@ -15,6 +14,7 @@ from pdf2image import convert_from_path
 import wget
 from PIL import Image
 import urllib.request
+
 
 
 # версия без скачанной страницей (с подгружаемой на лету)
@@ -75,9 +75,18 @@ def get_name(soup):
 
 
 # Телефон
+#сделать нет телефона
 def get_phone(soup):
-    phone = soup.find(class_='place-phone').find("a").get("content")
-    return phone
+    phone = soup.find(class_='place-phone')
+    if not(phone is None):
+        #phone = soup.find(class_='place-phone').find("a").get("content")
+        phone = phone.find("a").get("content")
+        if phone is None:
+            return "no_phone"
+        else:
+            return phone
+    else:
+        return "no_phone"
 
 # Адрес
 def get_address(soup):
@@ -124,38 +133,44 @@ def get_kitchen(soup):
 
 #категория
 def get_category(soup):
-    category = soup.find("div", class_= "place-title__type").text
-    return category
-
+    category = soup.find("div", class_= "place-title__type")
+    if category:
+        category = category.text
+        return category
+    else:
+        return "no_category"
 
 # images = #ссылки
 def get_image(soup,main_url,headers,addUrl):
-    get_main_image = soup.find("div", class_="gallery__main").find("img").get("src")
-    dir_path = "Main_png/" + addUrl[addUrl.rfind("/") + 1:]
-    if not os.path.isdir(dir_path):
-        os.mkdir(dir_path)
+    get_main_image = soup.find("div", class_="gallery__main").find("img")
     if not(get_main_image is None):
-        #если у get_main_image перед /uploads есть base_url(restoclub.ru), то его чистим
-        if ".ru/" in get_main_image:
-            get_main_image = get_main_image[get_main_image.find("/")+2:]
-            get_main_image = get_main_image[get_main_image.find("/"):]
+        get_main_image = get_main_image.get("src")
+        #get_main_image = soup.find("div", class_="gallery__main").find("img").get("src")
+        dir_path = "Main_photo/" + addUrl[addUrl.rfind("/") + 1:]
+        if not os.path.isdir(dir_path):
+            os.mkdir(dir_path)
+        if not(get_main_image is None):
+            #если у get_main_image перед /uploads есть base_url(restoclub.ru), то его чистим
+            if ".ru/" in get_main_image:
+                get_main_image = get_main_image[get_main_image.find("/")+2:]
+                get_main_image = get_main_image[get_main_image.find("/"):]
 
-        main_image_url = main_url+get_main_image
-        main_image_jpeg = requests.get(main_image_url, headers = headers)
-        #response = requests.get(url)
-        if main_image_jpeg.status_code == 200:
+            main_image_url = main_url+get_main_image
+            main_image_jpeg = requests.get(main_image_url, headers = headers)
+            #response = requests.get(url)
+            if main_image_jpeg.status_code == 200:
 
-            jpeg_name = addUrl[addUrl.rfind("/")+1:]+"+"
-            with open(dir_path + "/" + jpeg_name + "main_image.jpg", 'wb') as f:
-                f.write(main_image_jpeg.content)
-        #download_wget(main_image_url)  # https://www.restoclub.ru/uploads/place_thumbnail_big/d/9/6/e/d96e3f0f868f21b03f2a50ecbb621b41.jpg
-        return jpeg_name + "main_image.jpg"  #main_image_url
-    else:
-        return "no_main_image"
+                jpeg_name = addUrl[addUrl.rfind("/")+1:]+"+"
+                with open(dir_path + "/" +  "main_image.jpg", 'wb') as f:
+                    f.write(main_image_jpeg.content)
+            #download_wget(main_image_url)  # https://www.restoclub.ru/uploads/place_thumbnail_big/d/9/6/e/d96e3f0f868f21b03f2a50ecbb621b41.jpg
+            return jpeg_name + "main_image.jpg"  #main_image_url
+        else:
+            return "no_main_image"
 
 def get_album(soup,main_url,headers,addUrl):
     div_slide_images = soup.findAll("div", class_="slide")
-    dir_path = "Png/" + addUrl[addUrl.rfind("/") + 1:]
+    dir_path = "Album/" + addUrl[addUrl.rfind("/") + 1:]
     if not os.path.isdir(dir_path):
         os.mkdir(dir_path)
     if not (div_slide_images is None):
@@ -180,7 +195,7 @@ def get_album(soup,main_url,headers,addUrl):
                     i += 1
                     if i==0:
                         continue
-                    with open(dir_path + "/" + jpeg_name + str(i)+".jpg", 'wb') as f:
+                    with open(dir_path + "/" +str(i)+".jpg", 'wb') as f:
                         f.write(main_image_jpeg.content)
             if i == 10:
                 break
@@ -191,12 +206,12 @@ def get_album(soup,main_url,headers,addUrl):
             # download_wget(main_image_url)  # https://www.restoclub.ru/uploads/place_thumbnail_big/d/9/6/e/d96e3f0f868f21b03f2a50ecbb621b41.jpg
           # main_image_url
 
-    #координаты
+#координаты
 def get_coordinates(soup):
     coords1 = soup.find("footer", id="great-footer").findChild("div").findChild("div")
     coords = coords1.find("div", class_="place-map maps-on")
-  #  data_longitude = soup.find("div", class_="place-map maps-on").get("data-longitude")
-   # data_latitude = soup.find("div", class_="place-map maps-on").get("data-latitude")
+    #data_longitude = soup.find("div", class_="place-map maps-on").get("data-longitude")
+    #data_latitude = soup.find("div", class_="place-map maps-on").get("data-latitude")
     data_longitude = coords1.get("data-longitude")
     data_latitude = coords1.get("data-latitude")
     return data_latitude,data_longitude
@@ -209,7 +224,7 @@ def checkIP():
 
 def get_menu(soup,addUrl):
     menu_link_list = soup.findAll("a", class_ ="file-link")
-    dir_path = "Menu_png/" + addUrl[addUrl.rfind("/") + 1:]
+    dir_path = "Menu/" + addUrl[addUrl.rfind("/") + 1:]
     if not os.path.isdir(dir_path):
         os.mkdir(dir_path)
     if menu_link_list:
@@ -236,67 +251,75 @@ def get_menu(soup,addUrl):
             req = requests.get(url, headers = headers)
             src = req.text
             menu_soup = BeautifulSoup(src, "html.parser")
-            pdf_link = "https://www.restoclub.ru" + menu_soup.find("a", class_="load-menu-link").get("href")
-
-            pdf = open("pdf" + "test" + ".pdf", "wb")
-
-
-            # s = requests.Session()
-            # s.headers.update({'referer': my_referer})
-            # s.get(url)
+           # pdf_link = "https://www.restoclub.ru" + menu_soup.find("a", class_="load-menu-link").get("href")
+            if not(menu_soup.find("a", class_="load-menu-link") is None):
+                    pdf_link = "https://www.restoclub.ru" + menu_soup.find("a", class_="load-menu-link").get("href")
+                    pdf = open("pdf" + "test" + ".pdf", "wb")
 
 
-            headers.update({
-
-                'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
-                'Accept-Encoding': "gzip, deflate, br",
-                "Accept-Language": "ru,en;q=0.9",
-                "Cache-Control": "max-age=0",
-                "Referer":url,
-                "Sec-Ch-Ua":' "Chromium";v="116", "Not)A;Brand";v="24", "YaBrowser";v="23"',
-                "Sec-Fetch-User": "?1",
-                "Sec-Fetch-Site":"same-origin",
-                "Upgrade-Insecure-Requests":"1",
-                "Cookie":'__ddg1_=bVfoar7vIFWeBimtByJh; PHPSESSID=3bv61h771pd42d35m0ojm33ip0; device_view=full; g_state={"i_p":1697482304790,"i_l":2}'
-
-            })
-            print(headers)
-
-            binary_yandex_driver_file = "yandexdriver.exe"  # path to YandexDriver
+                    # s = requests.Session()
+                    # s.headers.update({'referer': my_referer})
+                    # s.get(url)
 
 
-            responce_menu = requests.get(pdf_link,headers)
+                    headers.update({
+
+                        'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+                        'Accept-Encoding': "gzip, deflate, br",
+                        "Accept-Language": "ru,en;q=0.9",
+                        "Cache-Control": "max-age=0",
+                        "Referer":url,
+                        "Sec-Ch-Ua":' "Chromium";v="116", "Not)A;Brand";v="24", "YaBrowser";v="23"',
+                        "Sec-Fetch-User": "?1",
+                        "Sec-Fetch-Site":"same-origin",
+                        "Upgrade-Insecure-Requests":"1",
+                        "Cookie":'__ddg1_=bVfoar7vIFWeBimtByJh; PHPSESSID=3bv61h771pd42d35m0ojm33ip0; device_view=full; g_state={"i_p":1697482304790,"i_l":2}'
+
+                    })
+                    print(headers)
+
+                    binary_yandex_driver_file = "yandexdriver.exe"  # path to YandexDriver
 
 
-            pdf.write(responce_menu.content)
-            pdf.close()
-            print(f" {addUrl} ,{responce_menu.status_code} ")
-            images = False
-            if responce_menu.status_code != 200:
-                driver = webdriver.Chrome()
-                driver.get(url)
-                time.sleep(3)
-                download_menu = driver.find_element(By.CSS_SELECTOR, "a.load-menu-link")
-                download_menu.click()
-                time.sleep(5)
-
-                list_of_files = glob.glob('C:/Users/Admin/Downloads/*')  # * means all if need specific format then *.csv
-                latest_file = max(list_of_files, key=os.path.getctime)
+                    responce_menu = requests.get(pdf_link,headers)
 
 
-                images = convert_from_path(latest_file,500, poppler_path=r"G:\poppler-23.08.0\Library\bin")
+                    pdf.write(responce_menu.content)
+                    pdf.close()
+                    print(f" {addUrl} ,{responce_menu.status_code} ")
+                    images = False
+                    if responce_menu.status_code != 200:
+                        try:
+                            driver = webdriver.Chrome()
+                        except selenium.common.exceptions.SessionNotCreatedException:
+                            f = open("temp.txt", "a")
+                            f.write(dir_path + "\n" + "   sessionError")
+                            return
+                        driver.get(url)
+                        time.sleep(3)
+                        download_menu = driver.find_element(By.CSS_SELECTOR, "a.load-menu-link")
+                        download_menu.click()
+                        time.sleep(5)
+                        list_of_files = glob.glob('C:/Users/Admin/Downloads/*')  # * means all if need specific format then *.csv
+                        latest_file = max(list_of_files, key=os.path.getctime)
+                        try:
+                            images = convert_from_path(latest_file,500, poppler_path=r"G:\poppler-23.08.0\Library\bin")
+                        except PIL.Image.DecompressionBombError:
+
+                            f = open("temp.txt", "a")
+                            f.write(dir_path + "   image" + "\n")
+                            return
 
 
+                        os.remove(latest_file)
 
-                os.remove(latest_file)
-
-            #укажите свой путь к poppler`y чтобы работало
-            if images == False:
-                images = convert_from_path("pdftest.pdf", 500, poppler_path=r"G:\poppler-23.08.0\Library\bin")
-            for i in range(len(images)):
-                    # Save pages as images in the pdf
-                images[i].save(dir_path + "/" + link.find("span",class_ ="file-link__name").text + "/" + str(i) + '.jpg', 'JPEG')
-            time.sleep(3)
+                    #укажите свой путь к poppler`y чтобы работало
+                    if images == False:
+                        images = convert_from_path("pdftest.pdf", 500, poppler_path=r"G:\poppler-23.08.0\Library\bin")
+                    for i in range(len(images)):
+                            # Save pages as images in the pdf
+                        images[i].save(dir_path + "/" + link.find("span",class_ ="file-link__name").text + "/" + str(i) + '.jpg', 'JPEG')
+                    time.sleep(3)
         return "complete"
     else:
         return "no_menu"

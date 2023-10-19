@@ -55,3 +55,5 @@ for link in additional_links:
    rest = Restraunt(main_url,link, headers)
    rest.printRest()
    pass
+
+#Albums
