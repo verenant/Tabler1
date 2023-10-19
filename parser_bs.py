@@ -1,3 +1,5 @@
+import shutil
+
 import bs4
 from selenium import webdriver
 from bs4 import BeautifulSoup
@@ -10,15 +12,30 @@ import jsons
 from PIL import Image
 import urllib.request
 
-import restraunt
 from restraunt import Restraunt
 import glob
 import os
 
+try:
+    shutil.rmtree("Album")
+except:
+    print("no dir Album")
+try:
+    shutil.rmtree("Jsons")
+except:
+    print("no dir Jsons")
+try:
+    shutil.rmtree("Main_photo")
+except:
+    print("no dir Main_photo")
+try:
+    shutil.rmtree("Menu")
+except:
+    print("no dir Menu")
 
 
 #запускать с конца
-i=1
+i=2
 while i != 10:
     main_page_1 = "https://www.restoclub.ru/msk/search/"+str(i)+"?expertChoice=false&types%5B%5D=3&types%5B%5D=30&types%5B%5D=23&types%5B%5D=38&types%5B%5D=16&types%5B%5D=46&types%5B%5D=2&types%5B%5D=33&types%5B%5D=7&types%5B%5D=14&types%5B%5D=4&types%5B%5D=24&types%5B%5D=15&types%5B%5D=39&types%5B%5D=1&types%5B%5D=17&types%5B%5D=37&types%5B%5D=22&types%5B%5D=13&types%5B%5D=25"
     main_url = "https://www.restoclub.ru"
@@ -77,11 +94,10 @@ while i != 10:
     # (с ограничением в несколько файлов link[:-1] для работы с ссылками файлов, которые берутся из файла add_links.txt)
     j=0
     for link in additional_links:
-      #  rest = Restraunt(main_url,"place/dymzavod-rassvet",headers)
-        rest = Restraunt(main_url,link, headers)
+        rest = Restraunt(main_url,"/msk/place/fabrika-andy",headers)
+       # rest = Restraunt(main_url,"/msk/place/steak-it-easy-3",headers)
+        #rest = Restraunt(main_url,link, headers)
         j +=1
-
-
         rest_name = link[link.rfind("/") + 1:]
         with open("Jsons/" + rest_name +".json","w",encoding='UTF-8') as rest_JSON_file:
             w = jsons.dump(rest)
@@ -92,6 +108,8 @@ while i != 10:
            # rest_JSON_file.write(w)
             rest.printRest()
     i += 1
+    if i>2:
+        break
     pass
 
 

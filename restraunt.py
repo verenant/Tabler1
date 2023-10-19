@@ -11,10 +11,12 @@ import os
 import glob
 import random
 from pdf2image import convert_from_path
+from svglib.svglib import svg2rlg
+from reportlab.graphics import renderPDF, renderPM
 import wget
 from PIL import Image
 import urllib.request
-
+Image.MAX_IMAGE_PIXELS = None
 
 
 # версия без скачанной страницей (с подгружаемой на лету)
@@ -237,7 +239,11 @@ def get_menu(soup,addUrl):
         print(menu_link_list)
         for link in menu_link_list:
             if not os.path.isdir(dir_path + link.find("span",class_ ="file-link__name").text):
-                os.mkdir(dir_path + "/" +  link.find("span",class_ ="file-link__name").text)
+                try:
+                    os.mkdir(dir_path + "/" +  link.find("span",class_ ="file-link__name").text)
+                except :
+                    print("someError:" + dir_path + "/" +  link.find("span",class_ ="file-link__name").text )
+
             agent = random.choice(user_agent_list)
            # print(agent)
             headers = {
@@ -280,9 +286,7 @@ def get_menu(soup,addUrl):
 
                     binary_yandex_driver_file = "yandexdriver.exe"  # path to YandexDriver
 
-
                     responce_menu = requests.get(pdf_link,headers)
-
 
                     pdf.write(responce_menu.content)
                     pdf.close()
@@ -298,16 +302,30 @@ def get_menu(soup,addUrl):
                         driver.get(url)
                         time.sleep(3)
                         download_menu = driver.find_element(By.CSS_SELECTOR, "a.load-menu-link")
-                        download_menu.click()
+                        if download_menu:
+                            download_menu.click()
+                        else:
+                            #div class="image-wrap" img src
+                         #   responce_menu
+                            # Меню есть, но некоторые в виде картинок, а не которые как пдф
+                            # здесь обработка части с картинками
+                            image_menu = BeautifulSoup(responce_menu.text,"html.parser").find("div", class_= "image-wrap").find("img").get("src")
+                            cleanURL(image_menu)
+                            with open(dir_path + "/" + image_menu + ".jpg", 'wb') as f:
+                                f.write(image_menu.content)
+
+
+
+                            pass
                         time.sleep(5)
-                        list_of_files = glob.glob('C:/Users/Admin/Downloads/*')  # * means all if need specific format then *.csv
+                        list_of_files = glob.glob('C:/Users/User/Downloads/*')
                         latest_file = max(list_of_files, key=os.path.getctime)
                         try:
-                            images = convert_from_path(latest_file,500, poppler_path=r"G:\poppler-23.08.0\Library\bin")
+                            images = convert_from_path(latest_file,500, poppler_path=r"J:\poppler-23.08.0\Library\bin")
                         except PIL.Image.DecompressionBombError:
 
                             f = open("temp.txt", "a")
-                            f.write(dir_path + "   image" + "\n")
+                            f.write(download_menu +" " + dir_path + "   image" + "\n")
                             return
 
 
@@ -320,6 +338,35 @@ def get_menu(soup,addUrl):
                             # Save pages as images in the pdf
                         images[i].save(dir_path + "/" + link.find("span",class_ ="file-link__name").text + "/" + str(i) + '.jpg', 'JPEG')
                     time.sleep(3)
+            # меню в виде изображений
+            elif not (menu_soup.find("div", class_="image-menu-wrap") is None):
+                div_menu = menu_soup.find("div", class_="image-menu-wrap")
+                menu = div_menu.find("img").get("src")
+                if ".ru/" in menu:
+                    menu = menu[menu.find("/") + 2:]
+                    menu = menu[menu.find("/"):]
+
+                menu_image_url = "https://www.restoclub.ru" + menu
+                menu_image_jpeg = requests.get(menu_image_url, headers=headers)
+                # response = requests.get(url)
+                if menu_image_jpeg.status_code == 200:
+                    jpeg_name = addUrl[addUrl.rfind("/") + 1:]
+
+
+                    with open(dir_path + "/" + jpeg_name+".png", 'wb') as f:
+                        f.write(menu_image_jpeg.content)
+
+                # меню в виде изображений SVG
+
+
+                pass
         return "complete"
     else:
         return "no_menu"
+
+
+def cleanURL(url):
+    if ".ru/" in url:
+        url = url[url.find("/") + 2:]
+        tidyUrl = url[url.find("/"):]
+    return tidyUrl
