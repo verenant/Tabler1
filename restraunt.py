@@ -79,10 +79,11 @@ def get_name(soup):
 # Телефон
 #сделать нет телефона
 def get_phone(soup):
-    phone = soup.find(class_='place-phone')
+    phone = soup.find(class_='place-phone__text')
     if not(phone is None):
         #phone = soup.find(class_='place-phone').find("a").get("content")
-        phone = phone.find("a").get("content")
+        phone = phone.text
+        phone = phone[:-1]
         if phone is None:
             return "no_phone"
         else:

@@ -10,3 +10,8 @@
 /msk/place/bulgakovskij
 /msk/place/beller
 /msk/place/bear-burgers-2
+/msk/place/armjanskij-dom
+/msk/place/art-otel-pushkino
+/msk/place/asia
+/msk/place/ararat-1
+/msk/place/ararat-1
