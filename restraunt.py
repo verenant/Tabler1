@@ -92,8 +92,13 @@ def get_phone(soup):
 
 # Адрес
 def get_address(soup):
-    address = soup.find(attrs={"data-popup": "map"}).text
-    return address
+    #address = soup.find(attrs={"data-popup": "map"}).text
+    address = soup.find(attrs={"data-popup": "map"})
+    if address:
+        address = address.text
+        return address
+    else:
+        return "no_address"
 
 # Средний чек (бывает, что не указан)
 def get_avg_check(soup):
@@ -160,9 +165,9 @@ def get_image(soup,main_url,headers,addUrl):
             main_image_url = main_url+get_main_image
             main_image_jpeg = requests.get(main_image_url, headers = headers)
             #response = requests.get(url)
+            jpeg_name = addUrl[addUrl.rfind("/") + 1:] + "+"
             if main_image_jpeg.status_code == 200:
 
-                jpeg_name = addUrl[addUrl.rfind("/")+1:]+"+"
                 with open(dir_path + "/" +  "main_image.jpg", 'wb') as f:
                     f.write(main_image_jpeg.content)
             #download_wget(main_image_url)  # https://www.restoclub.ru/uploads/place_thumbnail_big/d/9/6/e/d96e3f0f868f21b03f2a50ecbb621b41.jpg
@@ -236,7 +241,7 @@ def get_menu(soup,addUrl):
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15',
 
         ]
-        print(menu_link_list)
+        #print(menu_link_list)
         for link in menu_link_list:
             if not os.path.isdir(dir_path + link.find("span",class_ ="file-link__name").text):
                 try:
@@ -282,7 +287,6 @@ def get_menu(soup,addUrl):
                         "Cookie":'__ddg1_=bVfoar7vIFWeBimtByJh; PHPSESSID=3bv61h771pd42d35m0ojm33ip0; device_view=full; g_state={"i_p":1697482304790,"i_l":2}'
 
                     })
-                    print(headers)
 
                     binary_yandex_driver_file = "yandexdriver.exe"  # path to YandexDriver
 
@@ -318,10 +322,10 @@ def get_menu(soup,addUrl):
 
                             pass
                         time.sleep(5)
-                        list_of_files = glob.glob('C:/Users/User/Downloads/*')
+                        list_of_files = glob.glob('C:/Users/Admin/Downloads/*')
                         latest_file = max(list_of_files, key=os.path.getctime)
                         try:
-                            images = convert_from_path(latest_file,500, poppler_path=r"J:\poppler-23.08.0\Library\bin")
+                            images = convert_from_path(latest_file,500, poppler_path=r"G:\poppler-23.08.0\Library\bin")
                         except PIL.Image.DecompressionBombError:
 
                             f = open("temp.txt", "a")
@@ -336,7 +340,11 @@ def get_menu(soup,addUrl):
                         images = convert_from_path("pdftest.pdf", 500, poppler_path=r"G:\poppler-23.08.0\Library\bin")
                     for i in range(len(images)):
                             # Save pages as images in the pdf
-                        images[i].save(dir_path + "/" + link.find("span",class_ ="file-link__name").text + "/" + str(i) + '.jpg', 'JPEG')
+                        try:
+                            images[i].save(dir_path + "/" + link.find("span",class_ ="file-link__name").text + "/" + str(i) + '.jpg', 'JPEG')
+                        except:
+                            file = open("temp.txt", "a")
+                            file.write(f"Слишком большое пдф изображение на странице:{addUrl}, не разбито на страницы \n")
                     time.sleep(3)
             # меню в виде изображений
             elif not (menu_soup.find("div", class_="image-menu-wrap") is None):
@@ -352,8 +360,7 @@ def get_menu(soup,addUrl):
                 if menu_image_jpeg.status_code == 200:
                     jpeg_name = addUrl[addUrl.rfind("/") + 1:]
 
-
-                    with open(dir_path + "/" + jpeg_name+".png", 'wb') as f:
+                    with open(dir_path + "/" + link.find("span",class_ ="file-link__name").text + "/" + "0" +".jpg", 'wb') as f:
                         f.write(menu_image_jpeg.content)
 
                 # меню в виде изображений SVG
