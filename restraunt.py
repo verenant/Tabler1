@@ -29,6 +29,8 @@ def get_soup(url,headers):
 class Restraunt():
     name = ""
     additional_url = ""
+    lon = 0.0
+    lat = 0.0
     description = ""
     phone = ""
     address = ""
@@ -38,7 +40,7 @@ class Restraunt():
     kitchen = []
     category = ""
     main_image_url = ""
-    Coordinates = []
+    Coordinates = [] # lat , lon
     soup = bs4.BeautifulSoup()
 
     def __init__(self,main_url,additional_url, headers, typeOfConstructor ):
@@ -65,6 +67,7 @@ class Restraunt():
             addUrl = additional_url[additional_url.rfind("/") + 1:]
             j = get_json(addUrl)
             self.__dict__ = json.loads(j)
+
 
     def printRest(self):
         print(f"{self.name} , {self.phone} , {self.avg_check}" )
@@ -454,3 +457,5 @@ def cleanURL(url):
         url = url[url.find("/") + 2:]
         tidyUrl = url[url.find("/"):]
     return tidyUrl
+
+
