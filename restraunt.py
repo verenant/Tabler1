@@ -3,6 +3,7 @@ import bs4
 import selenium.common.exceptions
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+from selenium_stealth import stealth
 from bs4 import BeautifulSoup
 import time
 import re
@@ -15,6 +16,7 @@ from svglib.svglib import svg2rlg
 from reportlab.graphics import renderPDF, renderPM
 import wget
 from PIL import Image
+import json
 import urllib.request
 Image.MAX_IMAGE_PIXELS = None
 
@@ -39,29 +41,37 @@ class Restraunt():
     Coordinates = []
     soup = bs4.BeautifulSoup()
 
-    def __init__(self,main_url,additional_url, headers):
-        self.main_url = main_url
-        self.headers = headers
-        self.additional_url = additional_url
-        self.soup = get_soup(self.main_url + self.additional_url,headers)
-        self.name = get_name(self.soup)
-        self.description = get_description(self.soup)
-        self.phone = get_phone(self.soup)
-        self.address = get_address(self.soup)
-        self.avg_check = get_avg_check(self.soup)
-        self.timetable = get_timetable(self.soup)
-        self.features = get_features(self.soup)
-        self.kitchen = get_kitchen(self.soup)
-        self.category = get_category(self.soup)
-        self.main_image_url = get_image(self.soup,self.main_url,self.headers,self.additional_url)
-        self.Coordinates = get_coordinates(self.soup)
-        self.album = get_album(self.soup, self.main_url, self.headers, self.additional_url)
-        self.menu = get_menu(self.soup, self.additional_url)
+    def __init__(self,main_url,additional_url, headers, typeOfConstructor ):
+        if typeOfConstructor == 0: # для парсинга
+            self.main_url = main_url
+            self.headers = headers
+            self.additional_url = additional_url
+            self.soup = get_soup(self.main_url + self.additional_url,headers)
+            self.name = get_name(self.soup)
+            self.description = get_description(self.soup)
+            #self.driver = create_driver(self.main_url + self.additional_url)
+            self.phone = get_phone(self.soup, self.main_url + self.additional_url)
+            self.address = get_address(self.soup)
+            self.avg_check = get_avg_check(self.soup)
+            self.timetable = get_timetable(self.soup)
+            self.features = get_features(self.soup)
+            self.kitchen = get_kitchen(self.soup)
+            self.category = get_category(self.soup)
+            self.main_image_url = get_image(self.soup,self.main_url,self.headers,self.additional_url)
+            self.Coordinates = get_coordinates(self.soup)
+            self.album = get_album(self.soup, self.main_url, self.headers, self.additional_url)
+            self.menu = get_menu(self.soup, self.additional_url)
+        if typeOfConstructor == 1: #для json
+            addUrl = additional_url[additional_url.rfind("/") + 1:]
+            j = get_json(addUrl)
+            self.__dict__ = json.loads(j)
 
     def printRest(self):
         print(f"{self.name} , {self.phone} , {self.avg_check}" )
 
-
+def get_json(filename):
+    with open("jsons/"+filename, encoding="utf8") as f:
+        return f.read()
 #Описание
 def get_description(soup):
     #description = soup.find(class_='expandable-text__t').find("p").text
@@ -78,13 +88,65 @@ def get_name(soup):
 
 # Телефон
 #сделать нет телефона
-def get_phone(soup):
+def create_driver(url):
+    # options = webdriver.ChromeOptions()
+    # options.add_argument(
+    #     "user-agent = Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5845.967 YaBrowser/23.9.1.967 Yowser/2.5 Safari/537.36")
+    # # options.add_argument("--disable-blink-feaures=AutomationControlled")
+    # headers = {
+    #
+    #                     'Accept' : 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7',
+    #                     'Accept-Encoding': "gzip, deflate, br",
+    #                     "Accept-Language": "ru,en;q=0.9",
+    #                     "Cache-Control": "max-age=0",
+    #                     "Referer":url,
+    #                     "Sec-Ch-Ua":' "Chromium";v="116", "Not)A;Brand";v="24", "YaBrowser";v="23"',
+    #                     "Sec-Fetch-User": "?1",
+    #                     "Sec-Fetch-Site":"same-origin",
+    #                     "Upgrade-Insecure-Requests":"1",
+    #                     "Cookie":'__ddg1_=bVfoar7vIFWeBimtByJh; PHPSESSID=3bv61h771pd42d35m0ojm33ip0; device_view=full; g_state={"i_p":1697482304790,"i_l":2}'
+    #
+    #                 }
+    # driver = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome()
+    driver.get(url)
+
+
+    return driver
+
+
+def get_phone(soup, url):
     phone = soup.find(class_='place-phone__text')
-    if not(phone is None):
+    if not(phone is None) :
+
         #phone = soup.find(class_='place-phone').find("a").get("content")
         phone = phone.text
         phone = phone[:-1]
-        if phone is None:
+        driver = webdriver.Chrome()
+        driver.get(url)
+        hidden_phone = driver.find_element(By.CLASS_NAME,"place-phone__number")
+        driver.execute_script("")
+        hidden_phone.click()
+        if (phone is None) or hidden_phone:
+
+            try:
+
+                hidden_phone.click()
+                time.sleep(5)
+            except selenium.common.exceptions.SessionNotCreatedException:
+              #  f = open("temp.txt", "a")
+               # f.write(dir_path + "\n" + "   sessionError")
+                return
+
+
+
+
+
+
+
+
+
+
             return "no_phone"
         else:
             return phone
@@ -230,14 +292,14 @@ def checkIP():
     print(soup.find('body').text)
 
 
-def get_menu(soup,addUrl):
+def get_menu(soup,addUrl,driver):
     menu_link_list = soup.findAll("a", class_ ="file-link")
     dir_path = "Menu/" + addUrl[addUrl.rfind("/") + 1:]
     if not os.path.isdir(dir_path):
         os.mkdir(dir_path)
     if menu_link_list:
         user_agent_list = [
-            'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/109.0.0.0 Safari/537.36',
+          #  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5845.967 YaBrowser/23.9.1.967 Yowser/2.5 Safari/537.36',
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15',
 
@@ -298,14 +360,28 @@ def get_menu(soup,addUrl):
                     print(f" {addUrl} ,{responce_menu.status_code} ")
                     images = False
                     if responce_menu.status_code != 200:
+                        # если спарсить не дали, то пробуем selenium
                         try:
-                            driver = webdriver.Chrome()
+                            options = webdriver.ChromeOptions
+                            options.add_argument("user-agent = Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5845.967 YaBrowser/23.9.1.967 Yowser/2.5 Safari/537.36")
+                            options.add_argument("--disable-blink-feaures=AutomationControlled")
+
+                            #driver = webdriver.Chrome(options=options)
+                            stealth(driver,
+                                    language=["en-US","en"],
+                                    vendor = "Google Inc.",
+                                    platform="Win32",
+                                    webgl_vendor="Intel Inc",
+                                    renderer="Intel Iris OpenGl Engine",
+                                    fix_hair_line=True,
+                                    )
+
                         except selenium.common.exceptions.SessionNotCreatedException:
                             f = open("temp.txt", "a")
                             f.write(dir_path + "\n" + "   sessionError")
                             return
                         driver.get(url)
-                        time.sleep(3)
+                        time.sleep(5)
                         download_menu = driver.find_element(By.CSS_SELECTOR, "a.load-menu-link")
                         if download_menu:
                             download_menu.click()
