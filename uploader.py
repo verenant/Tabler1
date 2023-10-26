@@ -4,6 +4,9 @@ from tablerObject import TablerObject
 import json
 import re
 
+
+from collections import OrderedDict
+
 #Перевод координат в float
 def prepareCoord(x):
     return float(x)
@@ -17,6 +20,122 @@ def prepareCheck(check):
     return int(check[:pos])
 
 def prepareSchedule(timetable):
+    weekDays = [ "Пн","Вт","Ср", "Чт", "Пт","Сб", "Вс"]
+    # Позиции букв
+    daysPositions =[]
+    # Время внутри букв
+    scheduletime = []
+    # Подготовка расписания делаем паттерн БУКВА+буква и ищем позиции букв дней
+    pattern= r'[А-Я][а-я]+'
+    daysInTimetable = re.findall(pattern, timetable)
+
+
+    #убираем из списка все случайные совпадение не двух буквенные (Выходной и тп )
+    for checkDay in daysInTimetable:
+        if len(checkDay) != 2:
+            daysInTimetable.remove(checkDay)
+
+    #получение номеров дней в расписании
+    weekDaysNumbersInSchedule = [-1,-1,-1,-1,-1,-1,-1]
+    i = 0
+    k = 0
+    for i in range(0,7):
+        if weekDays[i] == daysInTimetable[k]:
+            k+=1
+            weekDaysNumbersInSchedule[i] = weekDays[i]
+
+
+    for i_day in range(0, len(daysInTimetable)):
+        daysPositions.append(timetable.find(daysInTimetable[i_day]))
+     # Изменения
+    for i in range(1,len(daysPositions)):
+        if daysPositions[i]-daysPositions[i-1] <5 :
+            daysInTimetable[i] = -1
+
+    for i in range(0,7):
+        if weekDaysNumbersInSchedule[i] not in daysInTimetable:
+            weekDaysNumbersInSchedule[i] = -1
+
+
+
+    # Конец изменений
+    # Добавляем конец строки для того чтобы работал сбор времени между разными расписаниями
+    daysPositions.append(len(timetable))
+
+    #сбор времени между разными днями версия 1.0
+    #for i_day in range(1,len(daysInTimetable),2):
+    #    scheduletime.append(timetable[daysPositions[i_day]+3: daysPositions[i_day+1]])
+
+    # сбор времени между разными днями версия 2.0
+    daysRanges = []
+    for i in range(0,len(daysPositions)-1):
+        if daysPositions[i+1]- daysPositions[i] > 4:
+            scheduletime.append(timetable[daysPositions[i]+3: daysPositions[i+1]])
+
+    for i_day in scheduletime:
+        if i_day == None:
+            scheduletime.remove(i_day)
+
+
+    #расположить данные в словарь между правильными днями
+    schedule = {
+        "Пн":"",
+        "Вт": "",
+        "Ср": "",
+        "Чт": "",
+        "Пт": "",
+        "Сб": "",
+        "Вс": ""
+    }
+    #schedule = OrderedDict()
+    #schedule["Пн"]=""
+    #schedule["Вт"] = ""
+    #schedule["Ср"] = ""
+    #schedule["Чт"] = ""
+    #schedule["Пт"] = ""
+    #schedule["Сб"] = ""
+    #schedule["Вс"] = ""
+
+    k = 0
+    for i in range(0,7):
+        if isinstance(weekDaysNumbersInSchedule[i],str):
+            schedule[weekDaysNumbersInSchedule[i]] = scheduletime[k]
+            k+=1
+    print(schedule)
+
+    for day in schedule:
+        if schedule[day] == "":
+            prevDay = weekDays[weekDays.index(day)-1]
+            schedule[day] = schedule[prevDay]
+
+            pass
+           # schedule[i] = schedule[i-1]
+        # if weekDaysNumbersInSchedule[i] != -1:
+        #     schedule[i][weekDaysNumbersInSchedule[i]] = scheduletime[k]
+        #
+        # if weekDaysNumbersInSchedule[i] == -1:
+        #     schedule[i][weekDaysNumbersInSchedule[i]] = scheduletime[k]
+        #
+        # if weekDaysNumbersInSchedule[i-1] == -1 and weekDaysNumbersInSchedule[i] != -1:
+        #     k=+1
+        #     schedule[i][weekDaysNumbersInSchedule[i]] = scheduletime[k]
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    pass
+    """
     # Подготовка расписания делаем паттерн на цифр+буква (идеальный вариант)
     # затем проходим по расписанию и берем разбиение до следующего изменения расписания
     # после заполнения списка week его надо будет разбить на словарь с началом рабочего дня и концом рабочего дня
@@ -56,9 +175,8 @@ def prepareSchedule(timetable):
             timetable = timetable[pos + 1:]
             pass
 
-
     pass
-
+"""
 rest = Restraunt("","flamingo-3.json","",1)
 tObj = TablerObject()
 rest.avg_check = prepareCheck(rest.avg_check)
