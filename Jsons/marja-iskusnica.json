@@ -1,0 +1,30 @@
+{
+    "Coordinates": [
+        "59.95387200",
+        "30.30621100"
+    ],
+    "additional_url": "/spb/place/marja-iskusnica",
+    "address": "Съезжинская 37",
+    "album": "complete",
+    "avg_check": "no_avg_check",
+    "category": "Ресторан",
+    "description": "\n                Ресторан русской и европейской кухни на Съезжинской улице.                            ",
+    "features": [
+        "детское меню",
+        "настольные игры",
+        "завтрак",
+        "доставка",
+        "камин"
+    ],
+    "kitchen": [
+        "европейская",
+        "русская",
+        "стейки"
+    ],
+    "main_image_url": "marja-iskusnica+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "Марья-искусница",
+    "phone": "+79119940888",
+    "timetable": "Пн–Пт: 09:00 — 23:00Сб–Вс: 11:00 — 23:00"
+}

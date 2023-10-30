@@ -3,7 +3,7 @@ import bs4
 import selenium.common.exceptions
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from selenium_stealth import stealth
+#from selenium_stealth import stealth
 from bs4 import BeautifulSoup
 import time
 import re
@@ -54,7 +54,7 @@ class Restraunt():
             #self.driver = create_driver(self.main_url + self.additional_url)
             self.phone = get_phone(self.soup, self.main_url + self.additional_url)
             self.address = get_address(self.soup)
-            self.avg_check = get_avg_check(self.soup)
+           # self.avg_check = get_avg_check(self.soup)
             self.timetable = get_timetable(self.soup)
             self.features = get_features(self.soup)
             self.kitchen = get_kitchen(self.soup)
@@ -131,7 +131,6 @@ def get_phone(soup, url):
         driver.execute_script("")
         hidden_phone.click()
         if (phone is None) or hidden_phone:
-
             try:
 
                 hidden_phone.click()
@@ -140,16 +139,6 @@ def get_phone(soup, url):
               #  f = open("temp.txt", "a")
                # f.write(dir_path + "\n" + "   sessionError")
                 return
-
-
-
-
-
-
-
-
-
-
             return "no_phone"
         else:
             return phone
@@ -166,7 +155,7 @@ def get_address(soup):
     else:
         return "no_address"
 
-# Средний чек (бывает, что не указан)
+# Средзан)
 def get_avg_check(soup):
     if (soup.find("h2",text = re.compile("Средний чек"))):
         find_h_div_by_text = soup.find("h2",text = re.compile("Средний чек")).find_parent().find_parent()
@@ -457,5 +446,3 @@ def cleanURL(url):
         url = url[url.find("/") + 2:]
         tidyUrl = url[url.find("/"):]
     return tidyUrl
-
-

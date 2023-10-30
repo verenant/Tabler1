@@ -1,0 +1,24 @@
+{
+    "Coordinates": [
+        "55.80810800",
+        "37.94316700"
+    ],
+    "additional_url": "/msk/place/mamma-mia-1",
+    "address": "Балашиха, ул. Зеленая 32к2",
+    "avg_check": "900  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "бизнес-ланч",
+        "доставка"
+    ],
+    "kitchen": [
+        "пицца",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Мамма миа",
+    "phone": "+79295278771",
+    "timetable": "Пн–Вс: 11:00 — 23:00"
+}

@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "55.81360700",
+        "37.59682100"
+    ],
+    "additional_url": "/msk/place/zlachnoe-mesto",
+    "address": "ул. Руставели 15",
+    "avg_check": "1000  (без напитков)",
+    "category": "Паб",
+    "description": "no_description",
+    "features": [
+        "чаевые онлайн",
+        "живая музыка",
+        "бизнес-ланч",
+        "спортивные трансляции"
+    ],
+    "kitchen": [
+        "смешанная",
+        "европейская",
+        "пицца"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Злачное место",
+    "phone": "+74956186007",
+    "timetable": "Пн–Вс: 12:00 — 23:00"
+}

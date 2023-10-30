@@ -1,0 +1,23 @@
+{
+    "Coordinates": [
+        "56.75443336",
+        "37.12616825"
+    ],
+    "additional_url": "/msk/place/kamelot-5",
+    "address": "ул. Жуковского 5",
+    "avg_check": "1000  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "при отеле",
+        "за городом"
+    ],
+    "kitchen": [
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Камелот",
+    "phone": "+74962129936",
+    "timetable": "Пн–Чт: 11:30 — 23:00Пт: 11:30 — 01:00Сб: 12:00 — 01:00Вс: 12:00 — 23:00"
+}

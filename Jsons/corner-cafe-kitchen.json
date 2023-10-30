@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "55.80404600",
+        "37.59065900"
+    ],
+    "additional_url": "/msk/place/corner-cafe-kitchen",
+    "address": "ул. Новодмитровская 2, корп. 4",
+    "avg_check": "1200  (без напитков)",
+    "category": "Кафе",
+    "description": "\n                Небольшое японское кафе на Новодмитровской.                            ",
+    "features": [
+        "чаевые онлайн",
+        "бизнес-ланч",
+        "доставка",
+        "парковка"
+    ],
+    "kitchen": [
+        "рамен",
+        "японская",
+        "азиатская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Corner Café & Kitchen",
+    "phone": "+79859667888",
+    "timetable": "Пн–Вс: 12:00 — 23:00"
+}

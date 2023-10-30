@@ -1,0 +1,28 @@
+{
+    "Coordinates": [
+        "59.95336200",
+        "30.47566000"
+    ],
+    "additional_url": "/spb/place/one-bar",
+    "address": "пр. Ударников 34",
+    "album": "complete",
+    "avg_check": "800  (без напитков)",
+    "category": "Бар",
+    "description": "\n                Бар с караоке и вечеринками до утра на проспекте Ударников.                            ",
+    "features": [
+        "здесь танцуют",
+        "караоке",
+        "шоу-программа",
+        "dj",
+        "кальян"
+    ],
+    "kitchen": [
+        "европейская"
+    ],
+    "main_image_url": "one-bar+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "One Bar",
+    "phone": "+79629861203",
+    "timetable": "Пн–Вс: 19:00 — 06:00"
+}

@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "55.74239280",
+        "37.86895040"
+    ],
+    "additional_url": "/msk/place/tanuki-45",
+    "address": "ул. Новокосинская 36",
+    "avg_check": "1500  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "чаевые онлайн",
+        "детское меню",
+        "кальян",
+        "доставка",
+        "парковка"
+    ],
+    "kitchen": [
+        "японская",
+        "суши"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Тануки",
+    "phone": "+74995308148",
+    "timetable": "Пн–Вс: 11:30 — 05:00"
+}

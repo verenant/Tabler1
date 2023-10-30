@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "55.45286955",
+        "37.74720490"
+    ],
+    "additional_url": "/msk/place/merlin",
+    "address": "ул. 1-ая Коммунистическая 34а",
+    "avg_check": "1100  (без напитков)",
+    "category": "Кафе",
+    "description": "no_description",
+    "features": [
+        "за городом",
+        "детское меню",
+        "караоке",
+        "бизнес-ланч",
+        "завтрак"
+    ],
+    "kitchen": [
+        "смешанная",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Мерлин",
+    "phone": "+79778089057",
+    "timetable": "Пн–Вс: 10:00 — 23:00"
+}

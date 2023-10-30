@@ -1,0 +1,29 @@
+{
+    "Coordinates": [
+        "56.00948700",
+        "37.86799600"
+    ],
+    "additional_url": "/msk/place/tiamo",
+    "address": "Пушкино, микрорайон Серебрянка 48, корп. 2",
+    "avg_check": "700  (без напитков)",
+    "category": "Кафе",
+    "description": "no_description",
+    "features": [
+        "за городом",
+        "детская комната",
+        "доставка",
+        "парковка"
+    ],
+    "kitchen": [
+        "итальянская",
+        "бургеры",
+        "пицца",
+        "европейская",
+        "суши"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Тиамо",
+    "phone": "+74951254848",
+    "timetable": "Пн–Вс: 11:00 — 23:00"
+}

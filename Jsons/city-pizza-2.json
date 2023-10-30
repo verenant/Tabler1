@@ -1,0 +1,25 @@
+{
+    "Coordinates": [
+        "55.80488300",
+        "37.42046300"
+    ],
+    "additional_url": "/msk/place/city-pizza-2",
+    "address": "ул. Исаковского 33",
+    "avg_check": "1400  (без напитков)",
+    "category": "Пиццерия",
+    "description": "\n                Сетевое кафе-пиццерия с доставкой в Строгино.                            ",
+    "features": [
+        "доставка",
+        "парковка"
+    ],
+    "kitchen": [
+        "суши",
+        "пицца",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "City Pizza",
+    "phone": "+74957504347",
+    "timetable": "Пн–Вс: 10:00 — 23:00"
+}

@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "55.63381600",
+        "37.43193600"
+    ],
+    "additional_url": "/msk/place/sezony-2",
+    "address": "22-й км Киевского ш 6 с1",
+    "avg_check": "1200  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "доставка",
+        "парковка"
+    ],
+    "kitchen": [
+        "итальянская",
+        "стейки",
+        "смешанная",
+        "пицца",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Сезоны",
+    "phone": "+74957676237",
+    "timetable": "Пн–Пт: 08:00 — 20:00Сб–Вс: Выходной"
+}

@@ -1,0 +1,28 @@
+{
+    "Coordinates": [
+        "59.88227000",
+        "29.89024600"
+    ],
+    "additional_url": "/spb/place/artishok-2",
+    "address": "Петергоф, Санкт-Петербургский пр. 60",
+    "album": "complete",
+    "avg_check": "900  (без напитков)",
+    "category": "Семейный ресторан",
+    "description": "\n                Семейный ресторан у Английского парка в Петергофе.                            ",
+    "features": [
+        "детское меню",
+        "детская комната",
+        "спортивные трансляции",
+        "завтрак"
+    ],
+    "kitchen": [
+        "европейская",
+        "смешанная"
+    ],
+    "main_image_url": "artishok-2+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "Артишок",
+    "phone": "+78124206708",
+    "timetable": "Пн–Вс: 13:00 — 21:00"
+}

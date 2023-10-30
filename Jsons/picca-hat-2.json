@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "59.96649933",
+        "30.31130028"
+    ],
+    "additional_url": "/spb/place/picca-hat-2",
+    "address": "пр. Каменноостровский 37",
+    "album": "complete",
+    "avg_check": "800  (без напитков)",
+    "category": "Кафе",
+    "description": "\n                Сетевая пиццерия на Каменноостровском проспекте. Все блюда из меню Pizza Hut можно заказать с доставкой.                            ",
+    "features": [
+        "бизнес-ланч",
+        "завтрак",
+        "доставка"
+    ],
+    "kitchen": [
+        "пицца",
+        "смешанная"
+    ],
+    "main_image_url": "picca-hat-2+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "Pizza Hut",
+    "phone": "+78122404834",
+    "timetable": "Пн–Пт: 10:00 — 23:00Сб–Вс: 11:00 — 23:00"
+}

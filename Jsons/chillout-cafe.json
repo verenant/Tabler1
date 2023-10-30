@@ -1,0 +1,30 @@
+{
+    "Coordinates": [
+        "55.58181956",
+        "37.91222892"
+    ],
+    "additional_url": "/msk/place/chillout-cafe",
+    "address": "ул. 9-я Парковая 2",
+    "avg_check": "1000  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "за городом",
+        "детское меню",
+        "живая музыка",
+        "бизнес-ланч",
+        "кальян"
+    ],
+    "kitchen": [
+        "кавказская",
+        "грузинская",
+        "смешанная",
+        "европейская",
+        "узбекская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Chillout Cafe",
+    "phone": "+79104754909",
+    "timetable": "Пн–Чт: 12:00 — 00:00Пт–Сб: 12:00 — 02:00Вс: 12:00 — 00:00"
+}

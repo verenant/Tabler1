@@ -1,0 +1,28 @@
+{
+    "Coordinates": [
+        "55.61389109",
+        "37.68435480"
+    ],
+    "additional_url": "/msk/place/pizzamento",
+    "address": "Музей-Заповедник «Царицыно», ул. Тюрина 9",
+    "avg_check": "1300  (без напитков)",
+    "category": "Пиццерия",
+    "description": "no_description",
+    "features": [
+        "чаевые онлайн",
+        "бизнес-ланч",
+        "завтрак",
+        "доставка",
+        "парковка"
+    ],
+    "kitchen": [
+        "итальянская",
+        "пицца",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Pizzamento",
+    "phone": "+79854504545",
+    "timetable": "Пн–Вс: 11:00 — 00:00"
+}

@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "56.75724300",
+        "37.13484050"
+    ],
+    "additional_url": "/msk/place/picceroni-2",
+    "address": "Дубна, ул. Центральная 7А",
+    "avg_check": "1500  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "за городом",
+        "доставка"
+    ],
+    "kitchen": [
+        "итальянская",
+        "пицца",
+        "европейская",
+        "японская",
+        "суши"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Пиццерони",
+    "phone": "+74962123100",
+    "timetable": "Пн–Вс: 11:00 — 23:00"
+}

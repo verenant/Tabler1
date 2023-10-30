@@ -1,0 +1,24 @@
+{
+    "Coordinates": [
+        "59.96020100",
+        "30.31133200"
+    ],
+    "additional_url": "/spb/place/unicorn-coffee",
+    "address": "ул. Кронверкская 12",
+    "album": "complete",
+    "avg_check": "400  (без напитков)",
+    "category": "Кофейня",
+    "description": "\n                Кофейня с завтраками весь день на Кронверкской улице.                            ",
+    "features": [
+        "завтрак"
+    ],
+    "kitchen": [
+        "европейская"
+    ],
+    "main_image_url": "unicorn-coffee+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "Unicorn Coffee",
+    "phone": "+79218460616",
+    "timetable": "Пн–Чт: 08:30 — 21:00Пт–Сб: 09:00 — 22:00Вс: 08:30 — 21:00"
+}

@@ -1,0 +1,24 @@
+{
+    "Coordinates": [
+        "55.67889000",
+        "37.64264400"
+    ],
+    "additional_url": "/msk/place/borodachi",
+    "address": "ул. Нагатинская 16",
+    "avg_check": "no_avg_check",
+    "category": "Кафе",
+    "description": "no_description",
+    "features": [
+        "кальян",
+        "настольные игры",
+        "парковка"
+    ],
+    "kitchen": [
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Бородачи",
+    "phone": "+79251492889",
+    "timetable": "Пн–Чт: 12:00 — 23:00Пт: 12:00 — 02:00Сб: 14:00 — 02:00Вс: 14:00 — 23:00"
+}

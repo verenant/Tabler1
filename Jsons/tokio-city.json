@@ -1,0 +1,28 @@
+{
+    "Coordinates": [
+        "55.68246111",
+        "37.29127741"
+    ],
+    "additional_url": "/msk/place/tokio-city",
+    "address": "ш. Можайское 121",
+    "avg_check": "850  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "за городом",
+        "детское меню",
+        "бизнес-ланч",
+        "доставка",
+        "парковка"
+    ],
+    "kitchen": [
+        "смешанная",
+        "европейская",
+        "суши"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Токио City",
+    "phone": "+74959001019",
+    "timetable": "Пн–Вс: 12:00 — 01:00"
+}

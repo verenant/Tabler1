@@ -1,0 +1,30 @@
+{
+    "Coordinates": [
+        "59.91321200",
+        "30.34881800"
+    ],
+    "additional_url": "/spb/place/kofe-sushi-picca",
+    "address": "пр. Лиговский 175",
+    "album": "complete",
+    "avg_check": "700  (без напитков)",
+    "category": "Кафе",
+    "description": "\n                Маленькое домашнее кафе на Лиговском проспекте.                            ",
+    "features": [
+        "бизнес-ланч",
+        "кальян",
+        "доставка"
+    ],
+    "kitchen": [
+        "пицца",
+        "смешанная",
+        "суши",
+        "шашлыки",
+        "европейская"
+    ],
+    "main_image_url": "kofe-sushi-picca+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "Кофе суши пицца",
+    "phone": "+78129225325",
+    "timetable": "Пн–Вс: 11:00 — 23:00"
+}

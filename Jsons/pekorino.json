@@ -1,0 +1,26 @@
+{
+    "Coordinates": [
+        "55.70327600",
+        "37.84563300"
+    ],
+    "additional_url": "/msk/place/pekorino",
+    "address": "Пронская 2",
+    "avg_check": "1500  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "чаевые онлайн",
+        "детское меню"
+    ],
+    "kitchen": [
+        "итальянская",
+        "стейки",
+        "пицца",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Пекорино",
+    "phone": "+74997965815",
+    "timetable": "Пн–Вс: 12:00 — 00:00"
+}

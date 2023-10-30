@@ -1,0 +1,29 @@
+{
+    "Coordinates": [
+        "59.88315100",
+        "30.37000100"
+    ],
+    "additional_url": "/spb/place/maza-park",
+    "address": "ул. Бухарестская 30/32",
+    "album": "complete",
+    "avg_check": "2000  (без напитков)",
+    "category": "Ресторанный комплекс",
+    "description": "no_description",
+    "features": [
+        "детская комната",
+        "караоке",
+        "кальян",
+        "настольные игры",
+        "боулинг"
+    ],
+    "kitchen": [
+        "смешанная",
+        "суши"
+    ],
+    "main_image_url": "maza-park+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "MazaParkFood",
+    "phone": "+78126433322",
+    "timetable": "Пн–Пт: 12:00 — 05:00Сб–Вс: 10:00 — 05:00"
+}

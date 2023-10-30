@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "60.38890076",
+        "30.34580040"
+    ],
+    "additional_url": "/spb/place/panoramnyj-restoran",
+    "address": "ш. Приозерское 54 км",
+    "album": "complete",
+    "avg_check": "1300  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "за городом",
+        "детское меню",
+        "детская комната"
+    ],
+    "kitchen": [
+        "смешанная",
+        "европейская"
+    ],
+    "main_image_url": "panoramnyj-restoran+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "Панорамный ресторан",
+    "phone": "+78129600055",
+    "timetable": "Пн–Чт: ВыходнойПт–Сб: 12:00 — 00:00Вс: 12:00 — 22:00"
+}

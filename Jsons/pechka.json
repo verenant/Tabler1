@@ -1,0 +1,23 @@
+{
+    "Coordinates": [
+        "55.96389400",
+        "38.04200800"
+    ],
+    "additional_url": "/msk/place/pechka",
+    "address": "Фрязино, Вокзальная ул. 2в",
+    "avg_check": "1300  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "за городом"
+    ],
+    "kitchen": [
+        "пицца",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Печка бар",
+    "phone": "+79773101313",
+    "timetable": "Пн–Вс: 12:00 — 23:00"
+}

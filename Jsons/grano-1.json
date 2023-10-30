@@ -1,0 +1,28 @@
+{
+    "Coordinates": [
+        "55.69196300",
+        "37.52810190"
+    ],
+    "additional_url": "/msk/place/grano-1",
+    "address": "просп. Вернадского 6",
+    "avg_check": "1600  (без напитков)",
+    "category": "Кафе",
+    "description": "no_description",
+    "features": [
+        "чаевые онлайн",
+        "детское меню",
+        "детская комната",
+        "бизнес-ланч",
+        "завтрак"
+    ],
+    "kitchen": [
+        "итальянская",
+        "пицца",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Grano",
+    "phone": "+74956600398",
+    "timetable": "Пн–Вс: 10:00 — 22:00"
+}

@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "55.63381600",
+        "37.43193600"
+    ],
+    "additional_url": "/msk/place/pasta-deli-2",
+    "address": "22-й км Киевского ш. 6, стр. 1",
+    "avg_check": "900  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "детское меню",
+        "бизнес-ланч",
+        "спортивные трансляции",
+        "завтрак",
+        "доставка"
+    ],
+    "kitchen": [
+        "итальянская",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Pasta Deli",
+    "phone": "+79693478125",
+    "timetable": "Пн–Пт: 08:00 — 21:00Сб–Вс: Выходной"
+}

@@ -1,0 +1,28 @@
+{
+    "Coordinates": [
+        "55.74463200",
+        "37.56607200"
+    ],
+    "additional_url": "/msk/place/craft-kitchen",
+    "address": "пл. Киевского Вокзала 2",
+    "avg_check": "1650  (без напитков)",
+    "category": "Гастробар",
+    "description": "no_description",
+    "features": [
+        "заказ кейтеринга",
+        "бизнес-ланч",
+        "кальян",
+        "спортивные трансляции",
+        "настольные игры"
+    ],
+    "kitchen": [
+        "европейская",
+        "рыба и морепродукты",
+        "крафтовое пиво"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Craft Kitchen",
+    "phone": "+74959685373",
+    "timetable": "Пн–Чт: 11:00 — 23:00Пт–Сб: 11:00 — 00:00Вс: 11:00 — 23:00"
+}

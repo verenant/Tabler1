@@ -9,6 +9,62 @@ import glob
 
 from collections import OrderedDict
 
+from restraunt import Restraunt
+
+from tablerObject import TablerObject
+import json
+import re
+import os
+
+from collections import OrderedDict
+
+
+
+#меняем названия на те, которые на сайте
+def changeKithcenName(kitchen):
+    if kitchen == "рыба и морепродукты":
+        return "Морепродукты"
+    elif kitchen == "крафтовое пиво":
+        return "Крафт"
+    elif kitchen == "шашлыки":
+        return "Шашлык"
+    elif kitchen == "шаверма":
+        return "Шаурма"
+    elif kitchen == "боулы":
+        return "Боул"
+    else:
+        return kitchen.capitalize()
+def prepareKitchen(kitchens):
+    kitchens_array = []
+    for kitchen in kitchens:
+        kitchen = changeKithcenName(kitchen)
+        for i in cuisines_array:
+            if i["name"] == kitchen:
+                kitchens_array.append(i)
+    return kitchens_array
+
+#разбиваем адресс на улицу и дом, есть адресса без дома
+def prepareAddress(address):
+    address = address.split("\xa0")
+    return address
+# def prepareAddress(address):
+#     street = address
+#     building = ""
+#     list = ["0","1","2","3","4","5","6","7","8","9"]
+#     while street[-1] in list:
+#         building += street[-1]
+#         street = street[:-1]
+#     return street, building[::-1]
+#Делаем из описания короткое
+def prepareShortDescription(description):
+    short_description = description.split(".", 1)
+    short_description = short_description[0].split("                ")
+    return short_description[1] + "."
+
+def prepareDescription(description):
+    description = description.split("                ")
+    return description[1]
+
 def prepareFeatures(fts):
     dictFts = {}
 
@@ -152,8 +208,26 @@ def prepareSchedule(timetable):
         # if weekDaysNumbersInSchedule[i-1] == -1 and weekDaysNumbersInSchedule[i] != -1:
         #     k=+1
         #     schedule[i][weekDaysNumbersInSchedule[i]] = scheduletime[k]
+    schedule_dict = {
+        "id": " ", "isMain": True, "items" : [
+            {"dayOfWeek": 1, "endAt": "", "id": "  ", "startAt": ""},
+            {"dayOfWeek": 2, "endAt": "", "id": "  ", "startAt": ""},
+            {"dayOfWeek": 3, "endAt": "", "id": "  ", "startAt": ""},
+            {"dayOfWeek": 4, "endAt": "", "id": "  ", "startAt": ""},
+            {"dayOfWeek": 5, "endAt": "", "id": "  ", "startAt": ""},
+            {"dayOfWeek": 6, "endAt": "", "id": "  ", "startAt": ""},
+            {"dayOfWeek": 7, "endAt": "", "id": "  ", "startAt": ""},
 
-    return schedule
+        ]
+    }
+    day = 0
+    for i in schedule:
+        #print(schedule[i].split(" — "))
+        sd = schedule[i].split(" — ")
+        schedule_dict["items"][day]["startAt"] = sd[0]
+        schedule_dict["items"][day]["endAt"] = sd[1]
+        day += 1
+    return schedule_dict
 
 
 
@@ -227,21 +301,21 @@ def getAllFeatures(fts):
 
 #fts = set()
 #fts = getAllFeatures(fts)
+kitchens_dict = {}
 
 
-
+f = open("cuisines.json").read()
+json = json.loads(f)
+cuisines_array = []
+for i in json["data"]["cuisines"]:
+    cuisines_array.append(i)
 pass
-#
-rest = Restraunt("","balabol.json","",1)
 tObj = TablerObject()
+rest = Restraunt("", "Jsons/agni.json" ,"" "", 1)
+#print(prepareKitchen(rest.kitchen))
 # rest.avg_check = prepareCheck(rest.avg_check)
 # rest.lon = prepareCoord(rest.Coordinates[1])
 # rest.lat = prepareCoord(rest.Coordinates[0])
-rest.timetable = prepareSchedule(rest.timetable)
-rest.features = prepareFeatures(rest.features)
-
-
-
-
-
+#print(prepareSchedule(rest.timetable))
+print(prepareAddress(rest.address))
 pass

@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "59.93519974",
+        "30.30879974"
+    ],
+    "additional_url": "/spb/place/library-1",
+    "address": "пр. Вознесенский 4",
+    "album": "complete",
+    "avg_check": "1350  (без напитков)",
+    "category": "Бар",
+    "description": "no_description",
+    "features": [
+        "чаевые онлайн",
+        "живая музыка",
+        "настольные игры"
+    ],
+    "kitchen": [
+        "европейская",
+        "смешанная"
+    ],
+    "main_image_url": "library-1+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "Library",
+    "phone": "+78129273999",
+    "timetable": "Пн–Чт: 12:00 — 02:00Пт–Сб: 12:00 — 03:00Вс: 12:00 — 02:00"
+}

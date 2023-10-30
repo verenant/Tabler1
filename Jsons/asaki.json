@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "55.69929400",
+        "37.74106400"
+    ],
+    "additional_url": "/msk/place/asaki",
+    "address": "ул. Юных Ленинцев 12",
+    "avg_check": "1200  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "караоке",
+        "живая музыка",
+        "бизнес-ланч",
+        "кальян",
+        "спортивные трансляции"
+    ],
+    "kitchen": [
+        "смешанная",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Асаки",
+    "phone": "+74952552662",
+    "timetable": "Пн–Вс: C 11:00 — до последнего гостя"
+}

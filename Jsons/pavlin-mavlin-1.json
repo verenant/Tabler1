@@ -1,0 +1,23 @@
+{
+    "Coordinates": [
+        "55.82224000",
+        "37.59768400"
+    ],
+    "additional_url": "/msk/place/pavlin-mavlin-1",
+    "address": "Академика Королева 28",
+    "avg_check": "1500  (без напитков)",
+    "category": "Ресторан",
+    "description": "\n                Ресторан с узбекской кухней на улице Академика Королева.                            ",
+    "features": [
+        "кальян",
+        "доставка"
+    ],
+    "kitchen": [
+        "узбекская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Павлин-мавлин",
+    "phone": "+74956178989",
+    "timetable": "Пн–Вс: 11:00 — 23:00"
+}

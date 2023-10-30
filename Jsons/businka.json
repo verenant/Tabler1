@@ -1,0 +1,28 @@
+{
+    "Coordinates": [
+        "55.86812069",
+        "37.39674413"
+    ],
+    "additional_url": "/msk/place/businka",
+    "address": "Новотушинская ул. 2",
+    "avg_check": "200  (без напитков)",
+    "category": "Кафе",
+    "description": "no_description",
+    "features": [
+        "чаевые онлайн",
+        "за городом",
+        "детское меню",
+        "детская комната",
+        "бизнес-ланч"
+    ],
+    "kitchen": [
+        "десерты",
+        "смешанная",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Бусинка",
+    "phone": "+79778348005",
+    "timetable": "Пн–Вс: 09:00 — 21:00"
+}

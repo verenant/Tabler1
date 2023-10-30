@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "55.74452600",
+        "37.54526700"
+    ],
+    "additional_url": "/msk/place/rix",
+    "address": "Кутузовский просп. 24",
+    "avg_check": "2000  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "караоке",
+        "живая музыка",
+        "кальян",
+        "парковка"
+    ],
+    "kitchen": [
+        "рыба и морепродукты",
+        "русская",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Rix",
+    "phone": "+74992437373",
+    "timetable": "Пн–Вс: 12:00 — 00:00"
+}

@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "55.92094604",
+        "37.71976444"
+    ],
+    "additional_url": "/msk/place/tokio-city-1",
+    "address": "ул. Мира 32 корп.2",
+    "avg_check": "850  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "за городом",
+        "бизнес-ланч",
+        "доставка",
+        "парковка"
+    ],
+    "kitchen": [
+        "смешанная",
+        "суши",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Токио City",
+    "phone": "+74959667009",
+    "timetable": "Пн–Чт: 12:00 — 01:00Пт–Сб: 12:00 — 03:00Вс: 12:00 — 01:00"
+}

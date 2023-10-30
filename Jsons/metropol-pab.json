@@ -1,0 +1,25 @@
+{
+    "Coordinates": [
+        "59.93314000",
+        "30.33347500"
+    ],
+    "additional_url": "/spb/place/metropol-pab",
+    "address": "ул. Садовая 22/2",
+    "album": "complete",
+    "avg_check": "1550  (без напитков)",
+    "category": "Паб",
+    "description": "\n                Демократичный гастропаб с собственной пивоварней.                            ",
+    "features": [
+        "своя пивоварня"
+    ],
+    "kitchen": [
+        "смешанная",
+        "русская"
+    ],
+    "main_image_url": "metropol-pab+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "Метрополь",
+    "phone": "+78125718888",
+    "timetable": "Пн–Чт: 07:00 — 23:30Пт–Сб: C 07:00 — до последнего гостяВс: 07:00 — 23:30"
+}

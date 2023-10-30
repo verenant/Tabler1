@@ -1,0 +1,31 @@
+{
+    "Coordinates": [
+        "55.62417400",
+        "37.44002000"
+    ],
+    "additional_url": "/msk/place/armjanskij-dom",
+    "address": "1-я Новая ул 1а",
+    "avg_check": "1100  (без напитков)",
+    "category": "Кафе",
+    "description": "no_description",
+    "features": [
+        "спортивные трансляции",
+        "доставка",
+        "парковка"
+    ],
+    "kitchen": [
+        "русская",
+        "шашлыки",
+        "кавказская",
+        "грузинская",
+        "армянская",
+        "хинкали",
+        "пицца",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Армянский дом",
+    "phone": "+79037748822",
+    "timetable": "Пн–Вс: 10:00 — 00:00"
+}

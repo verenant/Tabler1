@@ -1,0 +1,28 @@
+{
+    "Coordinates": [
+        "59.92758100",
+        "30.35146800"
+    ],
+    "additional_url": "/spb/place/abazhur",
+    "address": "пер. Кузнечный 10",
+    "album": "complete",
+    "avg_check": "750  (без напитков)",
+    "category": "Кафе",
+    "description": "\n                Семейное кафе в центре города с грузинской кухней                            ",
+    "features": [
+        "детское меню",
+        "бизнес-ланч",
+        "завтрак",
+        "кабинки"
+    ],
+    "kitchen": [
+        "европейская",
+        "кавказская"
+    ],
+    "main_image_url": "abazhur+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "Абажур",
+    "phone": "+78125723681",
+    "timetable": "Пн–Сб: 10:00 — 23:00Вс: 10:00 — 22:00"
+}

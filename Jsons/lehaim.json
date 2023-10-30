@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "59.92499924",
+        "30.29140091"
+    ],
+    "additional_url": "/spb/place/lehaim",
+    "address": "пр. Лермонтовский 2",
+    "album": "complete",
+    "avg_check": "1200  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "детское меню",
+        "завтрак"
+    ],
+    "kitchen": [
+        "смешанная",
+        "израильская",
+        "европейская"
+    ],
+    "main_image_url": "lehaim+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "Лехаим",
+    "phone": "+78125725616",
+    "timetable": "Пн–Чт: 10:00 — 22:00Пт: 10:00 — 20:00Сб: ВыходнойВс: 10:00 — 22:00"
+}

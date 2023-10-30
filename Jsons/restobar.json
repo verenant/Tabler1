@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "59.94142914",
+        "31.03992081"
+    ],
+    "additional_url": "/spb/place/restobar",
+    "address": "канал Малоневский 7",
+    "album": "complete",
+    "avg_check": "900  (без напитков)",
+    "category": "Кафе",
+    "description": "no_description",
+    "features": [
+        "за городом",
+        "детское меню",
+        "бизнес-ланч"
+    ],
+    "kitchen": [
+        "смешанная",
+        "европейская"
+    ],
+    "main_image_url": "restobar+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "Restobar",
+    "phone": "+79111858330",
+    "timetable": "Пн–Вс: 12:00 — 00:00"
+}

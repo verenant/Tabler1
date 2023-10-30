@@ -1,0 +1,26 @@
+{
+    "Coordinates": [
+        "59.94409943",
+        "30.26499939"
+    ],
+    "additional_url": "/spb/place/mulan",
+    "address": "В.О. пр. Малый 40",
+    "album": "complete",
+    "avg_check": "800  (без напитков)",
+    "category": "Кафе",
+    "description": "\n                Китайский ресторан, который открыт уже более 20 лет.                            ",
+    "features": [
+        "детское меню",
+        "бизнес-ланч",
+        "доставка"
+    ],
+    "kitchen": [
+        "китайская"
+    ],
+    "main_image_url": "mulan+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "Мулан",
+    "phone": "+78123230200",
+    "timetable": "Пн–Чт: 11:00 — 23:00Пт: 11:00 — 00:00Сб: 12:00 — 00:00Вс: 12:00 — 23:00"
+}

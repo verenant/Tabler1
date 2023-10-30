@@ -1,0 +1,28 @@
+{
+    "Coordinates": [
+        "55.79411300",
+        "37.35901000"
+    ],
+    "additional_url": "/msk/place/white",
+    "address": "ш. Мякининское вл. 1",
+    "avg_check": "1400  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "чаевые онлайн",
+        "детское меню",
+        "dj",
+        "кальян",
+        "ресторан у воды"
+    ],
+    "kitchen": [
+        "смешанная",
+        "европейская",
+        "восточная"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "White",
+    "phone": "+79939937007",
+    "timetable": "Пн–Вс: C 12:00 — до последнего гостя"
+}

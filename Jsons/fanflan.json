@@ -1,0 +1,26 @@
+{
+    "Coordinates": [
+        "60.01380158",
+        "30.29520035"
+    ],
+    "additional_url": "/spb/place/fanflan",
+    "address": "пр. Коломяжский 27",
+    "album": "complete",
+    "avg_check": "700  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "живая музыка",
+        "бизнес-ланч"
+    ],
+    "kitchen": [
+        "смешанная",
+        "европейская"
+    ],
+    "main_image_url": "fanflan+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "Фанфлан",
+    "phone": "+78123746152",
+    "timetable": "Пн–Вс: 11:00 — 21:00"
+}

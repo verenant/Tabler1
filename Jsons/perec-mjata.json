@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "55.67289020",
+        "37.54242500"
+    ],
+    "additional_url": "/msk/place/perec-mjata",
+    "address": "ул. Академика Пилюгина 4",
+    "avg_check": "1400  (без напитков)",
+    "category": "Кафе",
+    "description": "no_description",
+    "features": [
+        "детское меню"
+    ],
+    "kitchen": [
+        "европейская",
+        "итальянская",
+        "японская",
+        "суши",
+        "пицца",
+        "азиатская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Перец & Мята",
+    "phone": "+74956385535",
+    "timetable": "Пн–Вс: 11:00 — 23:00"
+}

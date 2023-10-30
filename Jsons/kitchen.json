@@ -1,0 +1,25 @@
+{
+    "Coordinates": [
+        "55.79682837",
+        "37.98413005"
+    ],
+    "additional_url": "/msk/place/kitchen",
+    "address": "ул. Маяковского 24а",
+    "avg_check": "1000  (без напитков)",
+    "category": "Кафе",
+    "description": "no_description",
+    "features": [
+        "детские мастер-классы",
+        "за городом",
+        "детское меню",
+        "детская комната"
+    ],
+    "kitchen": [
+        "узбекская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Kitchen",
+    "phone": "+79265850550",
+    "timetable": "Пн–Вс: 09:00 — 22:00"
+}

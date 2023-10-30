@@ -1,0 +1,26 @@
+{
+    "Coordinates": [
+        "55.53521510",
+        "37.52744430"
+    ],
+    "additional_url": "/msk/place/italonija",
+    "address": "ул. Южнобутовская 69",
+    "avg_check": "1500  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "чаевые онлайн",
+        "доставка"
+    ],
+    "kitchen": [
+        "итальянская",
+        "суши",
+        "пицца",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Италония",
+    "phone": "+74957144444",
+    "timetable": "Пн–Вс: 11:00 — 00:00"
+}

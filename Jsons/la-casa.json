@@ -1,0 +1,28 @@
+{
+    "Coordinates": [
+        "59.91170120",
+        "30.27540016"
+    ],
+    "additional_url": "/spb/place/la-casa",
+    "address": "ул. Курляндская 35",
+    "album": "complete",
+    "avg_check": "1000  (без напитков)",
+    "category": "Кафе",
+    "description": "no_description",
+    "features": [
+        "при отеле",
+        "бизнес-ланч",
+        "завтрак",
+        "камин"
+    ],
+    "kitchen": [
+        "европейская",
+        "смешанная"
+    ],
+    "main_image_url": "la-casa+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "La Casa",
+    "phone": "+78125073555",
+    "timetable": "Пн–Вс: 07:00 — 23:00"
+}

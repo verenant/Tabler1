@@ -1,0 +1,24 @@
+{
+    "Coordinates": [
+        "59.92672000",
+        "30.32320700"
+    ],
+    "additional_url": "/spb/place/cheers",
+    "address": "ул. Гороховая 49 Б",
+    "album": "complete",
+    "avg_check": "no_avg_check",
+    "category": "Бар",
+    "description": "\n                Бар с коктейлями, вином и бестабачными паровыми коктейлями в пространстве Seno.                            ",
+    "features": [
+        "кальян"
+    ],
+    "kitchen": [
+        "коктейли"
+    ],
+    "main_image_url": "cheers+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "Cheers",
+    "phone": "+79669274777",
+    "timetable": "Пн–Вс: 14:00 — 02:00"
+}

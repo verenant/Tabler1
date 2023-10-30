@@ -1,0 +1,25 @@
+{
+    "Coordinates": [
+        "55.72737400",
+        "37.56769800"
+    ],
+    "additional_url": "/msk/place/pizzeria-il-pomodoro-1",
+    "address": "ул. Усачева 26",
+    "avg_check": "2000  (без напитков)",
+    "category": "Пиццерия",
+    "description": "no_description",
+    "features": [
+        "бизнес-ланч",
+        "доставка"
+    ],
+    "kitchen": [
+        "итальянская",
+        "пицца",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Pizzeria Il Pomodoro",
+    "phone": "+79653298888",
+    "timetable": "Пн–Чт: 10:00 — 22:00Пт–Сб: 10:00 — 23:00Вс: 10:00 — 22:00"
+}

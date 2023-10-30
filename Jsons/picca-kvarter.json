@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "55.78587300",
+        "37.29893100"
+    ],
+    "additional_url": "/msk/place/picca-kvarter",
+    "address": "ул. Архитектора Тюрина с7а",
+    "avg_check": "600  (без напитков)",
+    "category": "Пиццерия",
+    "description": "no_description",
+    "features": [
+        "за городом",
+        "доставка"
+    ],
+    "kitchen": [
+        "итальянская",
+        "бургеры",
+        "пицца",
+        "европейская",
+        "американская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Пицца-квартер",
+    "phone": "+74956645540",
+    "timetable": "Пн–Вс: 10:00 — 22:00"
+}

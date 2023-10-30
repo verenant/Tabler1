@@ -1,0 +1,28 @@
+{
+    "Coordinates": [
+        "55.58528255",
+        "37.90190351"
+    ],
+    "additional_url": "/msk/place/barashek",
+    "address": "Первомайская 30",
+    "avg_check": "1100  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "за городом",
+        "детское меню",
+        "детская комната",
+        "бизнес-ланч",
+        "кальян"
+    ],
+    "kitchen": [
+        "кавказская",
+        "европейская",
+        "шашлыки"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Барашек",
+    "phone": "+74955553288",
+    "timetable": "Пн–Чт: 12:00 — 23:00Пт–Вс: 12:00 — 00:00"
+}

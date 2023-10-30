@@ -1,0 +1,26 @@
+{
+    "Coordinates": [
+        "59.94100189",
+        "30.28000069"
+    ],
+    "additional_url": "/spb/place/marketplace-3",
+    "address": "В.О. 7-я линия 34",
+    "album": "complete",
+    "avg_check": "250  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "бизнес-ланч",
+        "завтрак"
+    ],
+    "kitchen": [
+        "смешанная",
+        "европейская"
+    ],
+    "main_image_url": "marketplace-3+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "Marketplace",
+    "phone": "+79817849814",
+    "timetable": "Пн–Вс: 09:00 — 21:00"
+}

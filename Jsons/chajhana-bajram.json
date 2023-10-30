@@ -1,0 +1,31 @@
+{
+    "Coordinates": [
+        "59.86107939",
+        "30.32232384"
+    ],
+    "additional_url": "/spb/place/chajhana-bajram",
+    "address": "пр. Московский 198лит.А",
+    "album": "complete",
+    "avg_check": "1000  (без напитков)",
+    "category": "Ресторан",
+    "description": "\n                Восточный ресторан на Московском проспекте.                            ",
+    "features": [
+        "живая музыка",
+        "бизнес-ланч",
+        "кальян",
+        "завтрак",
+        "доставка"
+    ],
+    "kitchen": [
+        "шаверма",
+        "узбекская",
+        "европейская",
+        "восточная"
+    ],
+    "main_image_url": "chajhana-bajram+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "Чайхана Байрам",
+    "phone": "+78123719250",
+    "timetable": "Пн–Вс: 11:00 — 00:00"
+}

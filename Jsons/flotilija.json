@@ -1,0 +1,28 @@
+{
+    "Coordinates": [
+        "59.91310120",
+        "30.27650070"
+    ],
+    "additional_url": "/spb/place/flotilija",
+    "address": "пр. Рижский 54/13",
+    "album": "complete",
+    "avg_check": "800  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "детское меню",
+        "караоке",
+        "бизнес-ланч"
+    ],
+    "kitchen": [
+        "рыба и морепродукты",
+        "смешанная",
+        "европейская"
+    ],
+    "main_image_url": "flotilija+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "Флотилия",
+    "phone": "+79118297792",
+    "timetable": "Пн–Сб: 10:00 — 23:00Вс: Выходной"
+}

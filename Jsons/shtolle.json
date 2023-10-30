@@ -1,0 +1,25 @@
+{
+    "Coordinates": [
+        "59.94599915",
+        "30.28499985"
+    ],
+    "additional_url": "/spb/place/shtolle",
+    "address": "В.О. 1-я линия 50",
+    "album": "complete",
+    "avg_check": "500  (без напитков)",
+    "category": "Кафе",
+    "description": "\n                Кафе с пирогами на Васильевском острове. В «Штолле» действует доставка.                            ",
+    "features": [
+        "доставка"
+    ],
+    "kitchen": [
+        "смешанная",
+        "европейская"
+    ],
+    "main_image_url": "shtolle+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "Штолле",
+    "phone": "+78123287860",
+    "timetable": "Пн–Вс: 08:00 — 22:00"
+}

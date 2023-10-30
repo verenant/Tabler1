@@ -1,0 +1,25 @@
+{
+    "Coordinates": [
+        "55.67727010",
+        "37.57710310"
+    ],
+    "additional_url": "/msk/place/picca-fabrika-2",
+    "address": "ул. Кржижановского 24/35",
+    "avg_check": "1000  (без напитков)",
+    "category": "Пиццерия",
+    "description": "no_description",
+    "features": [
+        "доставка",
+        "парковка"
+    ],
+    "kitchen": [
+        "европейская",
+        "суши",
+        "пицца"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Пицца-фабрика",
+    "phone": "+74957872589",
+    "timetable": "Пн–Пт: 10:00 — 23:00Сб–Вс: 11:00 — 23:00"
+}

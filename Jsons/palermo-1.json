@@ -1,0 +1,24 @@
+{
+    "Coordinates": [
+        "55.97149632",
+        "37.93024710"
+    ],
+    "additional_url": "/msk/place/palermo-1",
+    "address": "ул. Хлебозаводская 6",
+    "avg_check": "750  (без напитков)",
+    "category": "Пиццерия",
+    "description": "\n                Пиццерия в Ивантеевке.                            ",
+    "features": [
+        "доставка"
+    ],
+    "kitchen": [
+        "европейская",
+        "суши",
+        "пицца"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Палермо",
+    "phone": "+74965862101",
+    "timetable": "Пн–Вс: 10:00 — 23:00"
+}

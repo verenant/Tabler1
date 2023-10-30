@@ -1,0 +1,30 @@
+{
+    "Coordinates": [
+        "59.87575400",
+        "30.38637700"
+    ],
+    "additional_url": "/spb/place/v-gostjah-u-gruzina",
+    "address": "ул. Пражская 15",
+    "album": "complete",
+    "avg_check": "1400  (без напитков)",
+    "category": "Ресторан",
+    "description": "\n                Грузинский ресторан в Кудрово.                            ",
+    "features": [
+        "еда навынос",
+        "детская комната",
+        "кальян",
+        "спортивные трансляции",
+        "доставка"
+    ],
+    "kitchen": [
+        "грузинская",
+        "хинкали",
+        "шашлыки"
+    ],
+    "main_image_url": "v-gostjah-u-gruzina+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "В гостях у грузина",
+    "phone": "+79006200923",
+    "timetable": "Пн–Вс: 12:00 — 00:00"
+}

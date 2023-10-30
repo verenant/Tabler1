@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "55.66301900",
+        "37.48099300"
+    ],
+    "additional_url": "/msk/place/kvartal-1",
+    "address": "пр. Вернадского 86а",
+    "avg_check": "1500  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "dj",
+        "парковка"
+    ],
+    "kitchen": [
+        "итальянская",
+        "пицца",
+        "азиатская",
+        "европейская",
+        "суши"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Kvartal",
+    "phone": "+79851024545",
+    "timetable": "Пн–Вс: 11:00 — 00:00"
+}

@@ -1,0 +1,25 @@
+{
+    "Coordinates": [
+        "55.77517345",
+        "37.20521563"
+    ],
+    "additional_url": "/msk/place/zhar-1",
+    "address": "дер. Бузланово, пос. Новый 5а",
+    "avg_check": "1500  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "за городом",
+        "живая музыка"
+    ],
+    "kitchen": [
+        "стейки",
+        "европейская",
+        "бургеры"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Жар",
+    "phone": "+79268934393",
+    "timetable": "Пн–Вс: 12:00 — 23:00"
+}

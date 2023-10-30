@@ -1,0 +1,26 @@
+{
+    "Coordinates": [
+        "55.54053600",
+        "37.48456800"
+    ],
+    "additional_url": "/msk/place/makarosh",
+    "address": "ул. Александры Монаховой 98 к1",
+    "avg_check": "800  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "завтрак",
+        "доставка"
+    ],
+    "kitchen": [
+        "итальянская",
+        "европейская",
+        "бургеры",
+        "смешанная"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Макарош",
+    "phone": "+79013808980",
+    "timetable": "Пн–Чт: 11:00 — 23:00Пт–Сб: 11:00 — 02:00Вс: 11:00 — 23:00"
+}

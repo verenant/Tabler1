@@ -1,0 +1,25 @@
+{
+    "Coordinates": [
+        "55.72530700",
+        "37.57861290"
+    ],
+    "additional_url": "/msk/place/la-spezia",
+    "address": "пр. Комсомольский 30",
+    "avg_check": "1700  (без напитков)",
+    "category": "Пиццерия",
+    "description": "no_description",
+    "features": [
+        "завтрак",
+        "доставка"
+    ],
+    "kitchen": [
+        "итальянская",
+        "пицца",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "La spezia",
+    "phone": "+74992460206",
+    "timetable": "Пн–Вс: 11:00 — 23:00"
+}

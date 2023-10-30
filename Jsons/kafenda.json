@@ -1,0 +1,29 @@
+{
+    "Coordinates": [
+        "55.81829100",
+        "37.85803300"
+    ],
+    "additional_url": "/msk/place/kafenda",
+    "address": "ул. Западная 2",
+    "avg_check": "900  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "за городом",
+        "караоке",
+        "бизнес-ланч",
+        "доставка",
+        "парковка"
+    ],
+    "kitchen": [
+        "стейки",
+        "пицца",
+        "европейская",
+        "шашлыки"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Kafenda",
+    "phone": "+74986728989",
+    "timetable": "Пн–Чт: 12:00 — 00:00Пт: 12:00 — 03:00Сб: 13:00 — 03:00Вс: 12:00 — 00:00"
+}

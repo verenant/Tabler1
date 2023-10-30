@@ -1,0 +1,29 @@
+{
+    "Coordinates": [
+        "55.49886700",
+        "37.59017400"
+    ],
+    "additional_url": "/msk/place/chenturippe",
+    "address": "ул. Гагарина 69а",
+    "avg_check": "1200  (без напитков)",
+    "category": "Пиццерия",
+    "description": "no_description",
+    "features": [
+        "детское меню",
+        "живая музыка",
+        "бизнес-ланч",
+        "настольные игры",
+        "доставка"
+    ],
+    "kitchen": [
+        "итальянская",
+        "суши",
+        "пицца",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Чентуриппе",
+    "phone": "+74956485000",
+    "timetable": "Пн–Вс: 11:00 — 22:30"
+}

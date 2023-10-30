@@ -1,0 +1,29 @@
+{
+    "Coordinates": [
+        "55.69351000",
+        "37.62210000"
+    ],
+    "additional_url": "/msk/place/vechernij-baku",
+    "address": "Варшавское ш. 27",
+    "avg_check": "1250  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "детское меню",
+        "караоке",
+        "живая музыка",
+        "dj",
+        "кальян"
+    ],
+    "kitchen": [
+        "смешанная",
+        "азербайджанская",
+        "кавказская",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Вечерний Баку",
+    "phone": "+74952012131",
+    "timetable": "Пн–Вс: 10:00 — 05:00"
+}

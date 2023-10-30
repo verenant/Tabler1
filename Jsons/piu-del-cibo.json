@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "55.99668900",
+        "37.22010900"
+    ],
+    "additional_url": "/msk/place/piu-del-cibo",
+    "address": "Зеленоград Яблоневая аллея",
+    "avg_check": "1500  (без напитков)",
+    "category": "Кафе",
+    "description": "no_description",
+    "features": [
+        "детское меню",
+        "бизнес-ланч",
+        "доставка"
+    ],
+    "kitchen": [
+        "итальянская",
+        "суши",
+        "пицца",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Piu del cibo",
+    "phone": "+79151118989",
+    "timetable": "Пн–Вс: 11:00 — 23:00"
+}

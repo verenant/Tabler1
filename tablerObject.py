@@ -16,5 +16,5 @@ class TablerObject():
         self.__dict__ = jsons.load(self.JSON)
 
 
-#tablerObj = TablerObject()
+tablerObj = TablerObject()
 pass

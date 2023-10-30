@@ -1,0 +1,26 @@
+{
+    "Coordinates": [
+        "56.14092910",
+        "37.50070627"
+    ],
+    "additional_url": "/msk/place/osco",
+    "address": "Дмитровский р-н, пос. Ермолино, Центральная 32",
+    "avg_check": "700  (без напитков)",
+    "category": "Кафе",
+    "description": "no_description",
+    "features": [
+        "чаевые онлайн",
+        "доставка",
+        "парковка"
+    ],
+    "kitchen": [
+        "смешанная",
+        "пицца",
+        "суши"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Osco",
+    "phone": "+74994508141",
+    "timetable": "Пн–Вс: 11:00 — 23:00"
+}

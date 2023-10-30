@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "56.01043860",
+        "37.84794330"
+    ],
+    "additional_url": "/msk/place/pjachere",
+    "address": "Пушкино, Московский просп. 9/2",
+    "avg_check": "1250  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "чаевые онлайн",
+        "за городом",
+        "детское меню",
+        "завтрак"
+    ],
+    "kitchen": [
+        "итальянская",
+        "пицца",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Пьячере",
+    "phone": "+74957684442",
+    "timetable": "Пн–Пт: 09:30 — 23:00Сб–Вс: 11:00 — 23:00"
+}

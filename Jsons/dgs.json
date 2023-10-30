@@ -1,0 +1,22 @@
+{
+    "Coordinates": [
+        "59.92832000",
+        "30.30319300"
+    ],
+    "additional_url": "/spb/place/dgs",
+    "address": "ул. Декабристов 13",
+    "album": "complete",
+    "avg_check": "1000  (без напитков)",
+    "category": "Кафе",
+    "description": "\n                DGS — кафе тайской кухни на Декабристов.\r\nВ основе меню — супы том-кха и том-ям, лапша удон и пад-тай, и жареный рис с различными начинками.                            ",
+    "features": [],
+    "kitchen": [
+        "тайская"
+    ],
+    "main_image_url": "dgs+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "DGS",
+    "phone": "+79643287778",
+    "timetable": "Пн–Вс: 13:00 — 23:30"
+}

@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "55.98367000",
+        "37.17369700"
+    ],
+    "additional_url": "/msk/place/pizza-hut-3",
+    "address": "Зеленоград, ул. Гоголя 2",
+    "avg_check": "800  (без напитков)",
+    "category": "Пиццерия",
+    "description": "\n                Сетевая пиццерия с доставкой в Зеленограде.                            ",
+    "features": [
+        "еда навынос",
+        "за городом",
+        "доставка",
+        "парковка"
+    ],
+    "kitchen": [
+        "итальянская",
+        "европейская",
+        "пицца"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Pizza Hut",
+    "phone": "+78001001958",
+    "timetable": "Пн–Вс: 10:00 — 23:00"
+}

@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "55.78468300",
+        "37.55752000"
+    ],
+    "additional_url": "/msk/place/imperija-6",
+    "address": "1-й Боткинский пр-д 7",
+    "avg_check": "900  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "караоке",
+        "бизнес-ланч",
+        "кальян",
+        "спортивные трансляции",
+        "бильярд"
+    ],
+    "kitchen": [
+        "смешанная",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Империя",
+    "phone": "+79778728990",
+    "timetable": "Пн–Вс: Круглосуточно"
+}

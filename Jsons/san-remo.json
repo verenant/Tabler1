@@ -1,0 +1,25 @@
+{
+    "Coordinates": [
+        "55.94793250",
+        "37.49241160"
+    ],
+    "additional_url": "/msk/place/san-remo",
+    "address": "Долгопрудный, Лихачевское ш. 14к1",
+    "avg_check": "1400  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "доставка"
+    ],
+    "kitchen": [
+        "итальянская",
+        "пицца",
+        "европейская",
+        "рыба и морепродукты"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "San Remo",
+    "phone": "+74954084439",
+    "timetable": "Пн–Чт: 12:00 — 23:00Пт–Сб: 12:00 — 00:00Вс: 12:00 — 23:00"
+}

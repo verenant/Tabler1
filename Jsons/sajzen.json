@@ -1,0 +1,24 @@
+{
+    "Coordinates": [
+        "55.65138150",
+        "37.48286250"
+    ],
+    "additional_url": "/msk/place/sajzen",
+    "address": "пр. Ленинский 158",
+    "avg_check": "1200  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "доставка",
+        "парковка"
+    ],
+    "kitchen": [
+        "японская",
+        "азиатская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Сайзен",
+    "phone": "+74952349430",
+    "timetable": "Пн–Вс: 11:00 — 23:00"
+}

@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "56.17822300",
+        "37.00317900"
+    ],
+    "additional_url": "/msk/place/mamma-italia",
+    "address": "Солнечногорск микрорайон Рекинцо-2",
+    "avg_check": "1500  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "заказ кейтеринга",
+        "караоке",
+        "кальян",
+        "доставка"
+    ],
+    "kitchen": [
+        "итальянская",
+        "пицца",
+        "европейская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Mamma Italia",
+    "phone": "+74962638833",
+    "timetable": "Пн–Чт: C 12:00 — до последнего гостяПт–Сб: 12:00 — 05:00Вс: C 12:00 — до последнего гостя"
+}

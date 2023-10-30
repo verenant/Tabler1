@@ -1,0 +1,29 @@
+{
+    "Coordinates": [
+        "55.92359000",
+        "36.87601300"
+    ],
+    "additional_url": "/msk/place/kioto",
+    "address": "Истра, ул. Советская 46",
+    "avg_check": "1300  (без напитков)",
+    "category": "Ресторан",
+    "description": "no_description",
+    "features": [
+        "за городом",
+        "доставка"
+    ],
+    "kitchen": [
+        "итальянская",
+        "смешанная",
+        "пицца",
+        "азиатская",
+        "европейская",
+        "суши",
+        "японская"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Киото",
+    "phone": "+79265372037",
+    "timetable": "Пн–Вс: 11:00 — 23:00"
+}

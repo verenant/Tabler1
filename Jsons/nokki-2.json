@@ -1,0 +1,27 @@
+{
+    "Coordinates": [
+        "55.42428600",
+        "37.53824200"
+    ],
+    "additional_url": "/msk/place/nokki-2",
+    "address": "Подольск, ул. Свердлова 26",
+    "avg_check": "1100  (без напитков)",
+    "category": "Кафе",
+    "description": "no_description",
+    "features": [
+        "доставка"
+    ],
+    "kitchen": [
+        "смешанная",
+        "пицца",
+        "азиатская",
+        "европейская",
+        "коктейли",
+        "суши"
+    ],
+    "main_image_url": "",
+    "main_url": "https://www.restoclub.ru",
+    "name": "Ньокки",
+    "phone": "+74956624204",
+    "timetable": "Пн–Вс: 10:00 — 22:00"
+}

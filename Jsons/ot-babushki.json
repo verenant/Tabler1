@@ -1,0 +1,29 @@
+{
+    "Coordinates": [
+        "60.04795000",
+        "30.36047800"
+    ],
+    "additional_url": "/spb/place/ot-babushki",
+    "address": "пр. Просвещения 54к4",
+    "album": "complete",
+    "avg_check": "900  (без напитков)",
+    "category": "Ресторан",
+    "description": "\n                Ресторан домашней кухни на проспекте Просвещения.                            ",
+    "features": [
+        "детские мастер-классы",
+        "детское меню",
+        "караоке",
+        "детская комната",
+        "бизнес-ланч"
+    ],
+    "kitchen": [
+        "русская",
+        "европейская"
+    ],
+    "main_image_url": "ot-babushki+main_image.jpg",
+    "main_url": "https://www.restoclub.ru",
+    "menu": "complete",
+    "name": "От Бабушки",
+    "phone": "+79303777733",
+    "timetable": "Пн–Вс: C 10:00 — до последнего гостя"
+}

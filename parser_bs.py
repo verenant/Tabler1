@@ -2,7 +2,6 @@ import shutil
 
 import bs4
 from selenium import webdriver
-from selenium_stealth import stealth
 from bs4 import BeautifulSoup
 import time
 import re
@@ -44,11 +43,10 @@ if not os.path.isdir("Menu"):
 if not os.path.isdir("Album"):
     os.mkdir("Album")
 #запускать с конца
-i = 116
+i = 86
 while i != 0:
     print("i =",i)
-    #main_page_1 = "https://www.restoclub.ru/msk/search/"+str(i)+"?expertChoice=false&types%5B%5D=3&types%5B%5D=30&types%5B%5D=23&types%5B%5D=38&types%5B%5D=16&types%5B%5D=46&types%5B%5D=2&types%5B%5D=33&types%5B%5D=7&types%5B%5D=14&types%5B%5D=4&types%5B%5D=24&types%5B%5D=15&types%5B%5D=39&types%5B%5D=1&types%5B%5D=17&types%5B%5D=37&types%5B%5D=22&types%5B%5D=13&types%5B%5D=25"
-    main_page_1 = "https://www.restoclub.ru/spb/search/"+str(i)+"?expertChoice=false&types[]=3&types[]=30&types[]=23&types[]=38&types[]=16&types[]=46&types[]=2&types[]=33&types[]=7&types[]=14&types[]=4&types[]=24&types[]=15&types[]=39&types[]=1&types[]=17&types[]=37&types[]=22&types[]=13&types[]=25"
+    main_page_1 = "https://www.restoclub.ru/msk/search/"+str(i)+"?expertChoice=false&types%5B%5D=3&types%5B%5D=30&types%5B%5D=23&types%5B%5D=38&types%5B%5D=16&types%5B%5D=46&types%5B%5D=2&types%5B%5D=33&types%5B%5D=7&types%5B%5D=14&types%5B%5D=4&types%5B%5D=24&types%5B%5D=15&types%5B%5D=39&types%5B%5D=1&types%5B%5D=17&types%5B%5D=37&types%5B%5D=22&types%5B%5D=13&types%5B%5D=25"
     main_url = "https://www.restoclub.ru"
     headers = {'User-Agent':"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5845.967 YaBrowser/23.9.1.967 Yowser/2.5 Safari/537.36"}
     """
@@ -99,8 +97,7 @@ while i != 0:
         #rest = Restraunt(main_url,"/msk/place/fabrika-andy",headers)
         #rest = Restraunt(main_url,"/msk/place/steak-it-easy-3",headers)
         try:
-            #rest = Restraunt(main_url,link, headers)
-            rest = Restraunt(main_url, "/msk/place/bulgakovskij", headers,0)
+            rest = Restraunt(main_url,link, headers)
         except:
             file = open("temp.txt", "a")
             file.write(link + "\n")
