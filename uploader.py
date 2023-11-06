@@ -1,12 +1,20 @@
 import os
 
-from restraunt import Restraunt
+import requests
 
+from restraunt import Restraunt
+from requests.auth import HTTPBasicAuth
 from tablerObject import TablerObject
 import json
 import re
 import glob
-
+username = "verenant@gmail.com"
+password = "zrC!qFvI2Q"
+token = "Bearer 0r06VbX4NlbG77N3DQ1gEyNv"
+headers = {
+    'Authorization': 'Bearer 0r06VbX4NlbG77N3DQ1gEyNv',
+}
+postUrl = "https://tabler.ru/api/v1/places"
 from collections import OrderedDict
 
 def prepareFeatures(fts):
@@ -36,9 +44,6 @@ def prepareFeatures(fts):
     dictFts["parkingType"] = 2 if ("парковка" in fts) else 0
 
     return dictFts
-
-
-
 
 #Перевод координат в float
 def prepareCoord(x):
@@ -231,7 +236,31 @@ def getAllFeatures(fts):
 
 
 pass
-#
+def postRest(rest):
+
+    data = {
+        "name": rest.name,          # название
+        "lon": rest.lon,            # месторасположение
+        "lat": rest.lat,
+        "city": rest.city,          # город
+        "street": rest.street,       # улица
+        "building":rest.building,    # дом
+        "phone":rest.phone          #телефон
+    }
+    #responseCreation = requests.post(postUrl, data = data, headers=headers)
+    pass
+def patchRest(rest):
+    rest.getPatchData()
+    #средний чек
+    #краткая ссылка
+
+    #описание
+    #кухни
+    #особенности
+    #расписание
+    # основное фото
+    # меню
+
 rest = Restraunt("","balabol.json","",1)
 tObj = TablerObject()
 # rest.avg_check = prepareCheck(rest.avg_check)
@@ -239,6 +268,9 @@ tObj = TablerObject()
 # rest.lat = prepareCoord(rest.Coordinates[0])
 rest.timetable = prepareSchedule(rest.timetable)
 rest.features = prepareFeatures(rest.features)
+
+postRest(rest)
+
 
 
 
