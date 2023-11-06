@@ -19,6 +19,19 @@ from PIL import Image
 import json
 import urllib.request
 Image.MAX_IMAGE_PIXELS = None
+cities = [{
+                    "id": 9,
+                    "name": "Москва",
+                    "latinName": "moscow",
+                    "lat": "55.7558",
+                    "lon": "37.6173"
+        },{
+                "id": 8,
+                "name": "Санкт-Петербург",
+                "latinName": "saint-petersburg",
+                "lat": "59.9343",
+                "lon": "30.3351"
+       },]
 
 
 # версия без скачанной страницей (с подгружаемой на лету)
@@ -41,6 +54,7 @@ class Restraunt():
     category = ""
     main_image_url = ""
     Coordinates = [] # lat , lon
+    city = cities[0]
     soup = bs4.BeautifulSoup()
 
     def __init__(self,main_url,additional_url, headers, typeOfConstructor ):

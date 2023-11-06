@@ -10,11 +10,19 @@ import glob
 from collections import OrderedDict
 
 from restraunt import Restraunt
-
+username = "verenant@gmail.com"
+password = "zrC!qFvI2Q"
+token = "Bearer 0r06VbX4NlbG77N3DQ1gEyNv"
+headers = {
+    'Authorization': 'Bearer 0r06VbX4NlbG77N3DQ1gEyNv',
+}
+postUrl = "https://tabler.ru/api/v1/places"
 from tablerObject import TablerObject
 import json
 import re
 import os
+import requests
+
 
 from collections import OrderedDict
 
@@ -229,6 +237,31 @@ def prepareSchedule(timetable):
         day += 1
     return schedule_dict
 
+def postRest(rest):
+    data = {
+        "places" :[{
+            "name": rest.name,  # название
+            "lon": rest.lon,  # месторасположение
+            "lat": rest.lat,
+            "city": rest.city,  # город
+            "street": rest.address[0],  # улица
+            "building": rest.address[1],  # дом
+            "phone": rest.phone  # телефон
+        }]
+        }
+    responseCreation = requests.post(postUrl, data = data, headers=headers)
+    pass
+def patchRest(rest):
+    rest.getPatchData()
+    # средний чек
+    # краткая ссылка
+
+    # описание
+    # кухни
+    # особенности
+    # расписание
+    # основное фото
+    # меню
 
 
 
@@ -309,13 +342,12 @@ json = json.loads(f)
 cuisines_array = []
 for i in json["data"]["cuisines"]:
     cuisines_array.append(i)
-pass
+# pass
 tObj = TablerObject()
-rest = Restraunt("", "Jsons/agni.json" ,"" "", 1)
-#print(prepareKitchen(rest.kitchen))
-# rest.avg_check = prepareCheck(rest.avg_check)
-# rest.lon = prepareCoord(rest.Coordinates[1])
-# rest.lat = prepareCoord(rest.Coordinates[0])
-#print(prepareSchedule(rest.timetable))
-print(prepareAddress(rest.address))
+rest = Restraunt("", "Jsons/8-oz.json" ,"" "", 1)
+rest.avg_check = prepareCheck(rest.avg_check)
+rest.lon = prepareCoord(rest.Coordinates[1])
+rest.lat = prepareCoord(rest.Coordinates[0])
+rest.address = prepareAddress(rest.address)
+postRest(rest)
 pass
