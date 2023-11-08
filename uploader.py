@@ -8,7 +8,7 @@ import re
 import glob
 
 from collections import OrderedDict
-
+from PIL import Image
 from restraunt import Restraunt
 
 username = "verenant@gmail.com"
@@ -201,7 +201,7 @@ def prepareSchedule(timetable):
         if isinstance(weekDaysNumbersInSchedule[i],str):
             schedule[weekDaysNumbersInSchedule[i]] = scheduletime[k]
             k+=1
-    print(schedule)
+  #  print(schedule)
 
     for day in schedule:
         if schedule[day] == "":
@@ -331,6 +331,8 @@ def postRest(rest):
     patchUrl =postUrl+"/"+ patchUrl[patchUrl.find("latinName") + len("latinName") + 3:patchUrl.find("city") - 3]
     # print(patchUrl)
     responcePatch = patchRest(rest, patchUrl)
+    if responcePatch.status_code == 200:
+        responsePublish = requests.post(patchUrl+"/moderation-status/published")
 
 
     pass
@@ -368,10 +370,42 @@ def patchRest(rest,patchUrl):
 
 
         "schedules": prepareSchedule(rest.timetable),  # расписание
-                                                    # основное фото
-                                                    # меню
+
 
     }
+    # основное фото
+    with open("Main_photo/"+rest.latin_name+"/main_image.jpg","rb") as f:
+         main_image = f.read()
+    data["main_image"] = main_image
+
+
+    # Загрузка Меню
+    i=0
+    menu_arr = os.listdir("Menu/"+rest.latin_name)
+    for menu_dir in menu_arr:
+        jpg_arr = os.listdir("Menu/"+ rest.latin_name+"/"+ menu_dir)
+        for jpg in jpg_arr:
+
+            with open("Menu/"+rest.latin_name+"/" + menu_dir+"/" + jpg, "rb") as f:
+                menu_image = f.read()
+            data["menu_image"+str(i)] = menu_image
+            i+=1
+
+    # Альбом
+    i = 0
+    album_arr = os.listdir("Album/" + rest.latin_name)
+   # for album_dir in album_arr:
+      #  jpg_arr = os.listdir("Album/" + rest.latin_name + "/" + album_dir)
+    for jpg in album_arr:
+        with open("Album/" + rest.latin_name + "/" + jpg, "rb") as f:
+            album_image = f.read()
+        data["album_image" + str(i)] = album_image
+        i += 1
+
+
+
+
+
     if data["averageCheck"] == "no_avg_check":
         del data["averageCheck"]
     if data["schedules"] == "no_timetable":
@@ -492,7 +526,7 @@ kitchens_dict = {}
 
 # pass
 tObj = TablerObject()
-rest = Restraunt("", "Jsons/108.json" ,"" "", 1)
+rest = Restraunt("", "Jsons/chit-mil.json" ,"" "", 1)
 rest.description = prepareDescription(rest.description)
 rest.avg_check = prepareCheck(rest.avg_check)
 rest.lon = prepareCoord(rest.Coordinates[1])
