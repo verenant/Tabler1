@@ -1,0 +1,36 @@
+categories=[
+    {"id":1,"name":"Кафе","latinName":"cafe"},
+    {"id":9,"name":"Ресторан","latinName":"restaurant"},
+    {"id":12,"name":"Бар","latinName":"bar"},
+    {"id":13,"name":"Ночной клуб","latinName":"nightclub"},
+    {"id":14,"name":"Фастфуд","latinName":"fastfood"},
+    {"id":15,"name":"Автокафе","latinName":"pitstop"},
+    {"id":23,"name":"Кофейня","latinName":"coffeeshop"},
+    {"id":38,"name":"Столовая","latinName":"cafeteria"},
+    {"id":46,"name":"Коворкинг","latinName":"coworking"},
+    {"id":115,"name":"Антикафе","latinName":"anticafe"},
+    {"id":116,"name":"Фудкорт","latinName":"foodcourt"},
+    {"id":117,"name":"Киоск","latinName":"kiosk"},
+    {"id":120,"name":"Кальянная","latinName":"hookan"},
+    {"id":123,"name":"Фудтрак","latinName":"foodtruck"},
+    {"id":132,"name":"Боулинг","latinName":"bowling"},
+    {"id":133,"name":"Бильярд","latinName":"billiards"},
+    {"id":134,"name":"Аттракцион","latinName":"attraction"},
+    {"id":135,"name":"Кинотеатр","latinName":"cinema"},
+    {"id":136,"name":"Развлекательный центр","latinName":"entertainment-center"},
+    {"id":137,"name":"Библиотека","latinName":"library"},
+    {"id":138,"name":"Театр","latinName":"theatre"},
+    {"id":142,"name":"Центр искусства","latinName":"art-center"},
+    {"id":139,"name":"Выставка","latinName":"exhibition"},
+    {"id":143,"name":"Клуб по интересам","latinName":"interest-club"},
+    {"id":145,"name":"Пляж","latinName":"beach"},
+    {"id":146,"name":"Парк","latinName":"park"},
+    {"id":147,"name":"Достопримечательность","latinName":"showplace"},
+    {"id":148,"name":"Магазин","latinName":"shop"},
+    {"id":149,"name":"Торговый центр","latinName":"mall"},
+    {"id":140,"name":"Концертный зал","latinName":"concert-hall"},
+
+
+
+    ]
+

@@ -1,13 +1,16 @@
 import os
 
-import requests
-
 from restraunt import Restraunt
-from requests.auth import HTTPBasicAuth
+
 from tablerObject import TablerObject
 import json
 import re
 import glob
+
+from collections import OrderedDict
+
+from restraunt import Restraunt
+
 username = "verenant@gmail.com"
 password = "zrC!qFvI2Q"
 token = "Bearer 0r06VbX4NlbG77N3DQ1gEyNv"
@@ -15,7 +18,63 @@ headers = {
     'Authorization': 'Bearer 0r06VbX4NlbG77N3DQ1gEyNv',
 }
 postUrl = "https://tabler.ru/api/v1/places"
+from tablerObject import TablerObject
+import json
+import re
+import os
+import requests
+from Category import categories
+from Cuisines import cuisines
+
 from collections import OrderedDict
+
+
+
+#меняем названия на те, которые на сайте
+def changeKithcenName(kitchen):
+    if kitchen == "рыба и морепродукты":
+        return "Морепродукты"
+    elif kitchen == "крафтовое пиво":
+        return "Крафт"
+    elif kitchen == "шашлыки":
+        return "Шашлык"
+    elif kitchen == "шаверма":
+        return "Шаурма"
+    elif kitchen == "боулы":
+        return "Боул"
+    else:
+        return kitchen.capitalize()
+
+def prepareKitchen(kitchens):
+    kitchens_array = []
+    for kitchen in kitchens:
+        kitchen = changeKithcenName(kitchen)
+        for i in cuisines["cuisines"]:
+            if i["name"] == kitchen:
+                kitchens_array.append(i)
+    return kitchens_array
+
+#разбиваем адресс на улицу и дом, есть адресса без дома
+def prepareAddress(address):
+    address = address.split("\xa0")
+    return address
+# def prepareAddress(address):
+#     street = address
+#     building = ""
+#     list = ["0","1","2","3","4","5","6","7","8","9"]
+#     while street[-1] in list:
+#         building += street[-1]
+#         street = street[:-1]
+#     return street, building[::-1]
+#Делаем из описания короткое
+def prepareShortDescription(description):
+    short_description = description.split(".", 1)
+    short_description = short_description[0].split("                ")
+    return short_description[0] + "."
+
+def prepareDescription(description):
+    description = description.split("                ")
+    return description[1]
 
 def prepareFeatures(fts):
     dictFts = {}
@@ -34,7 +93,7 @@ def prepareFeatures(fts):
     dictFts["childrenRoom"] = True if (("детская комната" in fts) or ("детские мастер-классы" in fts)) else False
 
     # по алкоголю лучше уточнить перед загрузкой
-    dictFts["alcohol"] = True if ("своя пивоварня" in fts) else False
+    dictFts["alcohol"] = True #if ("своя пивоварня" in fts) else False
 
     dictFts["entertainment"] = 1 if ("кальян" in fts) or ("dj" in fts) or ("стриптиз" in fts) \
                                     or ("боулинг" in fts) or ("бильярд" in fts) or ("настольные игры" in fts) \
@@ -44,6 +103,9 @@ def prepareFeatures(fts):
     dictFts["parkingType"] = 2 if ("парковка" in fts) else 0
 
     return dictFts
+
+
+
 
 #Перевод координат в float
 def prepareCoord(x):
@@ -157,8 +219,171 @@ def prepareSchedule(timetable):
         # if weekDaysNumbersInSchedule[i-1] == -1 and weekDaysNumbersInSchedule[i] != -1:
         #     k=+1
         #     schedule[i][weekDaysNumbersInSchedule[i]] = scheduletime[k]
+    schedule_dict = {
+      #  "id": " ", "isMain": True, "items" : [
+       "isMain": True, "items": [
+            #{"dayOfWeek": 1, "endAt": "", "id": "  ", "startAt": ""},
+            {"dayOfWeek": 1, "endAt": "",  "startAt": ""},
+            #{"dayOfWeek": 2, "endAt": "", "id": "  ", "startAt": ""},
+            {"dayOfWeek": 2, "endAt": "",  "startAt": ""},
+            # {"dayOfWeek": 3, "endAt": "", "id": "  ", "startAt": ""},
+            {"dayOfWeek": 3, "endAt": "", "startAt": ""},
+            # {"dayOfWeek": 4, "endAt": "", "id": "  ", "startAt": ""},
+            {"dayOfWeek": 4, "endAt": "",  "startAt": ""},
+            # {"dayOfWeek": 5, "endAt": "", "id": "  ", "startAt": ""},
+            {"dayOfWeek": 5, "endAt": "",  "startAt": ""},
+            # {"dayOfWeek": 6, "endAt": "", "id": "  ", "startAt": ""},
+            {"dayOfWeek": 6, "endAt": "", "startAt": ""},
+            # {"dayOfWeek": 7, "endAt": "", "id": "  ", "startAt": ""},
+            {"dayOfWeek": 7, "endAt": "",  "startAt": ""},
 
-    return schedule
+        ]
+    }
+    day = 0
+    for i in schedule:
+        #print(schedule[i].split(" — "))
+        sd = schedule[i].split(" — ")
+        schedule_dict["items"][day]["startAt"] = sd[0]
+        schedule_dict["items"][day]["endAt"] = sd[1]
+        day += 1
+    #schedule_list = list({"isMain":schedule_dict["isMain"]}).append({"items":schedule_dict["items"]})
+    scheduleList = [schedule_dict["isMain"],schedule_dict["items"]]
+    return scheduleList
+
+def getCategoryId(rest):
+    restCat = rest.category
+    for category in categories:
+        if category["name"] == restCat:
+            return category["id"]
+        rest.subcategory = restCat
+        if restCat == "Пекарня":
+            return 1
+        if restCat== "Банкетный зал":
+            return 9
+        if restCat== "Паб":
+            return 12
+        if restCat== "Бургерная":
+            return 14
+        if restCat== "Кондитерская":
+            return 1
+        if restCat== "Чайная":
+            return 23
+        if restCat== "Пиццерия":
+            return 9
+        if restCat== "Семейный ресторан":
+            return 9
+        if restCat== "Кафе-мороженое":
+            return 1
+        if restCat== "Винотека":
+            return 14
+        if restCat== "Стейк-хаус":
+            return 9
+        if restCat== "Рюмочная":
+            return 12
+
+        if restCat== "Клуб":
+            return 13
+        if restCat== "Лаунж":
+            return 13
+        if restCat== "Ресторанный комплекс":
+            return 9
+        if restCat== "Детское кафе":
+            return 1
+        if restCat== "Караоке-клуб":
+            return 13
+        if restCat == "Корабль":
+            return 9
+        if restCat == "Гастробар":
+            return 12
+        if restCat == "Корнер":
+            return 117
+
+
+def postRest(rest):
+    city_id = 0
+    if "/spb/" in rest.additional_url:
+        city_id = 8
+    if "/msk/" in rest.additional_url:
+        city_id = 9
+
+    data = {
+
+            "name": rest.name,  # название
+            "latinName": rest.latin_name,
+            "lon": rest.lon,  # месторасположение
+            "lat": rest.lat,
+           # "city": rest.city,  # город
+            "street": rest.address[0],  # улица
+            "building": rest.address[1],  # дом
+            "phone": rest.phone,  # телефон
+            "city_id": city_id,
+            "category_id": rest.category,
+            "subcategory": rest.subcategory
+        }
+    if data["phone"] == "no_phone":
+        del data["phone"]
+    if data["subcategory"] == "":
+        del data["subcategory"]
+
+    responseCreation = requests.post(postUrl, json=data, headers=headers)
+    patchUrl = responseCreation.text
+    # нахожу айди латин нейма прибавляю к нему длину этого слова плюс 3 символа двоеточие и кавычки(х2) и до следующего элемента(city) минус 3 символа запятая и кавычки(х2)
+    patchUrl =postUrl+"/"+ patchUrl[patchUrl.find("latinName") + len("latinName") + 3:patchUrl.find("city") - 3]
+    # print(patchUrl)
+    responcePatch = patchRest(rest, patchUrl)
+
+
+    pass
+
+def patchRest(rest,patchUrl):
+    #rest.getPatchData()
+
+
+    data = {
+
+        "averageCheck": rest.avg_check,  # средний чек
+        "latinName" : rest.latin_name,   # краткая ссылка
+
+        "description": rest.description,  # описание
+        "short_description": prepareShortDescription(rest.description),
+        "cuisines": prepareKitchen(rest.kitchen),  # кухни
+        "subcategory": rest.subcategory,
+        # особенности
+        "wifi": rest.features["wifi"],
+        "cashfree": rest.features["cashfree"],
+        "terrace": rest.features["terrace"],
+        "alcohol": rest.features["alcohol"],  #  уточнить по поводу заполнения
+        "mobileCharge": rest.features["mobileCharge"],
+        "smokeZone": rest.features["smokeZone"],
+        "hookah": rest.features["hookah"],
+        "karaoke": rest.features["karaoke"],
+        "delivery": rest.features["delivery"],
+        "businessLunch": rest.features["businessLunch"],
+        "sportTranslations": rest.features["sportTranslations"],
+        "entertainment": rest.features["entertainment"],
+        "liveMusic": rest.features["liveMusic"],
+        "dancefloor": rest.features["dancefloor"],
+        "parkingType": rest.features["parkingType"],
+        "childrenRoom": rest.features["childrenRoom"],
+
+
+        "schedules": prepareSchedule(rest.timetable),  # расписание
+                                                    # основное фото
+                                                    # меню
+
+    }
+    if data["averageCheck"] == "no_avg_check":
+        del data["averageCheck"]
+    if data["schedules"] == "no_timetable":
+        del data["schedules"]
+    if data["subcategory"] == "":
+        del data["subcategory"]
+    if data["description"] == "no_description":
+        del data["description"]
+    if data["description"] == "no_description":
+        del data["short_description"]
+    patchResponse = requests.patch(patchUrl, data=data, headers=headers)
+    return patchResponse
 
 
 
@@ -230,50 +455,51 @@ def getAllFeatures(fts):
             return fts
     return fts
 
+def getAllCategoriesJson(cts):
+    directory_in_str = "jsons"
+    directory = os.fsencode(directory_in_str)
+
+    for file in os.listdir(directory):
+        filename = open("jsons/"+ os.fsdecode(file),encoding="utf8").read()
+        try:
+            text = json.loads(filename)
+            cts.add(text["category"])
+        except json.decoder.JSONDecodeError:
+            return cts
+    return cts
+
+def prepareCategory(ct):
+    category_id = getCategoryId(ct)
+    if isinstance(category_id,int):
+        return category_id
+def prepareLatinName(url):
+    latinName = url.split("/")
+    return latinName[-1]
 #fts = set()
 #fts = getAllFeatures(fts)
 
+#cts = set("")
+#cts = getAllCategoriesJson(cts)
+kitchens_dict = {}
 
 
-pass
-def postRest(rest):
+#f = open("cuisines.json").read()
+#json = json.loads(f)
+#cuisines_array = []
+#for i in json["data"]["cuisines"]:
+#    cuisines_array.append(i)
 
-    data = {
-        "name": rest.name,          # название
-        "lon": rest.lon,            # месторасположение
-        "lat": rest.lat,
-        "city": rest.city,          # город
-        "street": rest.street,       # улица
-        "building":rest.building,    # дом
-        "phone":rest.phone          #телефон
-    }
-    #responseCreation = requests.post(postUrl, data = data, headers=headers)
-    pass
-def patchRest(rest):
-    rest.getPatchData()
-    #средний чек
-    #краткая ссылка
 
-    #описание
-    #кухни
-    #особенности
-    #расписание
-    # основное фото
-    # меню
-
-rest = Restraunt("","balabol.json","",1)
+# pass
 tObj = TablerObject()
-# rest.avg_check = prepareCheck(rest.avg_check)
-# rest.lon = prepareCoord(rest.Coordinates[1])
-# rest.lat = prepareCoord(rest.Coordinates[0])
-rest.timetable = prepareSchedule(rest.timetable)
+rest = Restraunt("", "Jsons/108.json" ,"" "", 1)
+rest.description = prepareDescription(rest.description)
+rest.avg_check = prepareCheck(rest.avg_check)
+rest.lon = prepareCoord(rest.Coordinates[1])
+rest.lat = prepareCoord(rest.Coordinates[0])
+rest.address = prepareAddress(rest.address)
+rest.category = prepareCategory(rest)
 rest.features = prepareFeatures(rest.features)
-
-postRest(rest)
-
-
-
-
-
-
+rest.latin_name = prepareLatinName(rest.additional_url)
+postRest(rest)  # тут же и Patch внутри
 pass

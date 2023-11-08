@@ -41,6 +41,7 @@ def get_soup(url,headers):
 
 class Restraunt():
     name = ""
+    latin_name = ""
     additional_url = ""
     lon = 0.0
     lat = 0.0
@@ -52,6 +53,7 @@ class Restraunt():
     features =[]
     kitchen = []
     category = ""
+    subcategory = ""
     main_image_url = ""
     Coordinates = [] # lat , lon
     city = cities[0]
