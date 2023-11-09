@@ -315,37 +315,47 @@ def postRest(rest):
            # "city": rest.city,  # город
             "street": rest.address[0],  # улица
             "building": rest.address[1],  # дом
-            "phone": rest.phone,  # телефон
+            "phones": rest.phone,  # телефоны
             "city_id": city_id,
             "category_id": rest.category,
             "subcategory": rest.subcategory
         }
-    if data["phone"] == "no_phone":
-        del data["phone"]
+
+    #if data["phones"] == "no_phone":
+    #    del data["phones"]
     if data["subcategory"] == "":
         del data["subcategory"]
 
-    responseCreation = requests.post(postUrl, json=data, headers=headers)
-    patchUrl = responseCreation.text
-    # нахожу айди латин нейма прибавляю к нему длину этого слова плюс 3 символа двоеточие и кавычки(х2) и до следующего элемента(city) минус 3 символа запятая и кавычки(х2)
-    patchUrl =postUrl+"/"+ patchUrl[patchUrl.find("latinName") + len("latinName") + 3:patchUrl.find("city") - 3]
-    # print(patchUrl)
-    responcePatch = patchRest(rest, patchUrl)
-    if responcePatch.status_code == 200:
-        responsePublish = requests.post(patchUrl+"/moderation-status/published")
+    isExists = requests.get("https://tabler.ru/api/v1/places?response_type=short&query=" + rest.latin_name, headers = headers)
+    if isExists.status_code == 404:
 
+        responseCreation = requests.post(postUrl, json=data, headers=headers)
+        patchUrl = responseCreation.text
 
-    pass
+        patchUrl =postUrl+"/"+ patchUrl[patchUrl.find("latinName") + len("latinName") + 3:patchUrl.find("city") - 3]
+        # print(patchUrl)
+        with open("postRests.txt","a") as fP:
+            fP.write(rest.latin_name + "     tabler.ru" + patchUrl[patchUrl.rfind("/"):])
+            fP.write("\n")
+
+        responcePatch = patchRest(rest, patchUrl)
+        if responcePatch.status_code == 200:
+            responsePublish = requests.post(patchUrl+"/moderation-status/published",headers = headers)
+            #ошибка 403 недостаточно прав
+            return responsePublish
+        pass
+        return responcePatch
+
 
 def patchRest(rest,patchUrl):
     #rest.getPatchData()
 
 
     data = {
+        "phones": rest.phone,  # телефоны
 
         "averageCheck": rest.avg_check,  # средний чек
         "latinName" : rest.latin_name,   # краткая ссылка
-
         "description": rest.description,  # описание
         "short_description": prepareShortDescription(rest.description),
         "cuisines": prepareKitchen(rest.kitchen),  # кухни
@@ -373,6 +383,8 @@ def patchRest(rest,patchUrl):
 
 
     }
+    if data["phones"] == "no_phone":
+        del data["phones"]
     # основное фото
     with open("Main_photo/"+rest.latin_name+"/main_image.jpg","rb") as f:
          main_image = f.read()
@@ -416,6 +428,8 @@ def patchRest(rest,patchUrl):
         del data["description"]
     if data["description"] == "no_description":
         del data["short_description"]
+    #xx = json.loads(data)
+    #yy = json.dumps(data)
     patchResponse = requests.patch(patchUrl, data=data, headers=headers)
     return patchResponse
 
@@ -506,6 +520,11 @@ def prepareCategory(ct):
     category_id = getCategoryId(ct)
     if isinstance(category_id,int):
         return category_id
+def preparePhones(phone):
+     return [{"phone":phone}]
+   # return [ phone[1:] ]
+
+
 def prepareLatinName(url):
     latinName = url.split("/")
     return latinName[-1]
@@ -527,6 +546,7 @@ kitchens_dict = {}
 # pass
 tObj = TablerObject()
 rest = Restraunt("", "Jsons/chit-mil.json" ,"" "", 1)
+rest.phone = preparePhones(rest.phone)
 rest.description = prepareDescription(rest.description)
 rest.avg_check = prepareCheck(rest.avg_check)
 rest.lon = prepareCoord(rest.Coordinates[1])
@@ -535,5 +555,5 @@ rest.address = prepareAddress(rest.address)
 rest.category = prepareCategory(rest)
 rest.features = prepareFeatures(rest.features)
 rest.latin_name = prepareLatinName(rest.additional_url)
-postRest(rest)  # тут же и Patch внутри
+p = postRest(rest)  # тут же и Patch внутри
 pass
