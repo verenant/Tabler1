@@ -5,17 +5,19 @@ from restraunt import Restraunt
 from tablerObject import TablerObject
 import json
 import re
-import glob
-
-from collections import OrderedDict
-from PIL import Image
+#import glob
+#import httpx
+#from collections import OrderedDict
+#from PIL import Image
 from restraunt import Restraunt
+#from urllib import request, parse
 
 username = "verenant@gmail.com"
 password = "zrC!qFvI2Q"
 token = "Bearer 0r06VbX4NlbG77N3DQ1gEyNv"
 headers = {
     'Authorization': 'Bearer 0r06VbX4NlbG77N3DQ1gEyNv',
+    "Content-Type": "application/json"
 }
 postUrl = "https://tabler.ru/api/v1/places"
 from tablerObject import TablerObject
@@ -25,6 +27,7 @@ import os
 import requests
 from Category import categories
 from Cuisines import cuisines
+import httplib2
 
 from collections import OrderedDict
 
@@ -46,13 +49,13 @@ def changeKithcenName(kitchen):
         return kitchen.capitalize()
 
 def prepareKitchen(kitchens):
-    kitchens_array = []
+    kitchens_array_id = []
     for kitchen in kitchens:
         kitchen = changeKithcenName(kitchen)
         for i in cuisines["cuisines"]:
             if i["name"] == kitchen:
-                kitchens_array.append(i)
-    return kitchens_array
+                kitchens_array_id.append(i["id"])
+    return kitchens_array_id
 
 #разбиваем адресс на улицу и дом, есть адресса без дома
 def prepareAddress(address):
@@ -112,8 +115,8 @@ def prepareCoord(x):
     return float(x)
 
 def prepareCheck(check):
-    if check == "no_avg_check":
-        return "no_avg_check"
+    if check == "no_avg_check" or check =="":
+        return ""
     pos = check.index(" ")
     if pos < 0:
         return int(check)
@@ -187,14 +190,7 @@ def prepareSchedule(timetable):
         "Сб": "",
         "Вс": ""
     }
-    #schedule = OrderedDict()
-    #schedule["Пн"]=""
-    #schedule["Вт"] = ""
-    #schedule["Ср"] = ""
-    #schedule["Чт"] = ""
-    #schedule["Пт"] = ""
-    #schedule["Сб"] = ""
-    #schedule["Вс"] = ""
+
 
     k = 0
     for i in range(0,7):
@@ -241,13 +237,29 @@ def prepareSchedule(timetable):
     }
     day = 0
     for i in schedule:
-        #print(schedule[i].split(" — "))
         sd = schedule[i].split(" — ")
-        schedule_dict["items"][day]["startAt"] = sd[0]
+        schedule_dict["items"][day]["startAt"] = sd[0][1:]
         schedule_dict["items"][day]["endAt"] = sd[1]
         day += 1
     #schedule_list = list({"isMain":schedule_dict["isMain"]}).append({"items":schedule_dict["items"]})
-    scheduleList = [schedule_dict["isMain"],schedule_dict["items"]]
+
+    # ошибка 500 '{"status":"GeneralInternalError","message":"Произошла ошибка","data":[]}'
+    #scheduleList = [{"isMain":schedule_dict["isMain"],"items":json.dumps(schedule_dict["items"])}]
+
+    # 422 '{"status":"SlugAlreadyExist","message":"Слаг занят","data":[]}' # Исправил ошибку во времени работы был пробел перед врменем
+    scheduleList = [{"isMain": schedule_dict["isMain"], "items": schedule_dict["items"]}]
+
+   # '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["schedules.items"]}}'
+    #scheduleList = [{"isMain": schedule_dict["isMain"], "items": schedule_dict["items"],"name":""}]
+
+     # 400 '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["schedules.isMain"]}}'
+    #scheduleList = schedule_dict["items"]
+
+    #400 '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["schedules.isMain"]}}'
+    #scheduleList = [[{"isMain": schedule_dict["isMain"], "items": schedule_dict["items"]}]]
+
+    # 400 '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["schedules.isMain"]}}'
+
     return scheduleList
 
 def getCategoryId(rest):
@@ -315,21 +327,23 @@ def postRest(rest):
            # "city": rest.city,  # город
             "street": rest.address[0],  # улица
             "building": rest.address[1],  # дом
-            "phones": rest.phone,  # телефоны
+            "phone_number": "79648223232", #json.dumps(rest.phone),  # телефоны
             "city_id": city_id,
             "category_id": rest.category,
             "subcategory": rest.subcategory
         }
 
-    #if data["phones"] == "no_phone":
-    #    del data["phones"]
+    if data["phone_number"] == "no_phone":
+        del data["phone_number"]
     if data["subcategory"] == "":
         del data["subcategory"]
 
     isExists = requests.get("https://tabler.ru/api/v1/places?response_type=short&query=" + rest.latin_name, headers = headers)
     if isExists.status_code == 404:
+        #responseCreation = httpx.post(postUrl, json=data, headers = headers)
+        #print(responseCreation.json())
 
-        responseCreation = requests.post(postUrl, json=data, headers=headers)
+        responseCreation = requests.post(postUrl, data=json.dumps(data), headers=headers)
         patchUrl = responseCreation.text
 
         patchUrl =postUrl+"/"+ patchUrl[patchUrl.find("latinName") + len("latinName") + 3:patchUrl.find("city") - 3]
@@ -348,41 +362,45 @@ def postRest(rest):
 
 
 def patchRest(rest,patchUrl):
-    #rest.getPatchData()
+
 
 
     data = {
-        "phones": rest.phone,  # телефоны
+       # "phones": rest.phone,  # телефоны
 
-        "averageCheck": rest.avg_check,  # средний чек
-        "latinName" : rest.latin_name,   # краткая ссылка
+        "average_check": prepareCheck(rest.avg_check),  # средний чек
+        "latin_name" : rest.latin_name,   # краткая ссылка
         "description": rest.description,  # описание
         "short_description": prepareShortDescription(rest.description),
-        "cuisines": prepareKitchen(rest.kitchen),  # кухни
+        "cuisine_ids": prepareKitchen(rest.kitchen),  # кухни_id
         "subcategory": rest.subcategory,
         # особенности
         "wifi": rest.features["wifi"],
         "cashfree": rest.features["cashfree"],
         "terrace": rest.features["terrace"],
         "alcohol": rest.features["alcohol"],  #  уточнить по поводу заполнения
-        "mobileCharge": rest.features["mobileCharge"],
-        "smokeZone": rest.features["smokeZone"],
+        "mobile_charge": rest.features["mobileCharge"],
+        "smokezone": rest.features["smokeZone"],
         "hookah": rest.features["hookah"],
         "karaoke": rest.features["karaoke"],
         "delivery": rest.features["delivery"],
-        "businessLunch": rest.features["businessLunch"],
-        "sportTranslations": rest.features["sportTranslations"],
+        "business_lunch": rest.features["businessLunch"],
+        "sport_translations": rest.features["sportTranslations"],
         "entertainment": rest.features["entertainment"],
         "liveMusic": rest.features["liveMusic"],
         "dancefloor": rest.features["dancefloor"],
-        "parkingType": rest.features["parkingType"],
-        "childrenRoom": rest.features["childrenRoom"],
+      #  "parkingType": rest.features["parkingType"],
+        "children_room": rest.features["childrenRoom"],
 
 
-        "schedules": prepareSchedule(rest.timetable),  # расписание
+        "schedules": prepareSchedule(rest.timetable),  # расписание ПОДПРАВИТЬ
 
 
     }
+    #mergedData = d | data
+    #patchResponse = httpx.patch(patchUrl, json=mergedData, headers=headers)
+    patchResponse = requests.patch(patchUrl, json=data, headers=headers)
+   # print(patchResponse.json())
     if data["phones"] == "no_phone":
         del data["phones"]
     # основное фото
@@ -521,8 +539,14 @@ def prepareCategory(ct):
     if isinstance(category_id,int):
         return category_id
 def preparePhones(phone):
-     return [{"phone":phone}]
-   # return [ phone[1:] ]
+    if "+" in phone:
+        return phone[1:]
+    else:
+        return phone
+    # return [{"phone":phone}]
+   # return {"phone": phone}
+   #return [ phone ]
+   # return [{"id":1,"phone":phone}]
 
 
 def prepareLatinName(url):
@@ -545,7 +569,7 @@ kitchens_dict = {}
 
 # pass
 tObj = TablerObject()
-rest = Restraunt("", "Jsons/chit-mil.json" ,"" "", 1)
+rest = Restraunt("", "Jsons/3xtr.json" ,"" "", 1)
 rest.phone = preparePhones(rest.phone)
 rest.description = prepareDescription(rest.description)
 rest.avg_check = prepareCheck(rest.avg_check)
