@@ -115,6 +115,8 @@ def prepareCoord(x):
     return float(x)
 
 def prepareCheck(check):
+    if isinstance(check,int):
+        return check
     if check == "no_avg_check" or check =="":
         return ""
     pos = check.index(" ")
@@ -324,11 +326,11 @@ def postRest(rest):
             "latinName": rest.latin_name,
             "lon": rest.lon,  # месторасположение
             "lat": rest.lat,
-           # "city": rest.city,  # город
+           # "city": rest.city,
             "street": rest.address[0],  # улица
             "building": rest.address[1],  # дом
-            "phone_number": "79648223232", #json.dumps(rest.phone),  # телефоны
-            "city_id": city_id,
+            "phone_number": rest.phone, #json.dumps(rest.phone),  # телефоны
+            "city_id": city_id, # город
             "category_id": rest.category,
             "subcategory": rest.subcategory
         }
@@ -340,8 +342,7 @@ def postRest(rest):
 
     isExists = requests.get("https://tabler.ru/api/v1/places?response_type=short&query=" + rest.latin_name, headers = headers)
     if isExists.status_code == 404:
-        #responseCreation = httpx.post(postUrl, json=data, headers = headers)
-        #print(responseCreation.json())
+
 
         responseCreation = requests.post(postUrl, data=json.dumps(data), headers=headers)
         patchUrl = responseCreation.text
@@ -360,14 +361,15 @@ def postRest(rest):
         pass
         return responcePatch
 
+  # основное фото Загрузка основного фото и других изображений
+
 
 def patchRest(rest,patchUrl):
-
-
-
-    data = {
+        avatar_id = postMainImage(rest.latin_name)
+        data = {
        # "phones": rest.phone,  # телефоны
-
+        "avatar_id": avatar_id,
+        "background_id": avatar_id,
         "average_check": prepareCheck(rest.avg_check),  # средний чек
         "latin_name" : rest.latin_name,   # краткая ссылка
         "description": rest.description,  # описание
@@ -393,78 +395,111 @@ def patchRest(rest,patchUrl):
         "children_room": rest.features["childrenRoom"],
 
 
-        "schedules": prepareSchedule(rest.timetable),  # расписание ПОДПРАВИТЬ
+        "schedules": prepareSchedule(rest.timetable),  # расписание
 
+
+        }
+
+    #Загрузка текстового json + Avatar_id(ссылка на Main_photo)
+       # patchResponse = requests.patch(patchUrl, json=data, headers=headers)
+
+
+        # Альбом
+        i = 0
+      #  postImage("Album",rest.latin_name,jpg)
+        album_arr = os.listdir("Album/" + rest.latin_name)
+        # for album_dir in album_arr:
+        #  jpg_arr = os.listdir("Album/" + rest.latin_name + "/" + album_dir)
+        album_ids = []
+        for jpg in album_arr:
+            album_ids.append(postImage("Album", rest.latin_name, jpg))
+           # with open("Album/" + rest.latin_name + "/" + jpg, "rb") as f:
+           #     album_image = f.read()
+          #  data["album_image" + str(i)] = album_image
+            i += 1
+
+        album = prepareAlbum(album_ids)
+        data["albums"] = [album]
+        patchResponse = requests.patch(patchUrl, json=data, headers=headers)
+
+            # Загрузка Меню
+        i = 0
+        menu_arr = os.listdir("Menu/" + rest.latin_name)
+        for menu_dir in menu_arr:
+            jpg_arr = os.listdir("Menu/" + rest.latin_name + "/" + menu_dir)
+            for jpg in jpg_arr:
+                with open("Menu/" + rest.latin_name + "/" + menu_dir + "/" + jpg, "rb") as f:
+                    menu_image = f.read()
+                data["menu_image" + str(i)] = menu_image
+                i += 1
+
+        if data["average_check"] == "no_avg_check":
+            del data["averageCheck"]
+        if data["schedules"] == "no_timetable":
+            del data["schedules"]
+        if data["subcategory"] == "":
+            del data["subcategory"]
+        if data["description"] == "no_description":
+            del data["description"]
+        if data["description"] == "no_description":
+            del data["short_description"]
+        # xx = json.loads(data)
+        # yy = json.dumps(data)
+        patchResponse = requests.patch(patchUrl, data=data, headers=headers)
+        return patchResponse
+
+def prepareAlbum(photo_ids):
+    # i = 0
+    # photo_dict_list = []
+    #
+    # for photo in photo_ids:
+    #     photo_dict = {}
+    #     photo_dict["id"]=photo
+    #     photo_dict_list.append(photo_dict)
+    """
+    ВЗЯТЬ ОТСЮДА ID + COVER ?? Если нужно будет
+    mainImagePostresponseText = mainImagePostresponse.text
+    pattern = r'"id":".*"'
+    result = re.findall(pattern, mainImagePostresponseText)[0]
+    avatar_id = result[result.find(":") + 2:len(result) - 1]
+    """
+    cover_id = getPhotoId(photo_ids[-1])
+    #album = {"photos": photo_ids, "title": "MainAlbum","photosCount":len(photo_ids),"orderNumber":0,"cover":cover_id} #400
+    # '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["albums.photos"]}}'
+
+    album = {"photos": photo_ids, "title": "MainAlbum", "photosCount": len(photo_ids),
+             "cover": cover_id}
+    # '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["albums.photos"]}}'
+    return album
+
+"""
+    # основное фото
+def postImage(name):    
+    url = "https://tabler.ru/api/v2/images"
+
+    payload = {}
+    files = [
+        ('image', ('main.jpg', open("Main_photo/"+rest.latin_name+"/main_image.jpg", 'rb'), 'image/jpeg'))
+    ]
+    headers = {
+        'Authorization': 'Bearer 0r06VbX4NlbG77N3DQ1gEyNv'
 
     }
-    #mergedData = d | data
-    #patchResponse = httpx.patch(patchUrl, json=mergedData, headers=headers)
-    patchResponse = requests.patch(patchUrl, json=data, headers=headers)
-   # print(patchResponse.json())
-    if data["phones"] == "no_phone":
-        del data["phones"]
-    # основное фото
-    with open("Main_photo/"+rest.latin_name+"/main_image.jpg","rb") as f:
-         main_image = f.read()
-    data["main_image"] = main_image
 
-
-    # Загрузка Меню
-    i=0
-    menu_arr = os.listdir("Menu/"+rest.latin_name)
-    for menu_dir in menu_arr:
-        jpg_arr = os.listdir("Menu/"+ rest.latin_name+"/"+ menu_dir)
-        for jpg in jpg_arr:
-
-            with open("Menu/"+rest.latin_name+"/" + menu_dir+"/" + jpg, "rb") as f:
-                menu_image = f.read()
-            data["menu_image"+str(i)] = menu_image
-            i+=1
-
-    # Альбом
-    i = 0
-    album_arr = os.listdir("Album/" + rest.latin_name)
-   # for album_dir in album_arr:
-      #  jpg_arr = os.listdir("Album/" + rest.latin_name + "/" + album_dir)
-    for jpg in album_arr:
-        with open("Album/" + rest.latin_name + "/" + jpg, "rb") as f:
-            album_image = f.read()
-        data["album_image" + str(i)] = album_image
-        i += 1
+    mainImagePostresponse = requests.request("POST", url, headers=headers, data=payload, files=files)
+    mainImagePostresponseText = mainImagePostresponse.text
+    pattern = r'"id":".*"'
 
 
 
-
-
-    if data["averageCheck"] == "no_avg_check":
-        del data["averageCheck"]
-    if data["schedules"] == "no_timetable":
-        del data["schedules"]
-    if data["subcategory"] == "":
-        del data["subcategory"]
-    if data["description"] == "no_description":
-        del data["description"]
-    if data["description"] == "no_description":
-        del data["short_description"]
-    #xx = json.loads(data)
-    #yy = json.dumps(data)
-    patchResponse = requests.patch(patchUrl, data=data, headers=headers)
-    return patchResponse
+    result = re.findall(pattern, mainImagePostresponseText)[0]
+    avatar_id = result[result.find(":")+2:len(result)-1]
+    return avatar_id
+"""
 
 
 
-
-
-
-
-
-
-
-
-
-
-    pass
-#     """
+#
 #     # Подготовка расписания делаем паттерн на цифр+буква (идеальный вариант)
 #     # затем проходим по расписанию и берем разбиение до следующего изменения расписания
 #     # после заполнения списка week его надо будет разбить на словарь с началом рабочего дня и концом рабочего дня
@@ -506,6 +541,74 @@ def patchRest(rest,patchUrl):
 #
 #     pass
 # """
+def postMainImage(name):
+    url = "https://tabler.ru/api/v2/images"
+    payload = {}
+    files = [
+        #('image', ('image.jpg', open("Main_photo/"+rest.latin_name+"/main_image.jpg", 'rb'), 'image/jpeg'))
+        ('image', ('image.jpg', open("Main_photo/" + name + "/main_image.jpg", 'rb'), 'image/jpeg'))
+    ]
+    headers = {
+        'Authorization': 'Bearer 0r06VbX4NlbG77N3DQ1gEyNv'
+
+    }
+    mainImagePostresponse = requests.request("POST", url, headers=headers, data=payload, files=files)
+    mainImagePostresponseText = mainImagePostresponse.text
+    pattern = r'"id":".*"'
+    result = re.findall(pattern, mainImagePostresponseText)[0]
+    avatar_id = result[result.find(":")+2:len(result)-1]
+    return avatar_id
+
+def getPhotoId(text):
+    # pattern = r'"id":".*"'
+    # result = re.findall(pattern, text)[0]
+    # photo_id = result[result.find(":") + 2:len(result) - 1]
+    #
+    json_data = json.loads(text)
+    id_value = json_data['id']
+
+    return id_value
+
+def postImage(dir,name,number):
+    url = "https://tabler.ru/api/v2/images"
+    payload = {}
+    files = [
+        ('image', ('image'+number+'.jpg', open(dir+"/"+name+"/"+number, 'rb'), 'image/jpeg'))
+    ]
+    headers = {
+        'Authorization': 'Bearer 0r06VbX4NlbG77N3DQ1gEyNv'
+
+    }
+    mainImagePostResponse = requests.request("POST", url, headers=headers, data=payload, files=files)
+    mainImagePostResponseText = mainImagePostResponse.text
+
+    pattern = r'"imageSet":{".*"}'
+    #photos = re.findall(pattern, mainImagePostresponseText)[0].replace("imageSet","photos",1) # get from imageSet
+    photos = re.findall(pattern, mainImagePostResponseText)[0].replace('"imageSet":', "", 1)
+
+    photos_dict = json.loads(photos)
+    cover_url = photos_dict["cover"]["url"]
+    photos_dict["cover"]["path"] = cover_url
+    photos = json.dumps(photos_dict)
+
+    photos_dict = json.loads(photos)
+    thumbnail_url = photos_dict["thumbnail"]["url"]
+    photos_dict["thumbnail"]["path"] = thumbnail_url
+    photos = json.dumps(photos_dict)
+
+    photos_dict = json.loads(photos)
+    standard_url = photos_dict["standard"]["url"]
+    photos_dict["standard"]["path"] = standard_url
+    photos = json.dumps(photos_dict)
+
+    photos_dict = json.loads(photos)
+    original_url = photos_dict["original"]["url"]
+    photos_dict["original"]["path"] = original_url
+    photos = json.dumps(photos_dict)
+
+    return photos
+
+
 
 def getAllFeatures(fts):
     directory_in_str = "jsons"
@@ -569,7 +672,7 @@ kitchens_dict = {}
 
 # pass
 tObj = TablerObject()
-rest = Restraunt("", "Jsons/3xtr.json" ,"" "", 1)
+rest = Restraunt("", "Jsons/chacha-2.json" ,"" "", 1)
 rest.phone = preparePhones(rest.phone)
 rest.description = prepareDescription(rest.description)
 rest.avg_check = prepareCheck(rest.avg_check)
