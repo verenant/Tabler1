@@ -434,16 +434,29 @@ def patchRest(rest,patchUrl):
         #        #  postImage("Album",rest.latin_name,jpg)
 
 
-        # Загрузка Меню
-        menu_arr_ids = os.listdir("Album/" + rest.latin_name) # Загрузка Меню ;Заменить Album на МЕНЮ!;
-        menu_ids = []
-        for jpg in menu_arr_ids:
-            menu_ids.append(postImage("Album", rest.latin_name, jpg))
-            i += 1
-        menu_1 = prepareMenu(menu_ids)
-        data["menus"] = [menu_1]
+        # # Загрузка одного Меню РАБОЧАЯ ВЕРСИЯ
+        # menu_arr_ids = os.listdir("Album/" + rest.latin_name) # Загрузка Меню ;Заменить Album на МЕНЮ!;
+        # menu_ids = []
+        # for jpg in menu_arr_ids:
+        #     menu_ids.append(postImage("Album", rest.latin_name, jpg))
+        #     i += 1
+        # menu_1 = prepareMenu(menu_ids)
+        # data["menus"] = [menu_1]
 
-        patchResponse = requests.patch(patchUrl, json=data, headers=headers)
+        # организация прохода по всем папкам с МЕНЮ
+        i = 0
+        menu_list = []
+        menu_dirs_arr = os.listdir("Menu/" + rest.latin_name)
+        for menu_dir in menu_dirs_arr:
+            menu_arr = os.listdir("Menu/" + rest.latin_name+ "/"+ menu_dir)  # Загрузка Меню ;Заменить Album на МЕНЮ!;
+            menu_ids = []
+            for jpg in menu_arr:
+                menu_ids.append(postImage("Menu", rest.latin_name+"/"+menu_dir, jpg))
+                i += 1
+
+            menu_list.append(prepareMenu(menu_ids,menu_dir))
+        data["menus"] = menu_list
+
 
         if data["average_check"] == "no_avg_check":
             del data["averageCheck"]
@@ -457,7 +470,8 @@ def patchRest(rest,patchUrl):
             del data["short_description"]
         # xx = json.loads(data)
         # yy = json.dumps(data)
-        patchResponse = requests.patch(patchUrl, data=data, headers=headers)
+        patchResponse = requests.patch(patchUrl, json=data, headers=headers)
+       # patchResponse = requests.patch(patchUrl, data=data, headers=headers)
         return patchResponse
 
 def prepareAlbum(photo_ids):
@@ -487,7 +501,7 @@ def prepareAlbum(photo_ids):
     return album
 
 
-def prepareMenu(photo_ids):
+def prepareMenu(photo_ids, menuName):
     # i = 0
     # photo_dict_list = []
     #
@@ -509,7 +523,7 @@ def prepareMenu(photo_ids):
    # album = {"photos": photo_ids, "title": "MainAlbum", "photosCount": len(photo_ids), "cover": cover_id}
     # '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["albums.photos"]}}'
 
-    album = {"photos": photo_ids, "title": "MainAlbum"}
+    album = {"photos": photo_ids, "title": menuName}
     # '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["menus.photos"]}}'
 
     #album = {"photos": photo_ids, "title": "MainAlbum", "orderNumber":0}
@@ -723,7 +737,7 @@ kitchens_dict = {}
 
 # pass
 tObj = TablerObject()
-rest = Restraunt("", "Jsons/champion.json" ,"" "", 1)
+rest = Restraunt("", "Jsons/aristokrat-3.json" ,"" "", 1)
 rest.phone = preparePhones(rest.phone)
 rest.description = prepareDescription(rest.description)
 rest.avg_check = prepareCheck(rest.avg_check)
