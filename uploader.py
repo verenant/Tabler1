@@ -48,14 +48,69 @@ def changeKithcenName(kitchen):
     else:
         return kitchen.capitalize()
 
+# def prepareKitchen(kitchens):
+#     kitchens_array_id = []
+#     for kitchen in kitchens:
+#         kitchen = changeKithcenName(kitchen)
+#         for i in cuisines["cuisines"]:
+#             if i["name"] == kitchen:
+#                 kitchens_array_id.append(i["id"])
+#     return
 def prepareKitchen(kitchens):
+    kitchens_array = []
     kitchens_array_id = []
     for kitchen in kitchens:
+        already_exists = False
         kitchen = changeKithcenName(kitchen)
-        for i in cuisines["cuisines"]:
+        for i in kitchens_array:
             if i["name"] == kitchen:
+                already_exists = True
+        for i in cuisines["cuisines"]:
+            if i["name"] == kitchen and not(already_exists):
+                kitchens_array.append(i)
                 kitchens_array_id.append(i["id"])
     return kitchens_array_id
+
+
+def changeKithcenName(kitchen):
+    if kitchen == "рыба и морепродукты":
+        return "Морепродукты"
+    elif kitchen == "крафтовое пиво":
+        return "Крафт"
+    elif kitchen == "шашлыки":
+        return "Шашлык"
+    elif kitchen == "шаверма":
+        return "Шаурма"
+    elif kitchen == "боулы":
+        return "Боул"
+    elif kitchen == "пышки":
+        return "Десерты"
+    elif kitchen == "сидр":
+        return "Крафт"
+    elif kitchen == "крабы":
+        return "Морепродукты"
+    elif kitchen == "корюшка":
+        return "Морепродукты"
+    elif kitchen == "устрицы":
+        return "Морепродукты"
+    elif kitchen == "сезон лисечек":
+        return "Русская"
+    elif kitchen == "суши":
+        return "Роллы"
+    elif kitchen == "перуанская":
+        return "Мексиканская"
+    elif kitchen == "блюда из дичи":
+        return "Русская"
+    elif kitchen == "блюда из дичи":
+        return "Русская"
+    elif kitchen == "торты на заказ":
+        return "Десерты"
+    elif kitchen == "азиатская":
+        return "Паназиатская"
+
+
+    else:
+        return kitchen.capitalize()
 
 #разбиваем адресс на улицу и дом, есть адресса без дома
 def prepareAddress(address):
@@ -76,8 +131,12 @@ def prepareShortDescription(description):
     return short_description[0] + "."
 
 def prepareDescription(description):
-    description = description.split("                ")
-    return description[1]
+    if "                " in description:
+        description = description.split("                ")
+        if len(description)>0:
+            return description[1]
+    else:
+        return description
 
 def prepareFeatures(fts):
     dictFts = {}
@@ -443,18 +502,19 @@ def patchRest(rest,patchUrl):
         # menu_1 = prepareMenu(menu_ids)
         # data["menus"] = [menu_1]
 
-        # организация прохода по всем папкам с МЕНЮ
+
         i = 0
         menu_list = []
         menu_dirs_arr = os.listdir("Menu/" + rest.latin_name)
         for menu_dir in menu_dirs_arr:
             menu_arr = os.listdir("Menu/" + rest.latin_name+ "/"+ menu_dir)  # Загрузка Меню ;Заменить Album на МЕНЮ!;
             menu_ids = []
+
             for jpg in menu_arr:
                 menu_ids.append(postImage("Menu", rest.latin_name+"/"+menu_dir, jpg))
                 i += 1
-
-            menu_list.append(prepareMenu(menu_ids,menu_dir))
+            if len(menu_arr) > 0:  # организация прохода по всем папкам с МЕНЮ, Если меню пустое, то его пропускаем
+                menu_list.append(prepareMenu(menu_ids,menu_dir))
         data["menus"] = menu_list
 
 
@@ -736,16 +796,18 @@ kitchens_dict = {}
 
 
 # pass
-tObj = TablerObject()
-rest = Restraunt("", "Jsons/aristokrat-3.json" ,"" "", 1)
-rest.phone = preparePhones(rest.phone)
-rest.description = prepareDescription(rest.description)
-rest.avg_check = prepareCheck(rest.avg_check)
-rest.lon = prepareCoord(rest.Coordinates[1])
-rest.lat = prepareCoord(rest.Coordinates[0])
-rest.address = prepareAddress(rest.address)
-rest.category = prepareCategory(rest)
-rest.features = prepareFeatures(rest.features)
-rest.latin_name = prepareLatinName(rest.additional_url)
-p = postRest(rest)  # тут же и Patch внутри
+def upload(nameRestraunt):
+    tObj = TablerObject()
+    rest = Restraunt("", "Jsons/"+ nameRestraunt ,"" "", 1)
+    rest.phone = preparePhones(rest.phone)
+    rest.description = prepareDescription(rest.description)
+    rest.avg_check = prepareCheck(rest.avg_check)
+    rest.lon = prepareCoord(rest.Coordinates[1])
+    rest.lat = prepareCoord(rest.Coordinates[0])
+    rest.address = prepareAddress(rest.address)
+    rest.category = prepareCategory(rest)
+    rest.features = prepareFeatures(rest.features)
+    rest.latin_name = prepareLatinName(rest.additional_url)
+    p = postRest(rest)  # тут же и Patch внутри
+    return p.text
 pass
