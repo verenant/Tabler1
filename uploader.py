@@ -417,21 +417,33 @@ def patchRest(rest,patchUrl):
            #     album_image = f.read()
           #  data["album_image" + str(i)] = album_image
             i += 1
-
         album = prepareAlbum(album_ids)
         data["albums"] = [album]
-        patchResponse = requests.patch(patchUrl, json=data, headers=headers)
+     #   patchResponse = requests.patch(patchUrl, json=data, headers=headers)
 
-            # Загрузка Меню
-        i = 0
-        menu_arr = os.listdir("Menu/" + rest.latin_name)
-        for menu_dir in menu_arr:
-            jpg_arr = os.listdir("Menu/" + rest.latin_name + "/" + menu_dir)
-            for jpg in jpg_arr:
-                with open("Menu/" + rest.latin_name + "/" + menu_dir + "/" + jpg, "rb") as f:
-                    menu_image = f.read()
-                data["menu_image" + str(i)] = menu_image
-                i += 1
+        # Загрузка Меню
+        # i = 0
+        # menu_arr = os.listdir("Menu/" + rest.latin_name)
+        # for menu_dir in menu_arr:
+        #     jpg_arr = os.listdir("Menu/" + rest.latin_name + "/" + menu_dir)
+        #     for jpg in jpg_arr:
+        #         with open("Menu/" + rest.latin_name + "/" + menu_dir + "/" + jpg, "rb") as f:
+        #             menu_image = f.read()
+        #         data["menu_image" + str(i)] = menu_image
+        #         i += 1
+        #        #  postImage("Album",rest.latin_name,jpg)
+
+
+        # Загрузка Меню
+        menu_arr_ids = os.listdir("Album/" + rest.latin_name) # Загрузка Меню ;Заменить Album на МЕНЮ!;
+        menu_ids = []
+        for jpg in menu_arr_ids:
+            menu_ids.append(postImage("Album", rest.latin_name, jpg))
+            i += 1
+        menu_1 = prepareMenu(menu_ids)
+        data["menus"] = [menu_1]
+
+        patchResponse = requests.patch(patchUrl, json=data, headers=headers)
 
         if data["average_check"] == "no_avg_check":
             del data["averageCheck"]
@@ -463,15 +475,47 @@ def prepareAlbum(photo_ids):
     result = re.findall(pattern, mainImagePostresponseText)[0]
     avatar_id = result[result.find(":") + 2:len(result) - 1]
     """
-    cover_id = getPhotoId(photo_ids[-1])
+    cover_id = getPhotoId(json.dumps(photo_ids[-1]))
     #album = {"photos": photo_ids, "title": "MainAlbum","photosCount":len(photo_ids),"orderNumber":0,"cover":cover_id} #400
     # '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["albums.photos"]}}'
 
-    album = {"photos": photo_ids, "title": "MainAlbum", "photosCount": len(photo_ids),
-             "cover": cover_id}
+   # album = {"photos": photo_ids, "title": "MainAlbum", "photosCount": len(photo_ids), "cover": cover_id}
     # '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["albums.photos"]}}'
+
+    album = {"photos": photo_ids, "title": "MainAlbum",  "cover": cover_id}
+
     return album
 
+
+def prepareMenu(photo_ids):
+    # i = 0
+    # photo_dict_list = []
+    #
+    # for photo in photo_ids:
+    #     photo_dict = {}
+    #     photo_dict["id"]=photo
+    #     photo_dict_list.append(photo_dict)
+    """
+    ВЗЯТЬ ОТСЮДА ID + COVER ?? Если нужно будет
+    mainImagePostresponseText = mainImagePostresponse.text
+    pattern = r'"id":".*"'
+    result = re.findall(pattern, mainImagePostresponseText)[0]
+    avatar_id = result[result.find(":") + 2:len(result) - 1]
+    """
+    #cover_id = getPhotoId(photo_ids[-1])
+    #album = {"photos": photo_ids, "title": "MainAlbum","photosCount":len(photo_ids),"orderNumber":0,"cover":cover_id} #400
+    # '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["albums.photos"]}}'
+
+   # album = {"photos": photo_ids, "title": "MainAlbum", "photosCount": len(photo_ids), "cover": cover_id}
+    # '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["albums.photos"]}}'
+
+    album = {"photos": photo_ids, "title": "MainAlbum"}
+    # '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["menus.photos"]}}'
+
+    #album = {"photos": photo_ids, "title": "MainAlbum", "orderNumber":0}
+    # '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["menus.photos"]}}'
+
+    return album
 """
     # основное фото
 def postImage(name):    
@@ -606,7 +650,14 @@ def postImage(dir,name,number):
     photos_dict["original"]["path"] = original_url
     photos = json.dumps(photos_dict)
 
-    return photos
+    photos_dict = json.loads(photos)
+    photos_dict["isLoading"] = False
+    photos_dict["isDeleted"] = False
+    # photos_dict["error"] = Null
+
+   # photos = json.dumps(photos_dict)
+
+    return photos_dict
 
 
 
@@ -672,7 +723,7 @@ kitchens_dict = {}
 
 # pass
 tObj = TablerObject()
-rest = Restraunt("", "Jsons/chacha-2.json" ,"" "", 1)
+rest = Restraunt("", "Jsons/champion.json" ,"" "", 1)
 rest.phone = preparePhones(rest.phone)
 rest.description = prepareDescription(rest.description)
 rest.avg_check = prepareCheck(rest.avg_check)
