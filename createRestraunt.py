@@ -2,11 +2,10 @@ from uploader import upload
 import os
 # пройтись по всем файлам,где можно брать с json и отправлять в функцию upload
 
-
+#Единичная загрузка ресторана
 upload("vinil-i-vino-1.json")
 
-
+#Общая выгрузка
 files = os.listdir("Jsons")
 for file in files:
-    # оставить от file только latin_name (то есть убрать .json)
-    print(upload(file[:-5]))
+    print(upload(file))

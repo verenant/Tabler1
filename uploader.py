@@ -300,7 +300,10 @@ def prepareSchedule(timetable):
     for i in schedule:
         sd = schedule[i].split(" — ")
         schedule_dict["items"][day]["startAt"] = sd[0][1:]
-        schedule_dict["items"][day]["endAt"] = sd[1]
+        if ":" not in sd[1]:
+            schedule_dict["items"][day]["endAt"] = "23:59"
+        else:
+            schedule_dict["items"][day]["endAt"] = sd[1]
         day += 1
     #schedule_list = list({"isMain":schedule_dict["isMain"]}).append({"items":schedule_dict["items"]})
 
@@ -400,6 +403,12 @@ def postRest(rest):
         del data["subcategory"]
 
     isExists = requests.get("https://tabler.ru/api/v1/places?response_type=short&query=" + rest.latin_name, headers = headers)
+    if isExists.status_code == 200:
+        with open("postRests.txt", "a") as fP:
+            fP.write(rest.latin_name + " Already exists" )
+            fP.write("\n")
+        return rest.latin_name + " Already exists"
+
     if isExists.status_code == 404:
 
 
@@ -415,6 +424,14 @@ def postRest(rest):
         responcePatch = patchRest(rest, patchUrl)
         if responcePatch.status_code == 200:
             responsePublish = requests.post(patchUrl+"/moderation-status/published",headers = headers)
+            if responsePublish.status_code == 200:
+                with open("postRests.txt", "a") as fP:
+                    fP.write(rest.latin_name + "  tabler.ru" + patchUrl[patchUrl.rfind("/"):] + " success ")
+                    fP.write("\n")
+            else:
+                with open("postRests.txt", "a") as fP:
+                    fP.write(rest.latin_name + "  tabler.ru" + patchUrl[patchUrl.rfind("/"):] + " " + responsePublish.text)
+                    fP.write("\n")
             #ошибка 403 недостаточно прав
             return responsePublish
         pass
@@ -531,6 +548,9 @@ def patchRest(rest,patchUrl):
         # xx = json.loads(data)
         # yy = json.dumps(data)
         patchResponse = requests.patch(patchUrl, json=data, headers=headers)
+        with open("postRests.txt", "a") as fP:
+            fP.write(rest.latin_name + "  tabler.ru" + patchUrl[patchUrl.rfind("/"):] + " " + patchResponse.text)
+            fP.write("\n")
        # patchResponse = requests.patch(patchUrl, data=data, headers=headers)
         return patchResponse
 
@@ -810,4 +830,6 @@ def upload(nameRestraunt):
     rest.latin_name = prepareLatinName(rest.additional_url)
     p = postRest(rest)  # тут же и Patch внутри
     return p.text
+
+#upload("2-tone-bar.json")
 pass
