@@ -112,9 +112,12 @@ def changeKithcenName(kitchen):
     else:
         return kitchen.capitalize()
 
-#разбиваем адресс на улицу и дом, есть адресса без дома
+#разбиваем адрес на улицу и дом, есть адреса без дома
+#если номер дома заканчиваетсяна ".", то ее убираем
 def prepareAddress(address):
     address = address.split("\xa0")
+    if address[1][-1]==".":
+        address[1] = address[1][:-1]
     return address
 # def prepareAddress(address):
 #     street = address
@@ -128,7 +131,7 @@ def prepareAddress(address):
 def prepareShortDescription(description):
     short_description = description.split(".", 1)
     short_description = short_description[0].split("                ")
-    return short_description[0] + "."
+    return short_description[0]
 
 def prepareDescription(description):
     if "                " in description:
@@ -410,6 +413,10 @@ def postRest(rest):
         return rest.latin_name + " Already exists"
 
     if isExists.status_code == 404:
+        menu_check_dir = os.listdir("Menu/" + rest.latin_name)
+        if len(menu_check_dir) == 0 :
+            return rest.latin_name + " No menu"
+
 
 
         responseCreation = requests.post(postUrl, data=json.dumps(data), headers=headers)
@@ -822,6 +829,8 @@ def upload(nameRestraunt):
     rest.phone = preparePhones(rest.phone)
     rest.description = prepareDescription(rest.description)
     rest.avg_check = prepareCheck(rest.avg_check)
+    if "." not in rest.Coordinates[1] :
+       return rest.latin_name + " no coordinates"
     rest.lon = prepareCoord(rest.Coordinates[1])
     rest.lat = prepareCoord(rest.Coordinates[0])
     rest.address = prepareAddress(rest.address)
