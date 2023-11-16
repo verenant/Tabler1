@@ -1,16 +1,14 @@
 import os
+import string
 
 from restraunt import Restraunt
 
 from tablerObject import TablerObject
 import json
 import re
-#import glob
-#import httpx
-#from collections import OrderedDict
-#from PIL import Image
+
 from restraunt import Restraunt
-#from urllib import request, parse
+
 
 username = "verenant@gmail.com"
 password = "zrC!qFvI2Q"
@@ -27,10 +25,6 @@ import os
 import requests
 from Category import categories
 from Cuisines import cuisines
-import httplib2
-
-from collections import OrderedDict
-
 
 
 #меняем названия на те, которые на сайте
@@ -48,14 +42,7 @@ def changeKithcenName(kitchen):
     else:
         return kitchen.capitalize()
 
-# def prepareKitchen(kitchens):
-#     kitchens_array_id = []
-#     for kitchen in kitchens:
-#         kitchen = changeKithcenName(kitchen)
-#         for i in cuisines["cuisines"]:
-#             if i["name"] == kitchen:
-#                 kitchens_array_id.append(i["id"])
-#     return
+
 def prepareKitchen(kitchens):
     kitchens_array = []
     kitchens_array_id = []
@@ -116,17 +103,12 @@ def changeKithcenName(kitchen):
 #если номер дома заканчиваетсяна ".", то ее убираем
 def prepareAddress(address):
     address = address.split("\xa0")
-    if address[1][-1]==".":
+   # if address[1][-1]=="." or address[1][-1]==",":
+    if address[1][-1] in string.punctuation:
         address[1] = address[1][:-1]
+
     return address
-# def prepareAddress(address):
-#     street = address
-#     building = ""
-#     list = ["0","1","2","3","4","5","6","7","8","9"]
-#     while street[-1] in list:
-#         building += street[-1]
-#         street = street[:-1]
-#     return street, building[::-1]
+
 #Делаем из описания короткое
 def prepareShortDescription(description):
     short_description = description.split(".", 1)
@@ -169,9 +151,6 @@ def prepareFeatures(fts):
 
     return dictFts
 
-
-
-
 #Перевод координат в float
 def prepareCoord(x):
     return float(x)
@@ -196,7 +175,6 @@ def prepareSchedule(timetable):
     pattern= r'[А-Я][а-я]+'
     daysInTimetable = re.findall(pattern, timetable)
 
-
     #убираем из списка все случайные совпадение не двух буквенные (Выходной и тп )
     for checkDay in daysInTimetable:
         if len(checkDay) != 2:
@@ -211,7 +189,6 @@ def prepareSchedule(timetable):
             k+=1
             weekDaysNumbersInSchedule[i] = weekDays[i]
 
-
     for i_day in range(0, len(daysInTimetable)):
         daysPositions.append(timetable.find(daysInTimetable[i_day]))
      # Изменения
@@ -223,15 +200,9 @@ def prepareSchedule(timetable):
         if weekDaysNumbersInSchedule[i] not in daysInTimetable:
             weekDaysNumbersInSchedule[i] = -1
 
-
-
     # Конец изменений
     # Добавляем конец строки для того чтобы работал сбор времени между разными расписаниями
     daysPositions.append(len(timetable))
-
-    #сбор времени между разными днями версия 1.0
-    #for i_day in range(1,len(daysInTimetable),2):
-    #    scheduletime.append(timetable[daysPositions[i_day]+3: daysPositions[i_day+1]])
 
     # сбор времени между разными днями версия 2.0
     daysRanges = []
@@ -242,8 +213,6 @@ def prepareSchedule(timetable):
     for i_day in scheduletime:
         if i_day == None:
             scheduletime.remove(i_day)
-
-
     #расположить данные в словарь между правильными днями
     schedule = {
         "Пн":"",
@@ -255,13 +224,11 @@ def prepareSchedule(timetable):
         "Вс": ""
     }
 
-
     k = 0
     for i in range(0,7):
         if isinstance(weekDaysNumbersInSchedule[i],str):
             schedule[weekDaysNumbersInSchedule[i]] = scheduletime[k]
             k+=1
-  #  print(schedule)
 
     for day in schedule:
         if schedule[day] == "":
@@ -269,32 +236,16 @@ def prepareSchedule(timetable):
             schedule[day] = schedule[prevDay]
 
             pass
-           # schedule[i] = schedule[i-1]
-        # if weekDaysNumbersInSchedule[i] != -1:
-        #     schedule[i][weekDaysNumbersInSchedule[i]] = scheduletime[k]
-        #
-        # if weekDaysNumbersInSchedule[i] == -1:
-        #     schedule[i][weekDaysNumbersInSchedule[i]] = scheduletime[k]
-        #
-        # if weekDaysNumbersInSchedule[i-1] == -1 and weekDaysNumbersInSchedule[i] != -1:
-        #     k=+1
-        #     schedule[i][weekDaysNumbersInSchedule[i]] = scheduletime[k]
+
     schedule_dict = {
-      #  "id": " ", "isMain": True, "items" : [
+
        "isMain": True, "items": [
-            #{"dayOfWeek": 1, "endAt": "", "id": "  ", "startAt": ""},
             {"dayOfWeek": 1, "endAt": "",  "startAt": ""},
-            #{"dayOfWeek": 2, "endAt": "", "id": "  ", "startAt": ""},
             {"dayOfWeek": 2, "endAt": "",  "startAt": ""},
-            # {"dayOfWeek": 3, "endAt": "", "id": "  ", "startAt": ""},
             {"dayOfWeek": 3, "endAt": "", "startAt": ""},
-            # {"dayOfWeek": 4, "endAt": "", "id": "  ", "startAt": ""},
             {"dayOfWeek": 4, "endAt": "",  "startAt": ""},
-            # {"dayOfWeek": 5, "endAt": "", "id": "  ", "startAt": ""},
             {"dayOfWeek": 5, "endAt": "",  "startAt": ""},
-            # {"dayOfWeek": 6, "endAt": "", "id": "  ", "startAt": ""},
             {"dayOfWeek": 6, "endAt": "", "startAt": ""},
-            # {"dayOfWeek": 7, "endAt": "", "id": "  ", "startAt": ""},
             {"dayOfWeek": 7, "endAt": "",  "startAt": ""},
 
         ]
@@ -405,19 +356,7 @@ def postRest(rest):
     if data["subcategory"] == "":
         del data["subcategory"]
 
-    isExists = requests.get("https://tabler.ru/api/v1/places?response_type=short&query=" + rest.latin_name, headers = headers)
-    if isExists.status_code == 200:
-        with open("postRests.txt", "a") as fP:
-            fP.write(rest.latin_name + " Already exists" )
-            fP.write("\n")
-        return rest.latin_name + " Already exists"
-
-    if isExists.status_code == 404:
-        menu_check_dir = os.listdir("Menu/" + rest.latin_name)
-        if len(menu_check_dir) == 0 :
-            return rest.latin_name + " No menu"
-
-
+    if isExist(rest.name) == False:
 
         responseCreation = requests.post(postUrl, data=json.dumps(data), headers=headers)
         patchUrl = responseCreation.text
@@ -449,6 +388,7 @@ def postRest(rest):
 
 def patchRest(rest,patchUrl):
         avatar_id = postMainImage(rest.latin_name)
+
         data = {
        # "phones": rest.phone,  # телефоны
         "avatar_id": avatar_id,
@@ -477,22 +417,17 @@ def patchRest(rest,patchUrl):
       #  "parkingType": rest.features["parkingType"],
         "children_room": rest.features["childrenRoom"],
 
-
         "schedules": prepareSchedule(rest.timetable),  # расписание
-
-
         }
 
-    #Загрузка текстового json + Avatar_id(ссылка на Main_photo)
+       #Загрузка текстового json + Avatar_id(ссылка на Main_photo)
        # patchResponse = requests.patch(patchUrl, json=data, headers=headers)
-
 
         # Альбом
         i = 0
-      #  postImage("Album",rest.latin_name,jpg)
+       #  postImage("Album",rest.latin_name,jpg)
         album_arr = os.listdir("Album/" + rest.latin_name)
-        # for album_dir in album_arr:
-        #  jpg_arr = os.listdir("Album/" + rest.latin_name + "/" + album_dir)
+
         album_ids = []
         for jpg in album_arr:
             album_ids.append(postImage("Album", rest.latin_name, jpg))
@@ -502,30 +437,6 @@ def patchRest(rest,patchUrl):
             i += 1
         album = prepareAlbum(album_ids)
         data["albums"] = [album]
-     #   patchResponse = requests.patch(patchUrl, json=data, headers=headers)
-
-        # Загрузка Меню
-        # i = 0
-        # menu_arr = os.listdir("Menu/" + rest.latin_name)
-        # for menu_dir in menu_arr:
-        #     jpg_arr = os.listdir("Menu/" + rest.latin_name + "/" + menu_dir)
-        #     for jpg in jpg_arr:
-        #         with open("Menu/" + rest.latin_name + "/" + menu_dir + "/" + jpg, "rb") as f:
-        #             menu_image = f.read()
-        #         data["menu_image" + str(i)] = menu_image
-        #         i += 1
-        #        #  postImage("Album",rest.latin_name,jpg)
-
-
-        # # Загрузка одного Меню РАБОЧАЯ ВЕРСИЯ
-        # menu_arr_ids = os.listdir("Album/" + rest.latin_name) # Загрузка Меню ;Заменить Album на МЕНЮ!;
-        # menu_ids = []
-        # for jpg in menu_arr_ids:
-        #     menu_ids.append(postImage("Album", rest.latin_name, jpg))
-        #     i += 1
-        # menu_1 = prepareMenu(menu_ids)
-        # data["menus"] = [menu_1]
-
 
         i = 0
         menu_list = []
@@ -533,6 +444,11 @@ def patchRest(rest,patchUrl):
         for menu_dir in menu_dirs_arr:
             menu_arr = os.listdir("Menu/" + rest.latin_name+ "/"+ menu_dir)  # Загрузка Меню ;Заменить Album на МЕНЮ!;
             menu_ids = []
+            for i in range(0,len(menu_arr)):
+                menu_arr[i] = int(menu_arr[i][:-4])
+            menu_arr.sort()
+            for i in range(0, len(menu_arr)):
+                menu_arr[i] = str(menu_arr[i])+".jpg"
 
             for jpg in menu_arr:
                 menu_ids.append(postImage("Menu", rest.latin_name+"/"+menu_dir, jpg))
@@ -546,151 +462,34 @@ def patchRest(rest,patchUrl):
             del data["averageCheck"]
         if data["schedules"] == "no_timetable":
             del data["schedules"]
-        if data["subcategory"] == "":
+        if data["subcategory"] == "" or data["subcategory"] == rest.category_str:
             del data["subcategory"]
         if data["description"] == "no_description":
             del data["description"]
         if data["description"] == "no_description":
             del data["short_description"]
-        # xx = json.loads(data)
-        # yy = json.dumps(data)
+
         patchResponse = requests.patch(patchUrl, json=data, headers=headers)
         with open("postRests.txt", "a") as fP:
             fP.write(rest.latin_name + "  tabler.ru" + patchUrl[patchUrl.rfind("/"):] + " " + patchResponse.text)
             fP.write("\n")
-       # patchResponse = requests.patch(patchUrl, data=data, headers=headers)
+
         return patchResponse
 
 def prepareAlbum(photo_ids):
-    # i = 0
-    # photo_dict_list = []
-    #
-    # for photo in photo_ids:
-    #     photo_dict = {}
-    #     photo_dict["id"]=photo
-    #     photo_dict_list.append(photo_dict)
-    """
-    ВЗЯТЬ ОТСЮДА ID + COVER ?? Если нужно будет
-    mainImagePostresponseText = mainImagePostresponse.text
-    pattern = r'"id":".*"'
-    result = re.findall(pattern, mainImagePostresponseText)[0]
-    avatar_id = result[result.find(":") + 2:len(result) - 1]
-    """
     cover_id = getPhotoId(json.dumps(photo_ids[-1]))
-    #album = {"photos": photo_ids, "title": "MainAlbum","photosCount":len(photo_ids),"orderNumber":0,"cover":cover_id} #400
-    # '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["albums.photos"]}}'
-
-   # album = {"photos": photo_ids, "title": "MainAlbum", "photosCount": len(photo_ids), "cover": cover_id}
-    # '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["albums.photos"]}}'
-
-    album = {"photos": photo_ids, "title": "MainAlbum",  "cover": cover_id}
-
+    album = {"photos": photo_ids, "title": "Основной альбом",  "cover": cover_id}
     return album
 
 
 def prepareMenu(photo_ids, menuName):
-    # i = 0
-    # photo_dict_list = []
-    #
-    # for photo in photo_ids:
-    #     photo_dict = {}
-    #     photo_dict["id"]=photo
-    #     photo_dict_list.append(photo_dict)
-    """
-    ВЗЯТЬ ОТСЮДА ID + COVER ?? Если нужно будет
-    mainImagePostresponseText = mainImagePostresponse.text
-    pattern = r'"id":".*"'
-    result = re.findall(pattern, mainImagePostresponseText)[0]
-    avatar_id = result[result.find(":") + 2:len(result) - 1]
-    """
-    #cover_id = getPhotoId(photo_ids[-1])
-    #album = {"photos": photo_ids, "title": "MainAlbum","photosCount":len(photo_ids),"orderNumber":0,"cover":cover_id} #400
-    # '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["albums.photos"]}}'
-
-   # album = {"photos": photo_ids, "title": "MainAlbum", "photosCount": len(photo_ids), "cover": cover_id}
-    # '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["albums.photos"]}}'
-
     album = {"photos": photo_ids, "title": menuName}
-    # '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["menus.photos"]}}'
-
-    #album = {"photos": photo_ids, "title": "MainAlbum", "orderNumber":0}
-    # '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["menus.photos"]}}'
-
     return album
-"""
-    # основное фото
-def postImage(name):    
-    url = "https://tabler.ru/api/v2/images"
 
-    payload = {}
-    files = [
-        ('image', ('main.jpg', open("Main_photo/"+rest.latin_name+"/main_image.jpg", 'rb'), 'image/jpeg'))
-    ]
-    headers = {
-        'Authorization': 'Bearer 0r06VbX4NlbG77N3DQ1gEyNv'
-
-    }
-
-    mainImagePostresponse = requests.request("POST", url, headers=headers, data=payload, files=files)
-    mainImagePostresponseText = mainImagePostresponse.text
-    pattern = r'"id":".*"'
-
-
-
-    result = re.findall(pattern, mainImagePostresponseText)[0]
-    avatar_id = result[result.find(":")+2:len(result)-1]
-    return avatar_id
-"""
-
-
-
-#
-#     # Подготовка расписания делаем паттерн на цифр+буква (идеальный вариант)
-#     # затем проходим по расписанию и берем разбиение до следующего изменения расписания
-#     # после заполнения списка week его надо будет разбить на словарь с началом рабочего дня и концом рабочего дня
-#     pattern = r'\d+[А-Я]+'
-#     #pattern= r'[a-я][А-Я]+'
-#
-#     week=[]
-#     # если изменение происходит в четверг. сделать и для других дней
-#     # циклом заполняем все дни с начала этапа и до конца этапа
-#     if timetable[3:5] == "чт" or timetable[3:5] == "ЧТ" or timetable[3:5] == "Чт":
-#         pos = 0
-#         for i in range(0,4):
-#             match = re.findall(pattern,timetable)
-#             if len(match) == 0:
-#                 # особенный паттерн если работает до последнего гостя
-#                 pattern = r'[a-я][А-Я]+'
-#                 match = re.findall(pattern, timetable)
-#             pos = timetable.find(match[0])
-#             week.append(timetable[7:pos+1])
-#             pass
-#         timetable = timetable[pos+1:]
-#     elif timetable[3:5] == "ВС" or timetable[3:5] == "вс" or timetable[3:5] == "Вс":
-#         # циклом заполняем все дни с начала этапа и до конца этапа
-#         for i in range(0, 7):
-#             match = re.findall(pattern, timetable)
-#             pos = 0
-#             if len(match) == 0:
-#                 pattern = r'[a-я][А-Я]+'
-#             match = re.findall(pattern, timetable)
-#
-#             if len(match) > 0:
-#                 pos = timetable.find(match[0])
-#                 week.append(timetable[7:pos + 1])
-#             else:
-#                 week.append(timetable[7:])
-#                 pos = len(timetable)
-#             timetable = timetable[pos + 1:]
-#             pass
-#
-#     pass
-# """
 def postMainImage(name):
     url = "https://tabler.ru/api/v2/images"
     payload = {}
     files = [
-        #('image', ('image.jpg', open("Main_photo/"+rest.latin_name+"/main_image.jpg", 'rb'), 'image/jpeg'))
         ('image', ('image.jpg', open("Main_photo/" + name + "/main_image.jpg", 'rb'), 'image/jpeg'))
     ]
     headers = {
@@ -705,13 +504,8 @@ def postMainImage(name):
     return avatar_id
 
 def getPhotoId(text):
-    # pattern = r'"id":".*"'
-    # result = re.findall(pattern, text)[0]
-    # photo_id = result[result.find(":") + 2:len(result) - 1]
-    #
     json_data = json.loads(text)
     id_value = json_data['id']
-
     return id_value
 
 def postImage(dir,name,number):
@@ -722,50 +516,37 @@ def postImage(dir,name,number):
     ]
     headers = {
         'Authorization': 'Bearer 0r06VbX4NlbG77N3DQ1gEyNv'
-
     }
     mainImagePostResponse = requests.request("POST", url, headers=headers, data=payload, files=files)
     mainImagePostResponseText = mainImagePostResponse.text
 
     pattern = r'"imageSet":{".*"}'
-    #photos = re.findall(pattern, mainImagePostresponseText)[0].replace("imageSet","photos",1) # get from imageSet
+
     photos = re.findall(pattern, mainImagePostResponseText)[0].replace('"imageSet":', "", 1)
 
     photos_dict = json.loads(photos)
     cover_url = photos_dict["cover"]["url"]
     photos_dict["cover"]["path"] = cover_url
-    photos = json.dumps(photos_dict)
 
-    photos_dict = json.loads(photos)
     thumbnail_url = photos_dict["thumbnail"]["url"]
     photos_dict["thumbnail"]["path"] = thumbnail_url
-    photos = json.dumps(photos_dict)
 
-    photos_dict = json.loads(photos)
     standard_url = photos_dict["standard"]["url"]
     photos_dict["standard"]["path"] = standard_url
-    photos = json.dumps(photos_dict)
 
-    photos_dict = json.loads(photos)
     original_url = photos_dict["original"]["url"]
     photos_dict["original"]["path"] = original_url
-    photos = json.dumps(photos_dict)
 
-    photos_dict = json.loads(photos)
     photos_dict["isLoading"] = False
     photos_dict["isDeleted"] = False
-    # photos_dict["error"] = Null
 
-   # photos = json.dumps(photos_dict)
+    photos_dict["orderNumber"] = number[:-4]
 
     return photos_dict
-
-
 
 def getAllFeatures(fts):
     directory_in_str = "jsons"
     directory = os.fsencode(directory_in_str)
-
     for file in os.listdir(directory):
         filename = open("jsons/"+ os.fsdecode(file),encoding="utf8").read()
         try:
@@ -798,29 +579,32 @@ def preparePhones(phone):
         return phone[1:]
     else:
         return phone
-    # return [{"phone":phone}]
-   # return {"phone": phone}
-   #return [ phone ]
-   # return [{"id":1,"phone":phone}]
-
 
 def prepareLatinName(url):
     latinName = url.split("/")
     return latinName[-1]
-#fts = set()
-#fts = getAllFeatures(fts)
-
-#cts = set("")
-#cts = getAllCategoriesJson(cts)
 kitchens_dict = {}
 
 
-#f = open("cuisines.json").read()
-#json = json.loads(f)
-#cuisines_array = []
-#for i in json["data"]["cuisines"]:
-#    cuisines_array.append(i)
+def isExist(name):
+    isExists = requests.get("https://tabler.ru/api/v1/places?response_type=short&query=" + name, headers=headers)
 
+    if isExists.status_code == 200:
+        restResponsJsons = isExists.json()["data"]["places"]
+        for rest in restResponsJsons:
+            if rest["name"] == name:
+                with open("postRests.txt", "a") as fP:
+                    fP.write(name + " Already exists")
+                    fP.write("\n")
+                return False # для отладки ставить False
+    return False
+
+    """
+    if isExists.status_code == 404:
+        menu_check_dir = os.listdir("Menu/" + name)
+        if len(menu_check_dir) == 0:
+            return False
+    """
 
 # pass
 def upload(nameRestraunt):
@@ -834,8 +618,10 @@ def upload(nameRestraunt):
     rest.lon = prepareCoord(rest.Coordinates[1])
     rest.lat = prepareCoord(rest.Coordinates[0])
     rest.address = prepareAddress(rest.address)
+    rest.category_str = rest.category
     rest.category = prepareCategory(rest)
     rest.features = prepareFeatures(rest.features)
+
     rest.latin_name = prepareLatinName(rest.additional_url)
     p = postRest(rest)  # тут же и Patch внутри
     return p.text

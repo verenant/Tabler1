@@ -57,7 +57,7 @@ class Restraunt():
     main_image_url = ""
     Coordinates = [] # lat , lon
     city = cities[0]
-
+    category_str = ""
     soup = bs4.BeautifulSoup()
 
     def __init__(self,main_url,additional_url, headers, typeOfConstructor ):
@@ -80,7 +80,8 @@ class Restraunt():
             self.Coordinates = get_coordinates(self.soup)
             self.album = get_album(self.soup, self.main_url, self.headers, self.additional_url)
             self.menu = get_menu(self.soup, self.additional_url)
-        if typeOfConstructor == 1: #для json
+
+        if typeOfConstructor == 1: #для json  #  0 для парсинга
             addUrl = additional_url[additional_url.rfind("/") + 1:]
             j = get_json(addUrl)
             self.__dict__ = json.loads(j)
@@ -157,14 +158,6 @@ def get_phone(soup, url):
               #  f = open("temp.txt", "a")
                # f.write(dir_path + "\n" + "   sessionError")
                 return
-
-
-
-
-
-
-
-
 
 
             return "no_phone"
@@ -322,7 +315,6 @@ def get_menu(soup,addUrl,driver):
           #  'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5845.967 YaBrowser/23.9.1.967 Yowser/2.5 Safari/537.36',
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/108.0.0.0 Safari/537.36',
             'Mozilla/5.0 (Macintosh; Intel Mac OS X 13_1) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.1 Safari/605.1.15',
-
         ]
         #print(menu_link_list)
         for link in menu_link_list:

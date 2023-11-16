@@ -3,7 +3,7 @@ import os
 # пройтись по всем файлам,где можно брать с json и отправлять в функцию upload
 
 #Единичная загрузка ресторана
-upload("frou-frou.json")
+upload("krasnodar.json")
 
 #Общая выгрузка
 files = os.listdir("Jsons")
