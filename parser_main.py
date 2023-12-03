@@ -1,33 +1,66 @@
-from selenium import webdriver
-import time
 
-#option = webdriver.ChromeOptions()
-from selenium.webdriver.common.by import By
+import bs4
+import requests
 
-binary_yandex_driver_file = "yandexdriver.exe" # path to YandexDriver
-driver = webdriver.Chrome()
-super_url = "https://www.restoclub.ru"
-baseurl_1 = "https://www.restoclub.ru/msk/search/1?expertChoice=false&types%5B%5D=3&types%5B%5D=30&types%5B%5D=23&types%5B%5D=38&types%5B%5D=16&types%5B%5D=46&types%5B%5D=2&types%5B%5D=33&types%5B%5D=7&types%5B%5D=14&types%5B%5D=4&types%5B%5D=24&types%5B%5D=15&types%5B%5D=39&types%5B%5D=1&types%5B%5D=17&types%5B%5D=37&types%5B%5D=22&types%5B%5D=13&types%5B%5D=25"
-driver.get(baseurl_1)
-time.sleep(3)
 
-element = driver.find_element(By.CSS_SELECTOR, "div.search-place-card")
-data_href = element.get_attribute("data-href")
-#переходим на в ресторан по полученной ссылке
-driver.get(super_url+data_href)
-div_element = driver.find_element(By.CLASS_NAME, 'expandable-text__t')
-# Находим внутри div нужный элемент p
-p_element = div_element.find_element(By.TAG_NAME,'p')
-# Получаем текст из элемента p
-description = p_element.text
+headers = {
+    'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5845.967 YaBrowser/23.9.1.967 Yowser/2.5 Safari/537.36"}
 
-hidden_phone = driver.find_element(By.CLASS_NAME, "place-phone").find_element(By.TAG_NAME,"a")
-phone = hidden_phone.get_attribute("content")
+main_page= "https://restaurantguru.com/"
 
-# adress=
-# timetable =
-# avg_check =
-# kitchen =
-# images =
+
+def get_soup(url):
+    res = requests.get(url, headers=headers)
+    return bs4.BeautifulSoup(res.text, "html.parser")
+
+
+def get_countries(url):
+    soup_main = get_soup(url)
+    countries = soup_main.find("div", class_='promo_links content')
+    spanCountries = countries.findAll("span")
+    countries = []
+    for spanCountry in spanCountries:
+        country = spanCountry.text
+        country = country.replace(" ", "-")
+        countries.append(country)
+
+    countries[0] = "Aland-Islands"
+    return countries
+
+def get_city_letters(country):
+    countryUrl = "https://restaurantguru.com/cities-" + country + "-c"
+    soup =  get_soup(countryUrl)
+    lettersHTML = soup.findAll("div", class_ = "cities_block" )
+    letters = []
+    for letterHTML in lettersHTML:
+        letterHTMLText = letterHTML.text
+        letters.append(letterHTMLText.strip()[0])
+    return letters
+
+def get_country_city_href(country,letter):
+    cityHrefs = []
+    countryUrl = "https://restaurantguru.com/cities-" + country + "-c/" + letter + "-t"
+    soup = get_soup(countryUrl)
+    cities_div_li_containers = soup.find("div", class_ = "cities scrolled-container").findAll("li")
+    for li in cities_div_li_containers:
+            cityHrefs.append(li.find("a").get("href"))
+    return cityHrefs
+    pass
+
+
+def get_full_city_name(href):
+    soup = get_soup(href)
+    cityName = soup.find("div", class_= "content_crumbs").find("a", class_= href).text
+    cityName = cityName.replace(" ","-")
+    cityName = cityName.replace(",", "")
+    cityName = cityName.replace(">", "-")
+
+    return cityName
+
+countries = get_countries(main_page)
+letters = get_city_letters(countries[4])
+cityHrefs = get_country_city_href(countries[4],letters[1])
+city_name = get_full_city_name(cityHrefs[2])
+
+
 pass
-driver.quit()
