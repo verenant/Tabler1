@@ -19,6 +19,14 @@ headers = {
 
 main_page= "https://restaurantguru.com/"
 
+class Used_Proxy():
+    def __init__(self,name,isBlocked,qtyOfUsage):
+        self.name = name
+        self.isBlocked = isBlocked
+        self.qtyOfUsage = qtyOfUsage
+
+
+
 
 
 def get_new_proxies():
@@ -37,8 +45,15 @@ def get_new_proxies():
             newIpAddress = ip_addr.text + ":" + port.text
 
             proxies.append(newIpAddress)
+
+    file_for_proxies = open("bad_proxy.txt","w",encoding="UTF-8")
+    for proxy in proxies:
+        file_for_proxies.write(proxy+"\n")
+
+    file_for_proxies.close()
     #for x in proxies:
      #   print(x)
+
     return proxies
 
 def get_good_proxies(url,proxies_from_network):
@@ -79,63 +94,104 @@ def get_good_proxies(url,proxies_from_network):
 
 def get_soup(url):
     ok = True
-    indexProxy = 0
     file_with_proxies = open("proxy.txt", "r")
+    bad_proxies_from_network_file = open("bad_proxy.txt","r")
+    #получаем хорошие прокси
     proxies_from_network = file_with_proxies.readlines()
     for i in range(len(proxies_from_network)):
         proxies_from_network[i] = proxies_from_network[i][:-1]
+        proxies_from_network[i] = Used_Proxy(proxies_from_network[i][:-1],False,0)
     file_with_proxies.close()
+    
+    #получаем плохие прокси
+    bad_proxies_from_network = bad_proxies_from_network_file.readlines()
+    for i in range(len(bad_proxies_from_network)):
+        bad_proxies_from_network[i] = bad_proxies_from_network[i][:-1]
+    bad_proxies_from_network_file.close()
+    indexProxy = 0
     while(ok):
         random_milliseconds = random.randint(100, 1500)
         time.sleep(random_milliseconds / 1000.0)
+        # случайные индексы для выбора IP прокси
+        indexBadProxy = random.randint(0, len(bad_proxies_from_network)-1)
 
+        rightEnd = len(proxies_from_network)      #защита от ("empty range for randrange() (%d, %d, %d)" % (istart, istop, width))
+        if rightEnd<=0:
+            rightEnd=1
+      #  indexProxy = random.randint(0, rightEnd) # случайные прокси
 
-
+        #очистка после взятия из файлов
         res = ""
         if "" in proxies_from_network:
             proxies_from_network.remove("")
-      #  i = random_milliseconds % random.randint(len(proxies_from_network),2*len(proxies_from_network))
+        if "" in bad_proxies_from_network:
+            bad_proxies_from_network.remove("")
+
+        bad_proxies = {
+            "https": bad_proxies_from_network[indexBadProxy],
+            "http": bad_proxies_from_network[indexBadProxy],
+        }
+
+
         if indexProxy < len(proxies_from_network):
             proxies = {
                 "https": proxies_from_network[indexProxy],
                 "http": proxies_from_network[indexProxy],
             }
-            try:
-                res = requests.get(url, headers=headers, proxies = proxies, timeout=6)
 
+            #запросы к серверу сначала хорошим IP, потом плохим IP
+            try:
+
+                res = requests.get(url, headers=headers, proxies = proxies, timeout=6)
+                random_milliseconds = random.randint(100, 1500)
+                time.sleep(random_milliseconds / 1000.0)
             except Exception:
-                pass
-                print(f"bad Ip -- {proxies_from_network[indexProxy]}")
+                print(f"bad Ip -- {bad_proxies_from_network[indexBadProxy]}")
+                #proxies_from_network.pop(indexProxy)
+
+            try:
+                requests.get(url, headers=headers, proxies = bad_proxies, timeout=4)
+                random_milliseconds = random.randint(100, 1500)
+                time.sleep(random_milliseconds / 1000.0)
+            except Exception:
+                print(f"bad Ip -- {bad_proxies_from_network[indexBadProxy]}")
+                proxies_from_network.pop(indexProxy)
 
         else:
+            random_milliseconds = random.randint(100, 1500)
+            time.sleep(random_milliseconds / 1000.0)
             res = requests.get(url, headers=headers)
-            # если все прокси удалены, то берем их опять из файла
-            if len(proxies_from_network) == 0:
-                file_with_proxies = open("proxy.txt", "r")
-                proxies_from_network = file_with_proxies.readlines()
-                for i in range(len(proxies_from_network)):
-                    proxies_from_network[i] = proxies_from_network[i][:-1]
-                if "" in proxies_from_network:
-                    proxies_from_network.remove("")
-                file_with_proxies.close()
-                time.sleep(1*60)
+            try:
+                random_milliseconds = random.randint(100, 1500)
+                time.sleep(random_milliseconds / 1000.0)
+                requests.get(url, headers=headers, proxies=bad_proxies, timeout=4)
+            except Exception:
+                pass
+                print(f"bad Ip -- {bad_proxies_from_network[indexBadProxy]}")
 
 
-        if res != "":
-            if res.status_code == 200:
+        #если получили ответ от сервера ( он принял прокси)
+        if res != "" and res.status_code == 200:
                 if bs4.BeautifulSoup(res.text,"html.parser").find("span",class_="pier_img") == None: # если не словили капчу
 
-                  #  for k in range(5):
-                   #     proxies_from_network[k] = proxies["http"] # proxies_from_network[i]
-                       #### #ok = False
-                    return bs4.BeautifulSoup(res.text, "html.parser")
+
+                    return bs4.BeautifulSoup(res.text, "html.parser") # получили адекватный ответ от сервера
                 else:
-                    if len(proxies_from_network)>0:
-                        proxies_from_network.pop(indexProxy)
-                    #time.sleep(60*5)
-        #indexProxy+=1
-       # if i == len(proxies_from_network):
-       #    proxies_from_network = get_new_proxies()
+                    if len(proxies_from_network)>0: #еще есть хорошие прокси на пробу
+
+                        if indexProxy < len(proxies_from_network): # иначе происходит попытка удаления своего ip
+                            print(f"indexProxy = {indexProxy}, len(proxies_from_network) = {len(proxies_from_network)}, proxies_from_network= {proxies_from_network}")
+                            proxies_from_network.pop(indexProxy)
+                    else:
+                        file_with_proxies = open("proxy.txt", "r") #все прокси удалены и берем новые
+                        proxies_from_network = file_with_proxies.readlines()
+                        for i in range(len(proxies_from_network)):
+                            proxies_from_network[i] = proxies_from_network[i][:-1]
+                        if "" in proxies_from_network:
+                            proxies_from_network.remove("")
+                        file_with_proxies.close()
+                        bad_proxies_from_network = get_new_proxies()
+                        time.sleep(1 * 20)  # ускорить бы процесс!
 
 
 
@@ -212,23 +268,28 @@ def get_countries():
 stTime = time.localtime()
 print(f"{stTime.tm_hour}-{stTime.tm_min}")
 
-#proxies_from_network = get_new_proxies() # получение бесплатных прокси
-#get_good_proxies(main_page,proxies_from_network) #составление файла с хорошими прокси
+proxies_from_network = get_new_proxies() # получение бесплатных прокси
+######get_good_proxies(main_page,proxies_from_network) #составление файла с хорошими прокси
 #countries = get_countries(main_page)
 countries = get_countries()
 counter = 0
+
 for countryIndex in range(1,len(countries)): # не через in чтобы пропустить Алеутские острова
     #letters = get_city_letters(countries[4])
-    letters = get_city_letters(countries[countryIndex])
+    #letters = get_city_letters(countries[countryIndex])
+    letters = get_city_letters("United-Kingdom")
     for letter in letters:
-        #cityHrefs = get_country_city_href(countries[4],letters[1])
-        cityHrefs = get_country_city_href(countries[countryIndex], letter)
+        cityHrefs = get_country_city_href("United-Kingdom",letter)
+      #  cityHrefs = get_country_city_href(countries[countryIndex], letter)
         for cityHref in cityHrefs:
             #city_name = get_full_city_name(cityHrefs[2])
 
             city_name = get_full_city_name(cityHref)
+            city_file = open(letter+"-cities.txt", "a", encoding="UTF-8")
+            city_file.write(city_name+"\n")
             counter+=1
             print(f"{city_name}   ====> {counter}")
+            city_file.close()
 
 
 
