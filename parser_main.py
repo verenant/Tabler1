@@ -14,6 +14,13 @@ import ipaddress
 proxies_from_network = [
 ]
 
+city = {
+    "name" : "",
+    "latin_name": "",
+    "lat": "",
+    "lon": ""
+}
+cities = []
 
 headers = {
     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5845.967 YaBrowser/23.9.1.967 Yowser/2.5 Safari/537.36"}
@@ -35,13 +42,34 @@ class Used_Proxy():
     def incUsage(self):
         self.qtyOfUsage+=1
 
+    def createJson(self):
+        json_dict = {
+            "name":self.name,
+            "isBlocked":self.isBlocked,
+            "isPaused":self.isPaused,
+            "qtyOfUsage":self.qtyOfUsage,
+            "blockedAt":self.blockedAt,
+        }
+
+        return json.dumps(json_dict)
+
+
+    def is_full_blocked(self):
+        if (self.isPaused == True) and (self.isPaused == True):
+            return True
+        else:
+            return False
+
 
 
 def get_new_proxies():
     random_milliseconds = random.randint(1000, 2000)
     time.sleep(random_milliseconds / 1000.0)
     proxies = []
-    res = requests.get("https://free-proxy-list.net/", headers = headers)
+    try:
+        res = requests.get("https://free-proxy-list.net/", headers = headers)
+    except requests.exceptions.ProxyError:
+        print("Выключите прокси сервер в настройках OS")
     table = bs4.BeautifulSoup(res.text, "html.parser")
 
     ips = table.find("tbody").find_all("tr")
@@ -110,13 +138,14 @@ def get_good_proxies():
     return proxies_from_network
 
 
+def pause_program():
+    random_milliseconds = random.randint(100, 1500)
+    time.sleep(random_milliseconds / 1000.0)
 
 def get_soup(url, proxies_from_network):
     ok = True
 
     bad_proxies_from_network_file = open("bad_proxy.txt","r")
-
-    
     #получаем плохие прокси
     bad_proxies_from_network = bad_proxies_from_network_file.readlines()
     for i in range(len(bad_proxies_from_network)):
@@ -124,14 +153,17 @@ def get_soup(url, proxies_from_network):
     bad_proxies_from_network_file.close()
     indexProxy = 0
     while(ok):
-        random_milliseconds = random.randint(100, 1500)
-        time.sleep(random_milliseconds / 1000.0)
+       # random_milliseconds = random.randint(100, 1500)
+       # time.sleep(random_milliseconds / 1000.0)
+        pause_program()
+
         # случайные индексы для выбора IP прокси
         indexBadProxy = random.randint(0, len(bad_proxies_from_network)-1)
 
-        rightEnd = len(proxies_from_network)      #защита от ("empty range for randrange() (%d, %d, %d)" % (istart, istop, width))
+        rightEnd = len(proxies_from_network)      #защита от ("empty range for randrange() (%d, %d, %d)" % (istart, istop, width)) # не используется
         if rightEnd<=0:
             rightEnd=1
+
       #  indexProxy = random.randint(0, rightEnd) # случайные прокси
 
         # indexProxy берем первый незаблокированный и не на паузе
@@ -140,22 +172,20 @@ def get_soup(url, proxies_from_network):
                 indexProxy = i
                 break
 
-
-        #очистка после взятия из файлов
-        res = ""
+        # очистка после взятия из файлов
+        """
         if "" in proxies_from_network:
             proxies_from_network.remove("")
-
-
         if "" in bad_proxies_from_network:
             bad_proxies_from_network.remove("")
+        """
 
         bad_proxies = {
             "https": bad_proxies_from_network[indexBadProxy],
             "http": bad_proxies_from_network[indexBadProxy],
         }
 
-
+        res = ""
         if indexProxy < len(proxies_from_network):
             proxies = {
                 "https": proxies_from_network[indexProxy].name,
@@ -164,10 +194,15 @@ def get_soup(url, proxies_from_network):
 
             #запросы к серверу сначала хорошим IP, потом плохим IP
             try:
-                random_milliseconds = random.randint(100, 1500)
-                time.sleep(random_milliseconds / 1000.0)
+               # random_milliseconds = random.randint(100, 1500)
+               # time.sleep(random_milliseconds / 1000.0)
 
+                pause_program()
                 # запрос хорошим прокси и увеличение количества использованных им раз
+                # проверка прокси на отсутствие паузы
+                if proxies_from_network[indexProxy].isPaused == True:
+                   indexProxy+=1
+
                 res = requests.get(url, headers=headers, proxies = proxies, timeout=6)
                 proxies_from_network[indexProxy].incUsage()
 
@@ -175,30 +210,37 @@ def get_soup(url, proxies_from_network):
                 if proxies_from_network[indexProxy].qtyOfUsage == 9:
                     proxies_from_network[indexProxy].isPaused = True
 
+
             except Exception:
                 print(f"bad Ip from good proxies -- {proxies_from_network[indexProxy].name}")
                 #proxies_from_network.pop(indexProxy)
 
             try:
-                random_milliseconds = random.randint(100, 1500)
-                time.sleep(random_milliseconds / 1000.0)
+                #random_milliseconds = random.randint(100, 1500)
+                #time.sleep(random_milliseconds / 1000.0)
+
+                pause_program()
+
                 requests.get(url, headers=headers, proxies = bad_proxies, timeout=4)
 
             except Exception:
-                print(f"bad Ip from bad IPS -- {bad_proxies_from_network[indexBadProxy]}")
+                pass
+                #print(f"bad Ip from bad IPS -- {bad_proxies_from_network[indexBadProxy]}")
                 ###############proxies_from_network.pop(indexProxy)
 
         else:
-            random_milliseconds = random.randint(100, 1500)
-            time.sleep(random_milliseconds / 1000.0)
+            #random_milliseconds = random.randint(100, 1500)
+            #time.sleep(random_milliseconds / 1000.0)
+            pause_program()
             res = requests.get(url, headers=headers)
             try:
-                random_milliseconds = random.randint(100, 1500)
-                time.sleep(random_milliseconds / 1000.0)
+                #random_milliseconds = random.randint(100, 1500)
+                #time.sleep(random_milliseconds / 1000.0
+                pause_program()
                 requests.get(url, headers=headers, proxies=bad_proxies, timeout=4)
             except Exception:
                 pass
-                print(f"bad Ip from bad IPS --  {bad_proxies_from_network[indexBadProxy]}")
+                #  print(f"bad Ip from bad IPS --  {bad_proxies_from_network[indexBadProxy]}")
 
 
         #если получили ответ от сервера ( он принял прокси)
@@ -216,23 +258,53 @@ def get_soup(url, proxies_from_network):
                     #блокировка прокси и переход на следующий
                     proxies_from_network[indexProxy].isBlocked = True
                     proxies_from_network[indexProxy].blockedAt = proxies_from_network[indexProxy].qtyOfUsage
-                    indexProxy += 1
+
                     print(
                         f"indexProxy = {indexProxy}, len(proxies_from_network) = {len(proxies_from_network)}, proxies_from_network_BLOCKED = {proxies_from_network[indexProxy].name}")
-                    #запись заблокированного прокси в файл
-                    blocked_proxy_file = open("blocked_proxies.txt","a",encoding="UTF-8")
-                    blocked_proxy_json = json.dumps(proxies_from_network[indexProxy])
-                    blocked_proxy_file.write(blocked_proxy_json)
-                    blocked_proxy_file.close()
 
-                    # ========конец новые строчки
-                    if indexProxy == len(proxies_from_network):
-                        #обновляем список прокси и снимаем блокировки и паузы. Нам нужны все
-                        indexProxy = 0
+                    #запись заблокированного прокси в файл
+                    stTime = time.localtime()
+                    block_time = (f"{stTime.tm_hour}-{stTime.tm_min}")
+
+                    blocked_proxy_file = open("blocked_proxies.txt","a",encoding="UTF-8")
+                    blocked_proxy_json = proxies_from_network[indexProxy].createJson()
+                    blocked_proxy_file.write(block_time+"\t")
+                    blocked_proxy_file.write(blocked_proxy_json)
+                    blocked_proxy_file.write("\n")
+                    blocked_proxy_file.close()
+                    indexProxy += 1
+                    # ========конец новые
+
+                    # !!!   PROBLEM  !!!Если все заблокированы то indexProxy остается равным 0!!!!!! Решение внизу, еще не тестировано
+                   # if indexProxy == len(proxies_from_network) :
+                            #обновляем список прокси и снимаем блокировки и паузы. Нам нужны все
+
+                    #снятие паузы
+
+                    allPaused =True
+                    for proxy in proxies_from_network:
+                        if proxy.isPaused == False:
+                            break
+                    if allPaused == True:
                         for proxy in proxies_from_network:
                             proxy.isPaused = False
-                            proxy.isBlocked = False
 
+
+                    #проверка заблокированности всех IP
+                    allBlocked = True
+                    for proxy in proxies_from_network:
+                        if proxy.isBlocked == False:
+                            allBlocked=False
+                    if allBlocked == True:
+                        # Если все заблокированны, то
+                        # очистка блокировок
+                        for i in range(len(proxies_from_network)):
+                            if proxies_from_network[i].isBlocked== True:
+                                indexProxy = 0
+                                proxies_from_network[i].isPaused = False
+                                proxies_from_network[i].isBlocked = False
+                            pass
+                    pass
                    # if len(proxies_from_network)>0: #еще есть хорошие прокси на пробу
 
                        # if indexProxy < len(proxies_from_network): # иначе происходит попытка удаления своего ip
@@ -255,7 +327,7 @@ def get_soup(url, proxies_from_network):
                         file_with_proxies.close()
                         bad_proxies_from_network = get_new_proxies()
                     """
-                    time.sleep(1 * 20)  # ускорить бы процесс!
+                    time.sleep(1 * 10)  # ускорить бы процесс!
 
 
 
@@ -308,17 +380,19 @@ def get_country_city_href(country,letter,good_proxies):
     pass
 
 
+
 def get_full_city_name(href,good_proxies):
 
     soup = get_soup(href,good_proxies)
 
     cityName = soup.find("div", class_= "content crumbs")
     cityName= cityName.find("a", attrs = { "href" : href}).text
+    cityNameForMaps = cityName
     cityName = cityName.replace(" ","-")
     cityName = cityName.replace(",", "")
    # cityName = cityName.replace(">", "-")
 
-    return cityName
+    return cityNameForMaps+">"+cityName
 
 def get_countries():
     f = open("countries.txt","r",encoding="UTF-8")
