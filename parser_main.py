@@ -456,6 +456,9 @@ proxies_from_network = get_new_proxies() # получение бесплатны
 countries = get_countries()
 counter = 0
 
+
+latin_names_list = []
+
 for countryIndex in range(1,len(countries)): # не через in чтобы пропустить Алеутские острова
     #letters = get_city_letters(countries[4])
     #letters = get_city_letters
@@ -469,7 +472,22 @@ for countryIndex in range(1,len(countries)): # не через in чтобы п�
             #city_name = get_full_city_name(cityHrefs[2])
 
             #city_name = get_full_city_name_and_coords(cityHref,good_proxies) # старый вариант рабочий
-            city = City(cityHref,good_proxies)
+            city = City(cityHref,good_proxies) # новый вариант через структуру тоже рабочий
+
+            # собираем количество использований городов
+            flag = False
+            for names in latin_names_list:
+                if names["name"] == city.latinName:
+                    names["used"] += 1
+                    city.latinName = city.latinName+"-"+names["used"]
+                    flag = True
+            if flag == False:
+                latin_names_dict = {
+                    "name": city.latinName,
+                    "used": 0
+                }
+                latin_names_list.append(latin_names_dict)
+
             city_file = open(letter+"-cities.txt", "a", encoding="UTF-8")
             #  city_file.write(city_name+"\n")
             city_file.write(json.dumps(city.get_json())+"\n")
