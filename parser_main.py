@@ -27,6 +27,25 @@ headers = {
 
 main_page= "https://restaurantguru.com/"
 
+class City():
+    def __init__(self, url,good_proxies):
+        city = get_full_city_name_and_coords(url,good_proxies)
+        city["name"] = city["name"][:city["name"].find(",")]
+        self.name = city["name"]
+        self.latinName = city["latin_name"]
+        self.lat = city["lat"]
+        self.lon = city["lon"]
+
+    def get_json(self):
+        json_dict ={
+            "name":self.name,
+            "latinName": self.latinName,
+            "lat": self.lat,
+            "lon": self.lon,
+        }
+        return json_dict
+
+
 class Used_Proxy():
     name = ""
     isBlocked = False
@@ -245,7 +264,7 @@ def get_soup(url, proxies_from_network):
 
         #если получили ответ от сервера ( он принял прокси)
         if res != "" and res.status_code == 200:
-                if bs4.BeautifulSoup(res.text,"html.parser").find("span",class_="pier_img") == None: # если не словили капчу
+                if bs4.BeautifulSoup(res.text,"lxml").find("span",class_="pier_img") == None: # если не словили капчу
                     proxies_from_network[indexProxy].isBlocked = False
                     # ставим прокси на паузу, пока он не заблокировался
                     if proxies_from_network[indexProxy].isPaused == True:
@@ -364,10 +383,11 @@ def get_city_letters(country, good_proxies):
     soup = get_soup(countryUrl,good_proxies)
     lettersHTML = soup.findAll("div", class_ = "cities_block" )
     letters = []
+    city_qty = soup.find("div", class_="restaurants_count")
     for letterHTML in lettersHTML:
         letterHTMLText = letterHTML.text
         letters.append(letterHTMLText.strip()[0])
-    return letters
+    return letters,city_qty
 
 def get_country_city_href(country,letter,good_proxies):
     cityHrefs = []
@@ -380,19 +400,43 @@ def get_country_city_href(country,letter,good_proxies):
     pass
 
 
+def get_coords_from_script(string_with_coords):
+    raw_coords_start_index = string_with_coords.find('"sw')
+    raw_coords = string_with_coords[raw_coords_start_index:]
+    raw_coords = raw_coords.replace('"sw":',"")
+    raw_coords = raw_coords.replace(";", "", 1)
+    raw_coords = raw_coords.strip()
+    raw_coords = raw_coords.replace("}", "", 1)
+    #raw_coords = raw_coords.replace("\n","")
+    #
 
-def get_full_city_name(href,good_proxies):
+    raw_coords = eval(raw_coords)
+    return raw_coords["latitude"],raw_coords["longitude"]
 
+
+def get_full_city_name_and_coords(href,good_proxies):
+    #получение имени города
+    lat=""
+    lon=""
     soup = get_soup(href,good_proxies)
-
+    scripts = soup.findAll("script")
+    for script_texts in scripts:
+        if "lon" in script_texts.text:
+            lat, lon = get_coords_from_script(script_texts.text)
     cityName = soup.find("div", class_= "content crumbs")
     cityName= cityName.find("a", attrs = { "href" : href}).text
     cityNameForMaps = cityName
     cityName = cityName.replace(" ","-")
     cityName = cityName.replace(",", "")
-   # cityName = cityName.replace(">", "-")
-
-    return cityNameForMaps+">"+cityName
+    # cityName = cityName.replace(">", "-")
+    city = {
+        "name":cityNameForMaps,
+        "latin_name":cityName,
+        "lat" : lat,
+        "lon":lon,
+    }
+    return city
+   # return cityNameForMaps+">"+cityName
 
 def get_countries():
     f = open("countries.txt","r",encoding="UTF-8")
@@ -414,19 +458,24 @@ counter = 0
 
 for countryIndex in range(1,len(countries)): # не через in чтобы пропустить Алеутские острова
     #letters = get_city_letters(countries[4])
-    #letters = get_city_letters(countries[countryIndex])
-    letters = get_city_letters("United-Kingdom",good_proxies)
+    #letters = get_city_letters
+    country = "Australia" #countries[countryIndex] # при полном парсинге городов
+    letters, city_qty = get_city_letters(country,good_proxies)
+    city_qty = int(city_qty.text.replace("/ ","").strip())
     for letter in letters:
-        cityHrefs = get_country_city_href("United-Kingdom",letter,good_proxies)
+        cityHrefs = get_country_city_href(country,letter,good_proxies)
       #  cityHrefs = get_country_city_href(countries[countryIndex], letter)
         for cityHref in cityHrefs:
             #city_name = get_full_city_name(cityHrefs[2])
 
-            city_name = get_full_city_name(cityHref,good_proxies)
+            #city_name = get_full_city_name_and_coords(cityHref,good_proxies) # старый вариант рабочий
+            city = City(cityHref,good_proxies)
             city_file = open(letter+"-cities.txt", "a", encoding="UTF-8")
-            city_file.write(city_name+"\n")
+            #  city_file.write(city_name+"\n")
+            city_file.write(json.dumps(city.get_json())+"\n")
             counter+=1
-            print(f"{city_name}   ====> {counter}")
+            # print(f"{city_name}   ====> {counter}")
+            print(f"{json.dumps(city.get_json())}   ====> {counter} , { str(counter/city_qty*100)[:6] }% in {country}")
             city_file.close()
 
 
