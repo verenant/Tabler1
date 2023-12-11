@@ -55,37 +55,36 @@ class Restraunt():
     category = ""
     subcategory = ""
     main_image_url = ""
-    Coordinates = [] # lat , lon
+    latitude = ""
+    longitude = ""
     city = cities[0]
     category_str = ""
     soup = bs4.BeautifulSoup()
 
-    def __init__(self,main_url,additional_url, headers, typeOfConstructor ):
-        if typeOfConstructor == 0: # для парсинга
+    def __init__(self, main_url, additional_url, headers, typeOfConstructor):
+        if typeOfConstructor == 0:  # для парсинга
             self.main_url = main_url
             self.headers = headers
             self.additional_url = additional_url
-            self.soup = get_soup(self.main_url + self.additional_url,headers)
+            self.soup = get_soup(self.main_url + self.additional_url, headers)
             self.name = get_name(self.soup)
             self.description = get_description(self.soup)
-            #self.driver = create_driver(self.main_url + self.additional_url)
+            # self.driver = create_driver(self.main_url + self.additional_url)
             self.phone = get_phone(self.soup, self.main_url + self.additional_url)
             self.address = get_address(self.soup)
-            self.avg_check = get_avg_check(self.soup)
+            # self.avg_check = get_avg_check(self.soup)
             self.timetable = get_timetable(self.soup)
             self.features = get_features(self.soup)
             self.kitchen = get_kitchen(self.soup)
             self.category = get_category(self.soup)
-            self.main_image_url = get_image(self.soup,self.main_url,self.headers,self.additional_url)
+            self.main_image_url = get_image(self.soup, self.main_url, self.headers, self.additional_url)
             self.Coordinates = get_coordinates(self.soup)
             self.album = get_album(self.soup, self.main_url, self.headers, self.additional_url)
             self.menu = get_menu(self.soup, self.additional_url)
-
-        if typeOfConstructor == 1: #для json  #  0 для парсинга
+        if typeOfConstructor == 1:  # для json
             addUrl = additional_url[additional_url.rfind("/") + 1:]
             j = get_json(addUrl)
             self.__dict__ = json.loads(j)
-
 
     def printRest(self):
         print(f"{self.name} , {self.phone} , {self.avg_check}" )

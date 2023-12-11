@@ -1,39 +1,12 @@
-import shutil
 
 import bs4
-from selenium import webdriver
-from selenium_stealth import stealth
-from bs4 import BeautifulSoup
-import time
-import re
 import requests
 import wget
 import json
 import jsons
-from PIL import Image
-import urllib.request
 
 from restraunt import Restraunt
-import glob
 import os
-
-# try:
-#     shutil.rmtree("Album")
-# except:
-#     print("no dir Album")
-# try:
-#     shutil.rmtree("Jsons")
-# except:
-#     print("no dir Jsons")
-# try:
-#     shutil.rmtree("Main_photo")
-# except:
-#     print("no dir Main_photo")
-# try:
-#     shutil.rmtree("Menu")
-# except:
-#     print("no dir Menu")
-
 
 if not os.path.isdir("Jsons"):
     os.mkdir("Jsons")
@@ -82,7 +55,6 @@ while i != 0:
                         f.write(get_data_href+"\n")
                         additional_links.append(get_data_href)
 
-
         """
      #Временная заглушка для проверки работы с ссылками, чтобы не закидывать сервер запросами
      """
@@ -91,16 +63,12 @@ while i != 0:
         additional_links = fileLinks.readlines()
     """
 
-
     # обход всех ресторанов с текущей страницы и создание обьекта Restraunt и его json
     # (с ограничением в несколько файлов link[:-1] для работы с ссылками файлов, которые берутся из файла add_links.txt)
     j=0
     for link in additional_links:
-        #rest = Restraunt(main_url,"/msk/place/fabrika-andy",headers)
-        #rest = Restraunt(main_url,"/msk/place/steak-it-easy-3",headers)
         try:
-            #rest = Restraunt(main_url,link, headers)
-            rest = Restraunt(main_url, "/msk/place/bulgakovskij", headers,0)
+            rest = Restraunt(main_url,link, headers)
         except:
             file = open("temp.txt", "a")
             file.write(link + "\n")

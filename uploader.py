@@ -17,6 +17,8 @@ headers = {
     'Authorization': 'Bearer 0r06VbX4NlbG77N3DQ1gEyNv',
     "Content-Type": "application/json"
 }
+headers = {
+    'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5845.967 YaBrowser/23.9.1.967 Yowser/2.5 Safari/537.36"}
 postUrl = "https://tabler.ru/api/v1/places"
 from tablerObject import TablerObject
 import json
@@ -267,16 +269,6 @@ def prepareSchedule(timetable):
     # 422 '{"status":"SlugAlreadyExist","message":"Слаг занят","data":[]}' # Исправил ошибку во времени работы был пробел перед врменем
     scheduleList = [{"isMain": schedule_dict["isMain"], "items": schedule_dict["items"]}]
 
-   # '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["schedules.items"]}}'
-    #scheduleList = [{"isMain": schedule_dict["isMain"], "items": schedule_dict["items"],"name":""}]
-
-     # 400 '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["schedules.isMain"]}}'
-    #scheduleList = schedule_dict["items"]
-
-    #400 '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["schedules.isMain"]}}'
-    #scheduleList = [[{"isMain": schedule_dict["isMain"], "items": schedule_dict["items"]}]]
-
-    # 400 '{"status":"FieldInvalid","message":"Поле содержит недопустимое значение","data":{"fields":["schedules.isMain"]}}'
 
     return scheduleList
 
@@ -387,14 +379,14 @@ def postRest(rest):
 
 
 def patchRest(rest,patchUrl):
-        avatar_id = postMainImage(rest.latin_name)
+       # avatar_id = postMainImage(rest.latin_name)
 
         data = {
        # "phones": rest.phone,  # телефоны
-        "avatar_id": avatar_id,
-        "background_id": avatar_id,
+    #    "avatar_id": avatar_id,
+    #    "background_id": avatar_id,
         "average_check": prepareCheck(rest.avg_check),  # средний чек
-        "latin_name" : rest.latin_name,   # краткая ссылка
+      #  "latin_name" : rest.latin_name,   # краткая ссылка
         "description": rest.description,  # описание
         "short_description": prepareShortDescription(rest.description),
         "cuisine_ids": prepareKitchen(rest.kitchen),  # кухни_id
@@ -416,15 +408,35 @@ def patchRest(rest,patchUrl):
         "dancefloor": rest.features["dancefloor"],
       #  "parkingType": rest.features["parkingType"],
         "children_room": rest.features["childrenRoom"],
+        #"organistaion_id":
 
         "schedules": prepareSchedule(rest.timetable),  # расписание
         }
 
        #Загрузка текстового json + Avatar_id(ссылка на Main_photo)
-       # patchResponse = requests.patch(patchUrl, json=data, headers=headers)
+
 
         # Альбом
         i = 0
+
+
+        if data["average_check"] == "no_avg_check":
+            del data["averageCheck"]
+        if data["schedules"] == "no_timetable":
+            del data["schedules"]
+        if data["subcategory"] == "" or data["subcategory"] != rest.category_str:
+            del data["subcategory"]
+        if data["description"] == "no_description":
+            del data["description"]
+        if data["description"] == "no_description":
+            del data["short_description"]
+
+
+        patchResponse = requests.patch(patchUrl, json=data, headers=headers)
+
+
+
+
        #  postImage("Album",rest.latin_name,jpg)
         album_arr = os.listdir("Album/" + rest.latin_name)
 
@@ -436,7 +448,11 @@ def patchRest(rest,patchUrl):
           #  data["album_image" + str(i)] = album_image
             i += 1
         album = prepareAlbum(album_ids)
-        data["albums"] = [album]
+        albumList = [album]
+        if len(albumList) == 0:
+            return False
+        data["albums"] = albumList
+
 
         i = 0
         menu_list = []
@@ -455,6 +471,9 @@ def patchRest(rest,patchUrl):
                 i += 1
             if len(menu_arr) > 0:  # организация прохода по всем папкам с МЕНЮ, Если меню пустое, то его пропускаем
                 menu_list.append(prepareMenu(menu_ids,menu_dir))
+
+        if len(menu_list) == 0:
+            return False
         data["menus"] = menu_list
 
 
@@ -588,7 +607,7 @@ kitchens_dict = {}
 
 def isExist(name):
     isExists = requests.get("https://tabler.ru/api/v1/places?response_type=short&query=" + name, headers=headers)
-
+    #return False
     if isExists.status_code == 200:
         restResponsJsons = isExists.json()["data"]["places"]
         for rest in restResponsJsons:
@@ -596,15 +615,121 @@ def isExist(name):
                 with open("postRests.txt", "a") as fP:
                     fP.write(name + " Already exists")
                     fP.write("\n")
-                return False # для отладки ставить False
+                return True # для отладки ставить False # Для загрузки поставить True
     return False
 
-    """
-    if isExists.status_code == 404:
-        menu_check_dir = os.listdir("Menu/" + name)
-        if len(menu_check_dir) == 0:
-            return False
-    """
+def findNetwork2():
+    directory_in_str = "jsons"
+    jsonFiles = []
+    for file in os.listdir(directory_in_str):
+        jsonFiles.append(file[:-5])
+    digits = "0123456789"
+    orNames = []
+    for i in range(len(jsonFiles)):
+        if "-" in jsonFiles[i]:
+            ind = str.rfind(jsonFiles[i], "-")
+            if jsonFiles[i][-1] in digits:
+                orNames.append(jsonFiles[i][:ind])
+                getNetwork = requests.get("https://www.restoclub.ru/spb/chain/"+ jsonFiles[i][:ind],headers=headers)
+                if getNetwork.status_code==200:
+                    x = jsonFiles[i]
+                    filename = open("jsons/" + os.fsdecode(x) + ".json", encoding="utf8").read()
+                    data = json.loads(filename)
+                    data["network"] = data["name"]
+
+                    fileJson = open("Jsons/Networks/" + x + ".json", "w", encoding='UTF-8')
+                    json.dump(data,fileJson,indent=4,ensure_ascii=False)
+                    fileJson.close()
+                    print(f" {x}, {data['network'] }")
+                    with open("postNetwork.txt", "a", encoding='UTF-8') as fP:
+                        fP.write(x + " " + data['network'])
+                        fP.write("\n")
+
+
+    pass
+
+def findNetwork():
+    directory_in_str = "jsons"
+    jsonFiles = []
+    for file in os.listdir(directory_in_str):
+        jsonFiles.append(file[:-5])
+    digits = "0123456789"
+    orNames = []
+    for i in range( len(jsonFiles) ):
+        if "-" in jsonFiles[i]:
+            ind = str.rfind(jsonFiles[i],"-")
+            if jsonFiles[i][-1] in digits:
+                orNames.append(jsonFiles[i][:ind])
+
+    maybeNets = {}
+    for i in range( len(orNames)-1 ):
+        #netsInNets.append([orNames[i]])
+        for j in range(i+1, len(orNames)):
+            if orNames[i]== orNames[j]:
+               maybeNets[ orNames[i]] = []
+
+    # net содержит названия из ресторана
+    for net in maybeNets:
+
+        for i in range(len(jsonFiles)):
+           # if net in jsonFiles[i]:
+           if str.find(jsonFiles[i],net) != -1 and jsonFiles[i][-1] in digits:
+               if str.rfind(jsonFiles[i],"-") and  str.find(net,jsonFiles[i][:str.rfind(jsonFiles[i],"-")]) != -1:
+                    maybeNets[net].append(jsonFiles[i])
+
+    # получить имена из заведений, но и здесь проблемы потому что имена в основном разные из-за языка/ добавок типа адреса. Проще вручную
+    for net in maybeNets:
+        print("----------------")
+        for name in maybeNets[net]:
+            filename = open("jsons/" + os.fsdecode(name) + ".json", encoding="utf8").read()
+            data = json.loads(filename)
+            print(f"{name}, {data['name']}, {data['category']}")
+        pass
+
+
+
+
+    print(maybeNets)
+
+    pass
+
+def createNet():
+    headers = {
+        'Authorization': 'Bearer 0r06VbX4NlbG77N3DQ1gEyNv',
+        "Content-Type": "application/json"
+    }
+    url = "https://tabler.ru/api/v2/organisations"
+    net = {
+        "name": "testRestNetwork",
+        "cityId": "moscow",
+        "category": "сеть ресторанов"
+    }
+    createNetworkResponse = requests.post(url=url, json=net, headers=headers)
+    organisation_id_StartIndex = str.find(createNetworkResponse.text,'id":')
+    organisation_id_EndIndex = str.find(createNetworkResponse.text, "}")
+    organisation_id = createNetworkResponse.text[organisation_id_StartIndex+5:organisation_id_EndIndex-1]
+    print(createNetworkResponse.text)
+    pass
+
+createNet()
+
+
+#findNetwork2()
+
+
+def postNetwork():
+    # Post СЕТИ (отдельная функция) # def postNetwork
+    if isinstance(findNetwork, list):
+        #собрать имя ресторна для отправки в пост
+        # получить категорию ресторана для отправки в пост
+        # получить город ресторана для отправки в пост
+        # отправить запрос на создание сети
+        pass
+    #if networkCreation == OK:
+        # post restraunt
+        # PostRest ---- но с сетью #запуск с первого второго (......-1.json)
+
+
 
 # pass
 def upload(nameRestraunt):
