@@ -17,7 +17,10 @@ def prepare_city_href(href):
     new_href = href.replace(city_end, "restaurant-"+city_end+"-t1")
     return new_href
 
-
+def prepare_features(features):
+    s = features.strip('[]').split(',')
+    s = [element.strip('\'') for element in s]
+    return s
 
 proxies_from_network = [
 ]
@@ -46,6 +49,8 @@ latin_names_list = []
 
 #заполнение ресторана, потом переместить в пункт РАБОТА НАД ПАРСИНГОМ РЕСТОРАНОВ
 rest_guru_json_object = json.loads(parsing.get_json_restraunt("https://restaurantguru.com/La-Farma-Prague",good_proxies))
+rest_guru_json_object["features"] = prepare_features(rest_guru_json_object["features"])
+
 restraunt_object = restraunt_guru.Restraunt_from_guru(rest_guru_json_object,0)
 
 
