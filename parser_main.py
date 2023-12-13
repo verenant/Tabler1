@@ -2,6 +2,7 @@ import ipaddress
 import json
 import os
 import random
+import shutil
 import time
 
 import bs4
@@ -46,34 +47,49 @@ countries = parsing.get_countries()
 counter = 0
 
 latin_names_list = []
-
+"""
 #заполнение ресторана, потом переместить в пункт РАБОТА НАД ПАРСИНГОМ РЕСТОРАНОВ
-rest_guru_json_object = json.loads(parsing.get_json_restraunt("https://restaurantguru.com/La-Farma-Prague",good_proxies))
+rest_guru_json_object = json.loads(parsing.get_json_restraunt("https://restaurantguru.com/Osteria-La-Baracca-Frydek-Mistek",good_proxies))
 rest_guru_json_object["features"] = prepare_features(rest_guru_json_object["features"])
 
 restraunt_object = restraunt_guru.Restraunt_from_guru(rest_guru_json_object,0)
-
+menu_status = parsing.get_menu(restraunt_object.menu_href,restraunt_object.additional_url,good_proxies)
+# если меню нет-> прерываем этот ресторан
+pass
+"""
 
 
 for countryIndex in range(1,2): # не через in чтобы пропустить Алеутские острова # поменять на len(countries) при запуске на все страны
     #letters = get_city_letters(countries[4])
     #letters = get_city_letters
-    country = "Czech-Republic" #countries[countryIndex] # при полном парсинге городов
-    if os.path.isdir(country) == False:
-        os.mkdir(country)
+    country = "Czech-Republic"  #countries[countryIndex] # при полном парсинге городов
+    country_path= country
+    if os.path.exists(country_path):
+        shutil.rmtree(country_path)
+    os.mkdir(country_path)
+
     letters, city_qty = parsing.get_city_letters(country,good_proxies)
     city_qty = int(city_qty.text.replace("/ ","").strip())
     for letter in letters:
         #cityHrefs = get_country_city_href(country, "B", good_proxies)  # вариант для  парсинга буквы
         cityHrefs = parsing.get_country_city_href(country,letter,good_proxies) #вариант для  парсинга страны
         #cityHrefs = get_country_city_href(countries[countryIndex], letter) #вариант для полного парсинга
+        letter_path = country_path+"/"+letter+"_cities"
+        if os.path.exists(letter_path):
+            shutil.rmtree(letter_path)
+        os.mkdir(letter_path)
         for cityHref in cityHrefs:
             #city_name = get_full_city_name(cityHrefs[2])
             #city_name = get_full_city_name_and_coords(cityHref,good_proxies) # старый вариант рабочий
 
             #============Работа над ресторанами в текущем городе ============
-
             city_guru = city.City(cityHref,country,good_proxies) # новый вариант через структуру тоже рабочий
+            city_path = letter_path+"/"+city_guru.latinName
+            #добавление папки города
+            if os.path.exists(city_path):
+                shutil.rmtree(city_path)
+            os.mkdir(city_path)
+
             city_guru_href = prepare_city_href(city_guru.href) # получаем ссылку на город и меняем ее для доступа ко всем ресторанам
             tags_with_data_pagenumber = parsing.get_soup(city_guru_href,good_proxies).find_all(attrs={"data-pagenumber": True}) # получаем ссылки для автоскролла
             pages_for_city = []
@@ -93,11 +109,27 @@ for countryIndex in range(1,2): # не через in чтобы пропусти
             #работа над сссылками ресторанов в городе(парсинг ресторана)
             # пункт РАБОТА НАД ПАРСИНГОМ РЕСТОРАНОВ
             for rest_href in restraunts_href_from_city:
-                rest_guru_object = json.loads(parsing.get_json_restraunt(rest_href,good_proxies))
-                pass
+                rest_guru_json_object = json.loads(parsing.get_json_restraunt(rest_href,good_proxies))
 
+               # rest_guru_json_object = json.loads( parsing.get_json_restraunt("https://restaurantguru.com/Osteria-La-Baracca-Frydek-Mistek", good_proxies)) # пример для разработки
+                rest_guru_json_object["features"] = prepare_features(rest_guru_json_object["features"])
+                restraunt_object = restraunt_guru.Restraunt_from_guru(rest_guru_json_object, 0)
+                rest_path = city_path + "/" + restraunt_object.name # name сделать проверку на повторы name
 
+                # добавление папки ресторана
+                if os.path.exists(rest_path):
+                    shutil.rmtree(rest_path)
+                os.mkdir(rest_path)
+                menu_status = parsing.get_menu(restraunt_object.menu_href, rest_path, good_proxies)
+                # если меню нет-> прерываем этот ресторан # удаление папки с рестораном происходит сразу внутри функции скачивания меню
+                if menu_status=="no_menu":
+                    break
 
+                # добавить обработку feauteres, opening_hours, cuisines
+
+                #тут будет блок с инстаграммом
+
+                #создание папки с рестораном
 
 
 
@@ -115,7 +147,9 @@ for countryIndex in range(1,2): # не через in чтобы пропусти
                 }
                 latin_names_list.append(latin_names_dict)
 
-            city_file = open(country+"/"+ letter+"-cities.txt", "a", encoding="UTF-8")
+
+            city_file = open("1_"+city_path+".txt", "a", encoding="UTF-8") # 1_ для того чтобы писать города в отдельные страны
+            #city_file = open(country+"/"+ letter+"-cities.txt", "a", encoding="UTF-8") ###### рабочий вариант, обновили версией где все сразу записывается
 
           #  city_file = open(letter + "-cities.txt", "a", encoding="UTF-8")
             #  city_file.write(city_name+"\n")

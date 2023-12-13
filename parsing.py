@@ -4,7 +4,8 @@ import json
 import bs4
 import requests
 import random
-
+import re
+import shutil
 
 headers = {
     'User-Agent': "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.5845.967 YaBrowser/23.9.1.967 Yowser/2.5 Safari/537.36"
@@ -317,19 +318,111 @@ def get_countries():
 
 def get_json_restraunt(href,good_proxies):
     soup = get_soup(href,good_proxies)
-    guru_restraunt_json = soup.find("script", type = "application/ld+json").text
+
+    if soup.find("script", type = "application/ld+json"):
+        guru_restraunt_json = soup.find("script", type = "application/ld+json").text
+    else:
+        print(href)
+        exit(111)
     # добавлять в строку данные после "{"
-    print(guru_restraunt_json)
+    # print(guru_restraunt_json)
     guru_restraunt_json = guru_restraunt_json.replace("@type","type")
-    url_instagramm_for_dict = '  "instagramm":"'+ soup.find("a", class_= "insta_btn").text + '",'
+    try:
+        url_instagramm_for_dict = '  "instagramm":"'+ soup.find("a", class_= "insta_btn").text + '",'
+    except AttributeError:
+        url_instagramm_for_dict = '  "instagramm":"''",'
     href_for_dict = '  "href":  "' + href + '",\n'
     add_href_for_dict = '  "add_href":  "' +  href[href.rfind("/")+1:] + '",\n'
-    guru_restraunt_json=guru_restraunt_json.replace("{","{\n"+href_for_dict+add_href_for_dict+url_instagramm_for_dict,1)
+
+    features_str = ""
+
+    if soup.find("div", class_="features_block"):
+        features = soup.find("div", class_="features_block").findAll("span")
+        features_str = '"features":'+'"['
+        features_list = []
+
+        for feature in features:
+            feature = feature.text
+            features_list.append(feature)
+            features_str= features_str+"'"+feature+"',"
+        features_str = features_str[:-1]+']",\n'
+    else:
+        print(href)
+        exit(111)
+
+    try:
+        avg_price = soup.find("div", class_="short_info with_avg_price").text
+        avg_price = ' "avg_check":" ' + str(prepare_avg_check(avg_price)) + '",\n'
+    except AttributeError:
+        avg_price = ' "avg_check":"no_info",\n'
+
+    sub_category = soup.find("div", class_="r_prime").find("span").text
+    sub_category = ' "sub_category":" ' +sub_category+ '",\n'
+
+    guru_restraunt_json=guru_restraunt_json.replace("{","{\n"+href_for_dict+add_href_for_dict+avg_price+features_str+sub_category+url_instagramm_for_dict,1)
     print(guru_restraunt_json)
     return guru_restraunt_json
+
+
+def prepare_avg_check(check):
+    check = check.replace(",", "")
+
+    # price_range = "price range per person czk 230 - czk 570"
+
+    # Использование регулярного выражения для поиска всех чисел в строке
+    numbers = re.findall(r'\b\d+\b', check)
+
+    # Преобразование найденных числовых строк в целые числа
+    numbers = [int(number) for number in numbers]
+    print(numbers)  # Выведет: [230, 570]
+    if len(numbers) == 1:
+        return numbers[0]
+    else:
+        return (numbers[0]+numbers[1])//2
+
+def download_img(href,dir_path,good_proxies,i):
+    for proxy in good_proxies:
+        if (proxy.isPaused== False) and (proxy.isBlocked==False):
+
+            good_proxy = {
+                "https": proxy.name,
+                "http": proxy.name,
+            }
+            break
+
+
+    image_jpeg = requests.get(href, headers=headers,proxies=good_proxy, timeout=6)
+    if image_jpeg.status_code == 200:
+        with open(dir_path + "/" + str(i) + ".jpg", 'wb') as f:
+            f.write(image_jpeg.content)
+        pass
+
+
+def get_menu(href_menu,dir_path,good_proxies):
+    #удаление старой папки, если есть.
+    menu_path = dir_path+"/menu"
+    if os.path.exists(menu_path):
+        shutil.rmtree(menu_path)
+    #делаем новую папку
+    os.mkdir(menu_path)
+
+    list_img = get_soup(href_menu,good_proxies).find("div",class_="left_column").findAll("img")
+    if isinstance(list_img,list) and len(list_img)>0:
+        i = 0
+        for img in list_img:
+            href_img = img.get("data-src")
+            if isinstance(href_img,str):
+                download_img(href_img,dir_path,good_proxies,i)
+                i+=1
+    else:
+        shutil.rmtree(dir_path)
+        return "no_menu"
+    return True
 
 
 def get_restraunt_hrefs_from_city_page(city_href):
     soup = get_soup(city_href,proxies_from_network)
 
     pass
+
+

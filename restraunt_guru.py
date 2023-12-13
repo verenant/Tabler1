@@ -26,6 +26,8 @@ class Restraunt_from_guru():
 
     def __init__(self, object, typeOfConstructor):
         if typeOfConstructor == 0:  # для парсинга
+            address = object["address"]['streetAddress'].split(" ")
+
             first_point = object["review"]["description"].find(".")
             self.short_description = object["review"]["description"][:first_point]
             self.main_url = object["href"]
@@ -36,8 +38,12 @@ class Restraunt_from_guru():
             self.description = object["review"]["description"]
             self.menu_href = object["menu"]
             self.phone = object["telephone"]
-            self.address = object["address"]["addressLocality"] + ">" + object["address"]['streetAddress']
+            #self.address = object["address"]["addressLocality"] + ">" + object["address"]['streetAddress']
+            self.street = address[0]
+            self.place = address[1]
             # self.avg_check = get_avg_check(self.soup)
+            if not("openingHours" in object):
+                object["openingHours"] = "no_info"
             self.timetable = object["openingHours"]
             # self.features = get_features(self.soup)
             self.kitchen = object["servesCuisine"]
