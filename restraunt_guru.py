@@ -23,6 +23,8 @@ class Restraunt_from_guru:
     guru_url = ""
     inst_url = ""
     sub_category = ""
+    network =""
+    qty_in_city = ""
 
     def __init__(self, object, typeOfConstructor):
         if typeOfConstructor == 0:  # для парсинга

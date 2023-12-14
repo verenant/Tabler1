@@ -126,6 +126,7 @@ for countryIndex in range(1, 2): # не через in чтобы пропуст�
 
             #работа над сссылками ресторанов в городе(парсинг ресторана)
             # пункт РАБОТА НАД ПАРСИНГОМ РЕСТОРАНОВ
+            rest_names_list = []
             for rest_href in restraunts_href_from_city:
                 json_object = parsing.get_json_restraunt(rest_href, good_proxies)
                 if json_object != "no_json":
@@ -145,18 +146,42 @@ for countryIndex in range(1, 2): # не через in чтобы пропуст�
                 # если меню нет-> прерываем этот ресторан # удаление папки с рестораном происходит сразу внутри функции скачивания меню
                 if menu_status=="no_menu":
                     continue
+                """
+                    # добавить обработку feauteres, opening_hours, cuisines
+                """
 
-                # добавить обработку feauteres, opening_hours, cuisines
-
-                #тут будет блок с инстаграммом
+                """
+                    #--------------------------------------   
+                # тут будет блок с инстаграммом
+                    #--------------------------------------
+                """
 
                 # заполнение папки с рестораном ----->>>  создание файла с рестораном
+                # реализация проверки повторов
+                # собираем количество использований городов
+                flag = False
+                for names in rest_names_list:
+                    if names["name"] == restraunt_object.latinName:
+                        names["used"] += 1
+                        restraunt_object.latinName = restraunt_object.latinName + ">" + str(names["used"])
+                        flag = True
+                if flag == False:
+                    latin_names_dict = {
+                        "name": restraunt_object.latinName,
+                        "used": 0
+                    }
+                    rest_names_list.append(latin_names_dict)
+
                 tabler_to_guru_json = restraunt_object.get_json()
                 print(tabler_to_guru_json)
                 rest_file = open(rest_path+ "/json.txt", "w",
                                  encoding="UTF-8")  # 1_ для того чтобы писать города в отдельные страны
                 rest_file.write(json.dumps(tabler_to_guru_json, ensure_ascii=False, indent = 4))
                 rest_file.close()
+
+
+
+
 
             # собираем количество использований городов
             flag = False
