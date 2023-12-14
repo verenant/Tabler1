@@ -322,8 +322,8 @@ def get_json_restraunt(href,good_proxies):
     if soup.find("script", type = "application/ld+json"):
         guru_restraunt_json = soup.find("script", type = "application/ld+json").text
     else:
-        print(href)
-        exit(111)
+        print(f"{href} -> no json -> bad restraunt")
+        return "no_json"
     # добавлять в строку данные после "{"
     # print(guru_restraunt_json)
     guru_restraunt_json = guru_restraunt_json.replace("@type","type")
@@ -347,8 +347,7 @@ def get_json_restraunt(href,good_proxies):
             features_str= features_str+"'"+feature+"',"
         features_str = features_str[:-1]+']",\n'
     else:
-        print(href)
-        exit(111)
+        features_str = '"features":"no_info",\n'
 
     try:
         avg_price = soup.find("div", class_="short_info with_avg_price").text
@@ -360,7 +359,7 @@ def get_json_restraunt(href,good_proxies):
     sub_category = ' "sub_category":" ' +sub_category+ '",\n'
 
     guru_restraunt_json=guru_restraunt_json.replace("{","{\n"+href_for_dict+add_href_for_dict+avg_price+features_str+sub_category+url_instagramm_for_dict,1)
-    print(guru_restraunt_json)
+    #print(guru_restraunt_json)
     return guru_restraunt_json
 
 
@@ -374,7 +373,7 @@ def prepare_avg_check(check):
 
     # Преобразование найденных числовых строк в целые числа
     numbers = [int(number) for number in numbers]
-    print(numbers)  # Выведет: [230, 570]
+    #print(numbers)  # Выведет: [230, 570]
     if len(numbers) == 1:
         return numbers[0]
     else:
@@ -393,7 +392,7 @@ def download_img(href,dir_path,good_proxies,i):
 
     image_jpeg = requests.get(href, headers=headers,proxies=good_proxy, timeout=6)
     if image_jpeg.status_code == 200:
-        with open(dir_path + "/" + str(i) + ".jpg", 'wb') as f:
+        with open(dir_path + "/menu/" + str(i) + ".jpg", 'wb') as f:
             f.write(image_jpeg.content)
         pass
 
@@ -406,7 +405,13 @@ def get_menu(href_menu,dir_path,good_proxies):
     #делаем новую папку
     os.mkdir(menu_path)
 
-    list_img = get_soup(href_menu,good_proxies).find("div",class_="left_column").findAll("img")
+    list_img = get_soup(href_menu,good_proxies).find("div",class_="left_column").findAll("img", recursive = False)
+    # list_tag_with_imgs = get_soup(href_menu, good_proxies).find("div", class_="left_column").findChildren()
+    # list_img = []
+    # for li in list_tag_with_imgs:
+    #     if li.tag == "img":
+    #         list_img.append(li)
+
     if isinstance(list_img,list) and len(list_img)>0:
         i = 0
         for img in list_img:
