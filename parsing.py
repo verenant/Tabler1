@@ -322,7 +322,7 @@ def get_json_restraunt(href,good_proxies):
     if soup.find("script", type = "application/ld+json"):
         guru_restraunt_json = soup.find("script", type = "application/ld+json").text
     else:
-        print(f"{href} -> no json -> bad restraunt")
+        #print(f"{href} -> no json -> bad restraunt")
         return "no_json"
     # добавлять в строку данные после "{"
     # print(guru_restraunt_json)
@@ -380,21 +380,34 @@ def prepare_avg_check(check):
         return (numbers[0]+numbers[1])//2
 
 def download_img(href,dir_path,good_proxies,i):
-    for proxy in good_proxies:
-        if (proxy.isPaused== False) and (proxy.isBlocked==False):
+    ok = True
+    while ok:
+        index_proxy = 0
+        for proxy in good_proxies:
+            if (proxy.isPaused == False) and (proxy.isBlocked == False):
+                good_proxy = {
+                    "https": proxy.name,
+                    "http": proxy.name,
+                }
+                index_proxy += 1
+                break
+        image_jpeg = ""
+        try:
+            image_jpeg = requests.get(href, headers=headers, proxies=good_proxy, timeout=3)
+        except requests.exceptions.ReadTimeout:
+            print(f"  proxies_during_downloading_menu ->> BLOCKED = {proxy.name}")
+            if good_proxies[i].name == proxy.name:
+                good_proxies[i].isBlocked = True
 
-            good_proxy = {
-                "https": proxy.name,
-                "http": proxy.name,
-            }
-            break
+        if image_jpeg != "" and image_jpeg.status_code == 200:
+            with open(dir_path + "/menu/" + str(i) + ".jpg", 'wb') as f:
+                f.write(image_jpeg.content)
+                ok = False
+            pass
+        else:
+            #ошибка при скачивании, делаем перезапуск пока не получим изображение после паузы
+            time.sleep(1)
 
-
-    image_jpeg = requests.get(href, headers=headers,proxies=good_proxy, timeout=6)
-    if image_jpeg.status_code == 200:
-        with open(dir_path + "/menu/" + str(i) + ".jpg", 'wb') as f:
-            f.write(image_jpeg.content)
-        pass
 
 
 def get_menu(href_menu,dir_path,good_proxies):

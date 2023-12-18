@@ -7,6 +7,8 @@ import time
 
 import bs4
 import requests
+
+import insta_parsing
 import parsing
 import city
 import restraunt_guru
@@ -60,7 +62,7 @@ menu_status = parsing.get_menu(restraunt_object.menu_href,restraunt_object.addit
 pass
 """
 
-
+counter_restraunt = 0
 for countryIndex in range(1, 2): # не через in чтобы пропустить Алеутские острова # поменять на len(countries) при запуске на все страны
     #letters = get_city_letters(countries[4])
     #letters = get_city_letters
@@ -76,7 +78,11 @@ for countryIndex in range(1, 2): # не через in чтобы пропуст�
 
     letters, city_qty = parsing.get_city_letters(country, good_proxies)
     city_qty = int(city_qty.text.replace("/ ", "").strip())
+    count_downloads = 0
     for letter in letters:
+
+
+
         #cityHrefs = get_country_city_href(country, "B", good_proxies)  # вариант для  парсинга буквы
         cityHrefs = parsing.get_country_city_href(country, letter, good_proxies) #вариант для  парсинга страны
         #cityHrefs = get_country_city_href(countries[countryIndex], letter) #вариант для полного парсинга
@@ -89,11 +95,18 @@ for countryIndex in range(1, 2): # не через in чтобы пропуст�
             shutil.rmtree("1_" + letter_path)
         os.mkdir("1_" + letter_path)
 
-
+        city_index = 0
         for cityHref in cityHrefs:
             #city_name = get_full_city_name(cityHrefs[2])
             #city_name = get_full_city_name_and_coords(cityHref,good_proxies)  # старый вариант рабочий
 
+            # пропуск загруженных кроме последнего города
+            # получить количество папок
+            # !!!! убрать удаление папки!!!!
+            l_dir = len(os.listdir(letter_path))
+            if city_index < l_dir-1:
+                city_index+=1
+                continue
             #============Работа над ресторанами в текущем городе ============
             city_guru = city.City(cityHref, country, good_proxies)  # новый вариант через структуру тоже рабочий
             city_path = letter_path+"/"+city_guru.latinName
@@ -136,8 +149,8 @@ for countryIndex in range(1, 2): # не через in чтобы пропуст�
                # rest_guru_json_object = json.loads( parsing.get_json_restraunt("https://restaurantguru.com/Osteria-La-Baracca-Frydek-Mistek", good_proxies)) # пример для разработки
                 rest_guru_json_object["features"] = prepare_features(rest_guru_json_object["features"])
                 restraunt_object = restraunt_guru.Restraunt_from_guru(rest_guru_json_object, 0)
-                rest_path = city_path + "/" + restraunt_object.name # name сделать проверку на повторы name
-
+                #rest_path = city_path + "/" + restraunt_object.name # name сделать проверку на повторы name
+                rest_path = city_path + "/" + restraunt_object.latin_name # name сделать проверку на повторы name
                 # добавление папки ресторана
                 if os.path.exists(rest_path):
                     shutil.rmtree(rest_path)
@@ -161,21 +174,27 @@ for countryIndex in range(1, 2): # не через in чтобы пропуст�
                 # собираем количество использований городов
                 flag = False
                 for names in rest_names_list:
-                    if names["name"] == restraunt_object.latinName:
+                    if names["name"] == restraunt_object.latin_name:
                         names["used"] += 1
-                        restraunt_object.latinName = restraunt_object.latinName + ">" + str(names["used"])
+                        restraunt_object.latin_name = restraunt_object.latin_name + ">" + str(names["used"])
+                        restraunt_object.network = restraunt_object.latin_name
                         flag = True
                 if flag == False:
                     latin_names_dict = {
-                        "name": restraunt_object.latinName,
+                        "name": restraunt_object.latin_name,
                         "used": 0
                     }
                     rest_names_list.append(latin_names_dict)
 
+
+                if restraunt_object.inst_url != "":
+                    insta_parsing.get_album(restraunt_object.inst_url,rest_path)
+                    restraunt_object.last_publication = insta_parsing.get_last_publication(restraunt_object.inst_url)
+
                 tabler_to_guru_json = restraunt_object.get_json()
                 print(tabler_to_guru_json)
-                rest_file = open(rest_path+ "/json.txt", "w",
-                                 encoding="UTF-8")  # 1_ для того чтобы писать города в отдельные страны
+
+                rest_file = open(rest_path+ "/json.txt", "w", encoding="UTF-8")  # 1_ для того чтобы писать города в отдельные страны
                 rest_file.write(json.dumps(tabler_to_guru_json, ensure_ascii=False, indent = 4))
                 rest_file.close()
 
@@ -208,6 +227,9 @@ for countryIndex in range(1, 2): # не через in чтобы пропуст�
             # print(f"{city_name}   ====> {counter}")
             print(f"{json.dumps(city_guru.get_json(), ensure_ascii=False )}   ====> {counter} , { str(counter/city_qty*100)[:6] }% in {country}")
             city_file.close()
+            counter_restraunt += 1
+            if counter_restraunt == 100:
+                break
 
 
 pass

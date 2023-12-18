@@ -25,6 +25,7 @@ class Restraunt_from_guru:
     sub_category = ""
     network =""
     qty_in_city = ""
+    last_publication = ""
 
     def __init__(self, object, typeOfConstructor):
         if typeOfConstructor == 0:  # для парсинга
@@ -33,7 +34,7 @@ class Restraunt_from_guru:
 
             print(f"Working_on {object['href']}")
 
-            self.additional_url = object["add_href"]
+            self.latin_name = object["add_href"]
             self.name = object["name"]
             self.check = object["avg_check"]
             self.features = object["features"]
@@ -84,8 +85,9 @@ class Restraunt_from_guru:
 
 
     def get_json(self):
+
         json_dict = {
-            "latinName" : self.additional_url,
+            "latinName" : self.latin_name,
             "name" : self.name,
             "check" : self.check,
             "features" : self.features,
@@ -94,16 +96,22 @@ class Restraunt_from_guru:
             "phone" : self.phone,
             "timetable" : self.timetable,
             "kitchen" : self.kitchen,
-            "category" : self.category,
+            "category" : self.sub_category,
             "place_url" : self.place_url,
             # self.main_image_url = get_image(self.soup,self.main_url,self.headers,self.additional_url)
             "lat" : self.lat,
             "lon" : self.lon,
             "inst_url" : self.inst_url,
+            "last_publication": self.last_publication,
             "sub_category" : self.sub_category,
             "street" : self.street,
         }
 
+
+        if self.network != "":
+            json_dict["network"] = self.network
         if self.place != "no_info":
             json_dict["place"] = self.place
         return json_dict
+
+

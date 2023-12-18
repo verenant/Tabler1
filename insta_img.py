@@ -1,5 +1,6 @@
 import requests
 import json
+import os
 f = open("insta_href.txt","r")
 dir_path = "instagramm"
 hrefs = f.readlines()
@@ -23,9 +24,15 @@ headers = {
     'User-Agent': "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Mobile Safari/537.36"
 }
 i = 0
+
+
+
+ip = requests.get('https://api.ipify.org',proxies = proxies_CANADA_v4).content.decode('utf8')
+print('My public IP address is: {}'.format(ip))
+
 for href_image in hrefs:
     print(href_image)
-    image_jpeg = requests.get(href_image, headers=headers, proxies=proxies_CANADA_v4, cookies = cookies, timeout = 20)
+    image_jpeg = requests.get(href_image, proxies=proxies_CANADA_v4)
     # response = requests.get(url)
 
     if image_jpeg.status_code == 200:
