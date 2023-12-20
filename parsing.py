@@ -391,19 +391,29 @@ def download_img(href,dir_path,good_proxies,i):
     count_tries = 0
     while ok:
         index_proxy = 0
-        for proxy in good_proxies:
-            if (proxy.isPaused == False) and (proxy.isBlocked == False):
-                good_proxy = {
-                    "https": proxy.name,
-                    "http": proxy.name,
-                }
+        good_proxy = -1
+        while good_proxy==-1:
+            for proxy in good_proxies:
+                if (proxy.isPaused == False) and (proxy.isBlocked == False):
+                    good_proxy = {
+                        "https": proxy.name,
+                        "http": proxy.name,
+                    }
 
-                break
-            index_proxy += 1
-        image_jpeg = ""
+                    break
+
+                index_proxy += 1
+            image_jpeg = ""
+            if (good_proxy==-1): # Если все прокси заблокированы, то их надо разблокировать
+                for i in range(0,len(good_proxies)):
+                    good_proxies[i].isPaused = False
+                    good_proxies[i].isBlocked = False
+
         try:
             image_jpeg = requests.get(href, headers=headers, proxies=good_proxy, timeout=3)
         except requests.exceptions.ReadTimeout:
+            #get_good_proxies()
+            #image_jpeg = requests.get(href, headers=headers, proxies=good_proxy, timeout=3)
             print(f"  proxies_during_downloading_menu ->> BLOCKED = {proxy.name}")
             if good_proxies[index_proxy].name == proxy.name:
                 good_proxies[index_proxy].isBlocked = True
@@ -438,8 +448,15 @@ def get_menu(href_menu,dir_path,good_proxies):
         shutil.rmtree(menu_path)
     #делаем новую папку
     os.mkdir(menu_path)
-
-    list_img = get_soup(href_menu,good_proxies).find("div",class_="left_column").findAll("img", recursive = False)
+    try:
+        if get_soup(href_menu,good_proxies).find("div",class_="left_column"):
+            list_img = get_soup(href_menu,good_proxies).find("div",class_="left_column").findAll("img", recursive = False)
+        else:
+            list_img = get_soup(href_menu, good_proxies).find("div", class_="content clear").findAll("img", recursive=False)
+    except AttributeError:
+        shutil.rmtree(dir_path)
+        print("too bad")
+        return "no_menu"
     # list_tag_with_imgs = get_soup(href_menu, good_proxies).find("div", class_="left_column").findChildren()
     # list_img = []
     # for li in list_tag_with_imgs:
@@ -461,7 +478,8 @@ def get_menu(href_menu,dir_path,good_proxies):
 
 
 #good_proxies = get_good_proxies()
-#get_menu("https://restaurantguru.com/Labelle-Nightclub-As/menu", "", good_proxies)
+#t = get_menu("https://restaurantguru.com/Bastanka-Frydek-Mistek/menu","Jsons" ,good_proxies)
+pass
 
 def get_restraunt_hrefs_from_city_page(city_href):
     soup = get_soup(city_href,proxies_from_network)

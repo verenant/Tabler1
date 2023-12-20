@@ -1,3 +1,4 @@
+import time
 
 class Restraunt_from_guru:
     name = ""
@@ -32,7 +33,8 @@ class Restraunt_from_guru:
             address = object["address"]['streetAddress'].split(" ")
             self.main_url = object["href"]
 
-            print(f"Working_on {object['href']}")
+            stTime = time.localtime()
+            print(f"time: {stTime.tm_hour}-{stTime.tm_min} Working_on {object['href']}")
 
             self.latin_name = object["add_href"]
             self.name = object["name"]

@@ -61,6 +61,8 @@ menu_status = parsing.get_menu(restraunt_object.menu_href,restraunt_object.addit
 # если меню нет-> прерываем этот ресторан
 pass
 """
+f = open("log.txt","w") # очистка старого лога
+f.close()
 
 counter_restraunt = 0
 for countryIndex in range(1, 2): # не через in чтобы пропустить Алеутские острова # поменять на len(countries) при запуске на все страны
