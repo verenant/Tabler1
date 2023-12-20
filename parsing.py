@@ -138,7 +138,7 @@ def get_soup(url, proxies_from_network):
                 res = requests.get(url, headers=headers, proxies = proxies, timeout=6)
                 proxies_from_network[indexProxy].incUsage()
                 #если было запросов много это ставим его на паузу
-                if proxies_from_network[indexProxy].qtyOfUsage == 9:
+                if proxies_from_network[indexProxy].qtyOfUsage == 5:
                     proxies_from_network[indexProxy].isPaused = True
 
             except Exception:
@@ -221,7 +221,7 @@ def get_soup(url, proxies_from_network):
                                 proxies_from_network[i].isBlocked = False
                             pass
                     pass
-                    time.sleep(1 * 7)  # ускорить бы процесс!
+                    time.sleep(0.7 * 2.1)  # ускорить бы процесс!
 
 
 
@@ -354,13 +354,20 @@ def get_json_restraunt(href,good_proxies):
         avg_price = ' "avg_check":" ' + str(prepare_avg_check(avg_price)) + '",\n'
     except AttributeError:
         avg_price = ' "avg_check":"no_info",\n'
-
-    sub_category = soup.find("div", class_="r_prime").find("span").text
-    sub_category = ' "sub_category":" ' +sub_category+ '",\n'
-
-    guru_restraunt_json=guru_restraunt_json.replace("{","{\n"+href_for_dict+add_href_for_dict+avg_price+features_str+sub_category+url_instagramm_for_dict,1)
-    #print(guru_restraunt_json)
-    return guru_restraunt_json
+    try:
+        sub_category = soup.find("div", class_="r_prime").find("span").text
+        sub_category = ' "sub_category":" ' +sub_category+ '",\n'
+    except AttributeError:
+        sub_category = ' "sub_category":"no_info",\n'
+        f = open("log.txt", "a", encoding="UTF-8")
+        f.write(f"{href} bad restraunt - no category\n")
+        f.close()
+    if sub_category != "":
+        guru_restraunt_json=guru_restraunt_json.replace("{","{\n"+href_for_dict+add_href_for_dict+avg_price+features_str+sub_category+url_instagramm_for_dict,1)
+        #print(guru_restraunt_json)
+        return guru_restraunt_json
+    else:
+        return ""
 
 
 def prepare_avg_check(check):
@@ -381,6 +388,7 @@ def prepare_avg_check(check):
 
 def download_img(href,dir_path,good_proxies,i):
     ok = True
+    count_tries = 0
     while ok:
         index_proxy = 0
         for proxy in good_proxies:
@@ -389,15 +397,28 @@ def download_img(href,dir_path,good_proxies,i):
                     "https": proxy.name,
                     "http": proxy.name,
                 }
-                index_proxy += 1
+
                 break
+            index_proxy += 1
         image_jpeg = ""
         try:
             image_jpeg = requests.get(href, headers=headers, proxies=good_proxy, timeout=3)
         except requests.exceptions.ReadTimeout:
             print(f"  proxies_during_downloading_menu ->> BLOCKED = {proxy.name}")
-            if good_proxies[i].name == proxy.name:
-                good_proxies[i].isBlocked = True
+            if good_proxies[index_proxy].name == proxy.name:
+                good_proxies[index_proxy].isBlocked = True
+            count_tries += 1
+            if count_tries == 5: # количество попыток скачивания с хорошим ip
+                ok = False
+                print(f"{href} has bad menu")
+        except requests.exceptions.ProxyError:
+            print(f"  proxies_during_downloading_menu ->> BLOCKED = {proxy.name}")
+            if good_proxies[index_proxy].name == proxy.name:
+                good_proxies[index_proxy].isBlocked = True
+            count_tries += 1
+            if count_tries == 5:  # количество попыток скачивания с хорошим ip
+                ok = False
+                print(f"{href} has bad menu")
 
         if image_jpeg != "" and image_jpeg.status_code == 200:
             with open(dir_path + "/menu/" + str(i) + ".jpg", 'wb') as f:
@@ -429,7 +450,7 @@ def get_menu(href_menu,dir_path,good_proxies):
         i = 0
         for img in list_img:
             href_img = img.get("data-src")
-            if isinstance(href_img,str):
+            if isinstance(href_img,str) and img.has_attr('class') and not("not_loaded" in img.get("class")):
                 download_img(href_img,dir_path,good_proxies,i)
                 i+=1
     else:
@@ -437,6 +458,10 @@ def get_menu(href_menu,dir_path,good_proxies):
         return "no_menu"
     return True
 
+
+
+#good_proxies = get_good_proxies()
+#get_menu("https://restaurantguru.com/Labelle-Nightclub-As/menu", "", good_proxies)
 
 def get_restraunt_hrefs_from_city_page(city_href):
     soup = get_soup(city_href,proxies_from_network)

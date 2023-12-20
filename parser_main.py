@@ -145,6 +145,9 @@ for countryIndex in range(1, 2): # не через in чтобы пропуст�
                 if json_object != "no_json":
                     rest_guru_json_object = json.loads(json_object)
                 else:
+                    f = open("log.txt","a", encoding="UTF-8")
+                    f.write(f"{rest_href} bad restraunt - no json\n")
+                    f.close()
                     continue
                # rest_guru_json_object = json.loads( parsing.get_json_restraunt("https://restaurantguru.com/Osteria-La-Baracca-Frydek-Mistek", good_proxies)) # пример для разработки
                 rest_guru_json_object["features"] = prepare_features(rest_guru_json_object["features"])
@@ -158,16 +161,10 @@ for countryIndex in range(1, 2): # не через in чтобы пропуст�
                 menu_status = parsing.get_menu(restraunt_object.menu_href, rest_path, good_proxies)
                 # если меню нет-> прерываем этот ресторан # удаление папки с рестораном происходит сразу внутри функции скачивания меню
                 if menu_status=="no_menu":
+                    f = open("log.txt", "a", encoding="UTF-8")
+                    f.write(f"{rest_href} bad restraunt - no menu\n")
+                    f.close()
                     continue
-                """
-                    # добавить обработку feauteres, opening_hours, cuisines
-                """
-
-                """
-                    #--------------------------------------   
-                # тут будет блок с инстаграммом
-                    #--------------------------------------
-                """
 
                 # заполнение папки с рестораном ----->>>  создание файла с рестораном
                 # реализация проверки повторов
@@ -188,18 +185,26 @@ for countryIndex in range(1, 2): # не через in чтобы пропуст�
 
 
                 if restraunt_object.inst_url != "":
-                    insta_parsing.get_album(restraunt_object.inst_url,rest_path)
-                    restraunt_object.last_publication = insta_parsing.get_last_publication(restraunt_object.inst_url)
-
+                    #insta_parsing.get_album(restraunt_object.inst_url,rest_path)
+                    #restraunt_object.last_publication = insta_parsing.get_last_publication(restraunt_object.inst_url)
+                    restraunt_object.last_publication = insta_parsing.get_album_and_last_publication_pikacu(restraunt_object.inst_url,rest_path)
                 tabler_to_guru_json = restraunt_object.get_json()
-                print(tabler_to_guru_json)
-
-                rest_file = open(rest_path+ "/json.txt", "w", encoding="UTF-8")  # 1_ для того чтобы писать города в отдельные страны
-                rest_file.write(json.dumps(tabler_to_guru_json, ensure_ascii=False, indent = 4))
-                rest_file.close()
-
-
-
+                if tabler_to_guru_json != "":
+                    print(tabler_to_guru_json)
+                    rest_file = open(rest_path+ "/json.txt", "w", encoding="UTF-8")  # 1_ для того чтобы писать города в отдельные страны
+                    rest_file.write(json.dumps(tabler_to_guru_json, ensure_ascii=False, indent = 4))
+                    rest_file.close()
+                    counter_restraunt += 1
+                    print(f"good restraunts = {counter_restraunt}")
+                    f_rest = open("log.txt", "a", encoding="UTF-8")
+                    f_rest.write(f"{rest_href} good restraunt - downloaded\n")
+                    f_rest.close()
+                    if counter_restraunt == 100:
+                        exit(1)
+                else:
+                    f_rest = open("log.txt", "a", encoding="UTF-8")
+                    f_rest.write(f"{rest_href} bad restraunt - no good json\n")
+                    f_rest.close()
 
 
             # собираем количество использований городов
@@ -227,9 +232,6 @@ for countryIndex in range(1, 2): # не через in чтобы пропуст�
             # print(f"{city_name}   ====> {counter}")
             print(f"{json.dumps(city_guru.get_json(), ensure_ascii=False )}   ====> {counter} , { str(counter/city_qty*100)[:6] }% in {country}")
             city_file.close()
-            counter_restraunt += 1
-            if counter_restraunt == 100:
-                break
 
 
 pass
