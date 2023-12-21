@@ -33,11 +33,11 @@ class Restraunt_from_guru:
             if ("address" in object) and ( "streetAddress" in object["address"]):
                 address = object["address"]['streetAddress'].split(" ")
             else:
-                address=["no_info", "no_info"]
+                address = ["no_info"]
             self.main_url = object["href"]
 
             stTime = time.localtime()
-            print(f"time: {stTime.tm_hour}-{stTime.tm_min} Working_on {object['href']}")
+            print(f"time: {stTime.tm_hour}-{stTime.tm_min} -> Working_on {object['href']}")
 
             self.latin_name = object["add_href"]
             self.name = object["name"]
@@ -111,8 +111,6 @@ class Restraunt_from_guru:
             "sub_category" : self.sub_category,
             "street" : self.street,
         }
-
-
         if self.network != "":
             json_dict["network"] = self.network
         if self.place != "no_info":

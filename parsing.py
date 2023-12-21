@@ -362,6 +362,7 @@ def get_json_restraunt(href,good_proxies):
         f = open("log.txt", "a", encoding="UTF-8")
         f.write(f"{href} bad restraunt - no category\n")
         f.close()
+
     if sub_category != "":
         guru_restraunt_json=guru_restraunt_json.replace("{","{\n"+href_for_dict+add_href_for_dict+avg_price+features_str+sub_category+url_instagramm_for_dict,1)
         #print(guru_restraunt_json)
@@ -372,12 +373,9 @@ def get_json_restraunt(href,good_proxies):
 
 def prepare_avg_check(check):
     check = check.replace(",", "")
-
     # price_range = "price range per person czk 230 - czk 570"
-
     # Использование регулярного выражения для поиска всех чисел в строке
     numbers = re.findall(r'\b\d+\b', check)
-
     # Преобразование найденных числовых строк в целые числа
     numbers = [int(number) for number in numbers]
     #print(numbers)  # Выведет: [230, 570]
@@ -399,9 +397,7 @@ def download_img(href,dir_path,good_proxies,i):
                         "https": proxy.name,
                         "http": proxy.name,
                     }
-
                     break
-
                 index_proxy += 1
             image_jpeg = ""
             if (good_proxy==-1): # Если все прокси заблокированы, то их надо разблокировать
@@ -457,11 +453,6 @@ def get_menu(href_menu,dir_path,good_proxies):
         shutil.rmtree(dir_path)
         print("too bad")
         return "no_menu"
-    # list_tag_with_imgs = get_soup(href_menu, good_proxies).find("div", class_="left_column").findChildren()
-    # list_img = []
-    # for li in list_tag_with_imgs:
-    #     if li.tag == "img":
-    #         list_img.append(li)
 
     if isinstance(list_img,list) and len(list_img)>0:
         i = 0
@@ -479,11 +470,7 @@ def get_menu(href_menu,dir_path,good_proxies):
 
 #good_proxies = get_good_proxies()
 #t = get_menu("https://restaurantguru.com/Bastanka-Frydek-Mistek/menu","Jsons" ,good_proxies)
-pass
+#pass
 
-def get_restraunt_hrefs_from_city_page(city_href):
-    soup = get_soup(city_href,proxies_from_network)
-
-    pass
 
 

@@ -293,8 +293,8 @@ def get_album_and_last_publication_pikacu(inst_restraunt,album_path):
             i = 0
             for post in posts:
                 if post.get("data-s")=="media":
-                    if i==0:
-                        last_publication = posts[0].find("div", class_="photo-description").text.strip()
+                    if i<3 and posts[i].find("div", class_="photo-description").text != "":
+                        last_publication = posts[i].find("div", class_="photo-description").text.strip()
                     resp = ""
                     img = post.find("img",class_="post-image").get("src")
                     ok = True
