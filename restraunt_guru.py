@@ -30,7 +30,10 @@ class Restraunt_from_guru:
 
     def __init__(self, object, typeOfConstructor):
         if typeOfConstructor == 0:  # для парсинга
-            address = object["address"]['streetAddress'].split(" ")
+            if ("address" in object) and ( "streetAddress" in object["address"]):
+                address = object["address"]['streetAddress'].split(" ")
+            else:
+                address=["no_info", "no_info"]
             self.main_url = object["href"]
 
             stTime = time.localtime()

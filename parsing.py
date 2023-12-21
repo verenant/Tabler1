@@ -221,7 +221,7 @@ def get_soup(url, proxies_from_network):
                                 proxies_from_network[i].isBlocked = False
                             pass
                     pass
-                    time.sleep(0.7 * 2.1)  # ускорить бы процесс!
+                    time.sleep(1 * 2.1)  # ускорить бы процесс!
 
 
 
