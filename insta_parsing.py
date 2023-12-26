@@ -2,18 +2,15 @@ import json
 import random
 import shutil
 import time
-from instagrapi import Client
 import requests
-from requests.auth import HTTPProxyAuth
 import os
-import PIL.Image
 import bs4
-import selenium.common.exceptions
-from selenium import webdriver
-from selenium.webdriver.common.by import By
-from selenium_stealth import stealth
+#import selenium.common.exceptions
+#from selenium import webdriver
+#from selenium.webdriver.common.by import By
+#from selenium_stealth import stealth
 import re
-from seleniumwire import webdriver
+#from seleniumwire import webdriver
 
 
 
@@ -30,7 +27,7 @@ proxies = {
     "http": proxy_server_for_inst,
 }
 
-
+"""
 def create_driver(url):
     # options = webdriver.ChromeOptions()
     # options.add_argument(
@@ -76,7 +73,7 @@ def create_driver(url):
     url = "https://insta-stories-viewer.com/ohota_auto/"
     driver.get(url)
     time.sleep(5)
-
+"""
 
 
 
@@ -90,7 +87,7 @@ def get_proxy():
         "http": proxies[r].strip(),
     }
     return proxy
-
+"""
 def get_album1(inst_restraunt,album_path):
     # Заменить restraunt на настоящий
     album_path = album_path + "/Restraunt/Album"
@@ -244,7 +241,8 @@ def get_album(inst_restraunt,album_path):
     pass
 
 
-
+"""
+"""
 def get_last_publication(inst_restraunt): # не работает
     # href1 = "https://www.instagram.com/api/v1/users/web_profile_info/?username=ohota_auto"
 
@@ -259,7 +257,7 @@ def get_last_publication(inst_restraunt): # не работает
         print("api doesnt work")
     return text
 
-
+"""
 
 def get_inst_proxy():
     f = open("foreign_proxies.txt")
@@ -282,8 +280,9 @@ def get_album_and_last_publication_pikacu(inst_restraunt,album_path):
 
     global_attemps = 0
     global_ok = True
+    last_publication = ""
     while(global_ok):
-        try:
+        try:# загрузка зеркала инстаграмма с фотографиями
             good_proxy = get_inst_proxy()
             site = requests.get("https://www.picuki.com/profile/" + inst_restraunt[1:], headers = headers, proxies= good_proxy,timeout = 5)
             photo_page = bs4.BeautifulSoup(site.text, "html.parser")
@@ -291,22 +290,31 @@ def get_album_and_last_publication_pikacu(inst_restraunt,album_path):
             posts = photo_page.findAll("div", class_="box-photo")
 
             i = 0
+            k = 0
             for post in posts:
+                if post.find("div") != None and post.find("div").get("id") != None:
+                    k+=1
                 if post.get("data-s")=="media":
-                    if i<3 and posts[i].find("div", class_="photo-description").text != "":
-                        last_publication = posts[i].find("div", class_="photo-description").text.strip()
+
                     resp = ""
                     img = post.find("img",class_="post-image").get("src")
                     ok = True
                     while(ok):
-                        try:
+
+                        try:# загрузка фотографий
                             resp = requests.get(img,headers = headers, proxies = good_proxy, timeout = 5)
                         except requests.exceptions.ReadTimeout:
                             print(f"  proxies_during_downloading_inst_img ->> BLOCKED = {good_proxy['http']}")
                         if resp != "" and resp.status_code == 200:
+                            if i < 3 and (posts[i].find("div", class_="photo-description") != None) and (
+                                    posts[i].find("div", class_="photo-description").text.strip() != "") \
+                                    and last_publication == "":
+                                last_publication = str(i-k) + "_" + posts[i].find("div",
+                                                                                class_="photo-description").text.strip()
                             with open(album_path + "/" + str(i) + ".jpg", 'wb') as f:
                                 f.write(resp.content)
                                 ok = False
+                                global_attemps = 0
                                 i += 1
                 if i == 10:
                     global_ok = False
@@ -327,8 +335,15 @@ def get_album_and_last_publication_pikacu(inst_restraunt,album_path):
             if global_attemps == 5:
                 print(f"{inst_restraunt} didn't allow to download photos")
                 global_ok = False
+        except BaseException:
+            print(f"{inst_restraunt} Some error downloading instagram")
+            global_attemps += 1
+            if global_attemps == 5:
+                print(f"{inst_restraunt} didn't allow to download photos")
+                global_ok = False
+            return False
 
-#t = get_album_and_last_publication_pikacu("@freeoneshop_cz","Czech-Republic/A_cities")
+#t = get_album_and_last_publication_pikacu("@unudleas","Czech-Republic")
 #print(t)
 #pass
 #get_last_publication("@southmoravia")
@@ -371,4 +386,3 @@ else:
     print("This user has no media available.")
 """
 
-pass

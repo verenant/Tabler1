@@ -27,11 +27,13 @@ class Restraunt_from_guru:
     network =""
     qty_in_city = ""
     last_publication = ""
+    city = ""
 
-    def __init__(self, object, typeOfConstructor):
+    def __init__(self, object,city, typeOfConstructor):
         if typeOfConstructor == 0:  # для парсинга
             if ("address" in object) and ( "streetAddress" in object["address"]):
-                address = object["address"]['streetAddress'].split(" ")
+                #address = object["address"]['streetAddress'].split(" ")
+                address = object["address"]['streetAddress']
             else:
                 address = ["no_info"]
             self.main_url = object["href"]
@@ -47,7 +49,7 @@ class Restraunt_from_guru:
             if ("review" in object) and ("description" in object["review"]):
                 self.description = object["review"]["description"]
                 first_point = object["review"]["description"].find(".")
-                self.short_description = object["review"]["description"][:first_point]
+                self.short_description = object["review"]["description"][:first_point+1]
             else:
                 self.description = "no_info"
                 self.short_description = "no_info"
@@ -57,11 +59,13 @@ class Restraunt_from_guru:
                 object["telephone"] = "no_info"
             self.phone = object["telephone"]
             #self.address = object["address"]["addressLocality"] + ">" + object["address"]['streetAddress']
-            self.street = address[0]
-            if len(address) == 2:
+            self.street = address
+            """
+            if len(address) >= 2:
                 self.place = address[1]
             else:
                 self.place = "no_info"
+            """
             # self.avg_check = get_avg_check(self.soup)
             if not("openingHours" in object):
                 object["openingHours"] = "no_info"
@@ -79,6 +83,7 @@ class Restraunt_from_guru:
             self.lon = object["geo"]["longitude"]
             self.inst_url = object["instagramm"]
             self.sub_category = object["sub_category"].strip()
+            self.city = city.get_json()
         #   self.album = get_album(self.soup, self.main_url, self.headers, self.additional_url)
         #   self.menu = get_menu(self.soup, self.additional_url)
         """
@@ -97,8 +102,8 @@ class Restraunt_from_guru:
             "check" : self.check,
             "features" : self.features,
             "description" : self.description,
-            "short_description" : self.description,
-            "phone" : self.phone,
+            "short_description" : self.short_description,
+            "phone": self.phone,
             "timetable" : self.timetable,
             "kitchen" : self.kitchen,
             "category" : self.sub_category,
@@ -110,11 +115,12 @@ class Restraunt_from_guru:
             "last_publication": self.last_publication,
             "sub_category" : self.sub_category,
             "street" : self.street,
+            "city":self.city,
         }
         if self.network != "":
             json_dict["network"] = self.network
-        if self.place != "no_info":
-            json_dict["place"] = self.place
+        #if self.place != "no_info":
+        #    json_dict["place"] = self.place
         return json_dict
 
 

@@ -114,12 +114,10 @@ def get_soup(url, proxies_from_network):
             if (proxies_from_network[i].isBlocked == False) and (proxies_from_network[i].isPaused == False):
                 indexProxy = i
                 break
-
         bad_proxies = {
             "https": bad_proxies_from_network[indexBadProxy],
             "http": bad_proxies_from_network[indexBadProxy],
         }
-
         res = ""
         if indexProxy < len(proxies_from_network):
             proxies = {
@@ -138,7 +136,7 @@ def get_soup(url, proxies_from_network):
                 res = requests.get(url, headers=headers, proxies = proxies, timeout=6)
                 proxies_from_network[indexProxy].incUsage()
                 #если было запросов много это ставим его на паузу
-                if proxies_from_network[indexProxy].qtyOfUsage == 5:
+                if proxies_from_network[indexProxy].qtyOfUsage == 4:
                     proxies_from_network[indexProxy].isPaused = True
 
             except Exception:
@@ -390,6 +388,7 @@ def download_img(href,dir_path,good_proxies,i):
     while ok:
         index_proxy = 0
         good_proxy = -1
+        image_jpeg = ""
         while good_proxy==-1:
             for proxy in good_proxies:
                 if (proxy.isPaused == False) and (proxy.isBlocked == False):
@@ -399,24 +398,28 @@ def download_img(href,dir_path,good_proxies,i):
                     }
                     break
                 index_proxy += 1
-            image_jpeg = ""
+
             if (good_proxy==-1): # Если все прокси заблокированы, то их надо разблокировать
                 for i in range(0,len(good_proxies)):
                     good_proxies[i].isPaused = False
                     good_proxies[i].isBlocked = False
 
         try:
-            image_jpeg = requests.get(href, headers=headers, proxies=good_proxy, timeout=3)
+            image_jpeg = requests.get(href, headers=headers, proxies=good_proxy, timeout=6)
+            if image_jpeg.status_code == 404:
+                raise BaseException
         except requests.exceptions.ReadTimeout:
             #get_good_proxies()
             #image_jpeg = requests.get(href, headers=headers, proxies=good_proxy, timeout=3)
             print(f"  proxies_during_downloading_menu ->> BLOCKED = {proxy.name}")
-            if good_proxies[index_proxy].name == proxy.name:
+
+            if index_proxy<len(good_proxies) and good_proxies[index_proxy].name == proxy.name:
                 good_proxies[index_proxy].isBlocked = True
             count_tries += 1
             if count_tries == 5: # количество попыток скачивания с хорошим ip
                 ok = False
                 print(f"{href} has bad menu")
+                return False
         except requests.exceptions.ProxyError:
             print(f"  proxies_during_downloading_menu ->> BLOCKED = {proxy.name}")
             if good_proxies[index_proxy].name == proxy.name:
@@ -425,6 +428,20 @@ def download_img(href,dir_path,good_proxies,i):
             if count_tries == 5:  # количество попыток скачивания с хорошим ip
                 ok = False
                 print(f"{href} has bad menu")
+                return False
+        except requests.exceptions.ConnectTimeout:
+            print(f"  proxies_during_downloading_menu ->> BLOCKED = {proxy.name}")
+            if good_proxies[index_proxy].name == proxy.name:
+                good_proxies[index_proxy].isBlocked = True
+            count_tries += 1
+            if count_tries == 5:  # количество попыток скачивания с хорошим ip
+                ok = False
+                print(f"{href} has secured menu")
+                return False
+        except BaseException:
+            print(f"{href} Some error downloading menu")
+            ok = False
+            return False
 
         if image_jpeg != "" and image_jpeg.status_code == 200:
             with open(dir_path + "/menu/" + str(i) + ".jpg", 'wb') as f:
@@ -435,7 +452,7 @@ def download_img(href,dir_path,good_proxies,i):
             #ошибка при скачивании, делаем перезапуск пока не получим изображение после паузы
             time.sleep(1)
 
-
+    return True
 
 def get_menu(href_menu,dir_path,good_proxies):
     #удаление старой папки, если есть.
@@ -451,7 +468,7 @@ def get_menu(href_menu,dir_path,good_proxies):
             list_img = get_soup(href_menu, good_proxies).find("div", class_="content clear").findAll("img", recursive=False)
     except AttributeError:
         shutil.rmtree(dir_path)
-        print("too bad")
+        print("  " + href_menu + " has no menu at all")
         return "no_menu"
 
     if isinstance(list_img,list) and len(list_img)>0:
@@ -459,8 +476,9 @@ def get_menu(href_menu,dir_path,good_proxies):
         for img in list_img:
             href_img = img.get("data-src")
             if isinstance(href_img,str) and img.has_attr('class') and not("not_loaded" in img.get("class")):
-                download_img(href_img,dir_path,good_proxies,i)
-                i+=1
+                status_img = download_img(href_img,dir_path,good_proxies,i)
+                if status_img == True:
+                    i+=1
     else:
         shutil.rmtree(dir_path)
         return "no_menu"
