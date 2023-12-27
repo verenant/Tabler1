@@ -62,6 +62,9 @@ def parser():
     pass
     """
     f = open("log.txt","w") # очистка старого лога
+
+    stTime = time.localtime()
+    f.write(str(stTime.tm_mday) + "-" + str(stTime.tm_hour) + "-" + str(stTime.tm_min))
     f.close()
 
     counter_restraunt = 0
@@ -88,8 +91,8 @@ def parser():
         for cnt in range(0,len(letters)):
 
             letter = letters[cnt]
-            if letter == "A" or letter == "B":
-                continue
+            if letter == "B":
+                break
             letter_path = country_path + "/" + letter + "_cities"
 
             #cityHrefs = get_country_city_href(country, "B", good_proxies)  # вариант для  парсинга буквы
@@ -178,12 +181,11 @@ def parser():
                     if json_object != "no_json":
                         rest_guru_json_object = json.loads(json_object)
                     else:
-                        stTime = time.localtime()
-                        d_t = str(stTime.tm_mday)+"-"+str(stTime.tm_hour)+"-"+str(stTime.tm_min)
 
-                        f = open("log"+ d_t+".txt","a", encoding="UTF-8")
-                        f.write(f"{rest_href} bad restraunt - no json\n")
-                        f.close()
+
+                        f_log = open("log.txt","a", encoding="UTF-8")
+                        f_log.write(f"{rest_href} bad restraunt - no json\n")
+                        f_log.close()
                         continue
                    # rest_guru_json_object = json.loads( parsing.get_json_restraunt("https://restaurantguru.com/Osteria-La-Baracca-Frydek-Mistek", good_proxies)) # пример для разработки
                     rest_guru_json_object["features"] = prepare_features(rest_guru_json_object["features"])

@@ -733,7 +733,7 @@ def postNetwork():
 
 # pass
 def upload(nameRestraunt):
-    tObj = TablerObject()
+    #tObj = TablerObject()
     rest = Restraunt("", "Jsons/"+ nameRestraunt ,"" "", 1)
     rest.phone = preparePhones(rest.phone)
     rest.description = prepareDescription(rest.description)

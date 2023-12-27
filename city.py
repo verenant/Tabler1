@@ -1,6 +1,16 @@
 import json
 import parsing
 from anyascii import anyascii
+import requests
+
+
+def getCitiesFromTabler():
+    cities_url = "https://tabler.pub/api/v1/cities"
+    citiies_response = requests.get(cities_url)
+    cities_response_json = json.loads(citiies_response.text)
+    return cities_response_json["data"]["cities"]
+
+
 
 class City():
     def __init__(self, url,country,good_proxies):

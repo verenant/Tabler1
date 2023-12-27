@@ -1,4 +1,5 @@
 import time
+import json
 
 class Restraunt_from_guru:
     name = ""
@@ -92,6 +93,35 @@ class Restraunt_from_guru:
             j = get_json(addUrl)
             self.__dict__ = json.loads(j)
         """
+        #конструктор для загрузчика
+        if typeOfConstructor == 1:
+            json_file = "Czech-Republic/A_cities/adamov-south-moravian-region-czech-republic/Asia-Bistro-Skalni-Sklep-Adamov/json.txt"
+            f = open(json_file, encoding="UTF-8")
+            t = f.read()
+            j = json.loads(t)
+            f.close()
+            self.filename = json_file
+            self.name = j["name"]
+            self.latin_name = j["latinName"]
+            self.city = j["city"]
+            self.avg_check = j["check"]
+            self.lon = j["lon"]
+            self.lat = j["lat"]
+            self.phone = j["phone"]
+            self.address = j["street"]
+            self.category = j["category"]
+            self.description = j["description"]
+            self.short_description = j["short_description"]
+            self.timetable = j["timetable"]
+            self.inst_url = j["inst_url"]
+            self.last_publication = j["last_publication"]
+            self.sub_category = j["sub_category"]
+            if "network" in j:
+                self.network = j["network"]
+
+
+
+            pass
 
 
     def get_json(self):
