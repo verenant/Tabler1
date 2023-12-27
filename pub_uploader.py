@@ -46,6 +46,8 @@ def prepareShortDescription(description):
 def prepareCheck(check):
     if check != "no_info":
         return int(check)
+    else:
+        return False
 
 def prepareTimetable(timetable):
     guru_timetable = timetable
@@ -64,7 +66,7 @@ def prepareTimetable(timetable):
             continue
         edit_timetable.append(guru_timetable[i])
 
-    print(edit_timetable)
+    #print(edit_timetable)
     schedule_dict1 = {
 
         "isMain": True, "items": [
@@ -115,7 +117,7 @@ def prepareTimetable(timetable):
     #for day in schedule_dict["items"]:
     #    if day["startAt"] == "" and day["endAt"] == "":
     #        del schedule_dict
-    print(schedule_dict)
+    #print(schedule_dict)
 
     # schedule_list = list({"isMain":schedule_dict["isMain"]}).append({"items":schedule_dict["items"]})
 
@@ -304,7 +306,7 @@ def postRest(rest):
         }
     if rest.category == "no_info":
         return "srt bad restraunt --closed(no category)"
-    if data["phone_number"] == "no_info":
+    if data["phone_number"] == "o_info":
         del data["phone_number"]
     #if data["subcategory"] == "":
     #    del data["subcategory"]
@@ -353,7 +355,7 @@ def patchRest(rest, url,category):
         "schedules": rest.timetable,  # расписание
     }
     if data["average_check"] == "no_info":
-        del data["averageCheck"]
+        del data["average_check"]
     if data["schedules"] == "no_info":
         del data["schedules"]
     if data["subcategory"] == "" :#or data["no_info"] != rest.category_str:
@@ -364,9 +366,118 @@ def patchRest(rest, url,category):
         del data["description"]
     if data["description"] == "no_info":
         del data["short_description"]
+
     patchResponse = requests.patch(patchUrl, json=data, headers=headers)
+
+    #patchResponse = requests.patch(patchUrl, data=json.dumps(data,ensure_ascii=False), headers=headers)
+
     patchResponse_text = patchResponse.text
+
+    return patchResponse_text
+
     pass
+
+
+def postImage(dir,name):
+    url = "https://tabler.pub/api/v2/images"
+    payload = {}
+    files = [
+        ('image', (name, open(dir+"/"+name, 'rb'), 'image/jpeg'))
+    ]
+    headers = {
+        'Authorization': 'Bearer 5V2EABW0ODofJAaQqaz5ifkB'
+    }
+    mainImagePostResponse = requests.request("POST", url, headers=headers, data=payload, files=files)
+    mainImagePostResponseText = mainImagePostResponse.text
+
+    pattern = r'"imageSet":{".*"}'
+
+    photos = re.findall(pattern, mainImagePostResponseText)[0].replace('"imageSet":', "", 1)
+
+    photos_dict = json.loads(photos)
+    cover_url = photos_dict["cover"]["url"]
+    photos_dict["cover"]["path"] = cover_url
+
+    thumbnail_url = photos_dict["thumbnail"]["url"]
+    photos_dict["thumbnail"]["path"] = thumbnail_url
+
+    standard_url = photos_dict["standard"]["url"]
+    photos_dict["standard"]["path"] = standard_url
+
+    original_url = photos_dict["original"]["url"]
+    photos_dict["original"]["path"] = original_url
+
+    photos_dict["isLoading"] = False
+    photos_dict["isDeleted"] = False
+
+    photos_dict["orderNumber"] = name[:-4]
+
+    return photos_dict
+
+def getPhotoId(text):
+    json_data = json.loads(text)
+    id_value = json_data['id']
+    return id_value
+
+def prepareAlbum(photo_ids):
+    cover_id = getPhotoId(json.dumps(photo_ids[-1]))
+    album = {"photos": photo_ids, "title": "Основной альбом",  "cover": cover_id}
+    return album
+
+def patchMenu(rest,postResponse):
+    menu_path = rest.filename + "/menu"
+    menu_imgs_ids = []
+    i = 0
+    if os.path.exists(menu_path) and len(os.listdir(menu_path))>0:
+        menu_items = os.listdir(menu_path)
+        for item in menu_items:
+            #print(item)
+            menu_imgs_ids.append(postImage(menu_path, item))
+            i += 1
+            pass
+        menu = prepareAlbum(menu_imgs_ids)
+        menuList = [menu]
+        if len(menuList) == 0:
+            return "no_menu"
+        rest.menu = menuList
+        pass
+    else:
+        return "no_menu"
+    headers = {
+        'Authorization': 'Bearer 5V2EABW0ODofJAaQqaz5ifkB'
+    }
+    menu_add = requests.patch(postResponse, json=rest.menu, headers=headers)
+    menu_add_text = menu_add.text
+    return menu_add.status_code
+
+
+def patchAlbum(rest,postResponse):
+    album_path = rest.filename + "/Album"
+    album_imgs_ids = []
+    i = 0
+    if os.path.exists(album_path) and len(os.listdir(album_path))>0:
+        album_items = os.listdir(album_path)
+        for item in album_items:
+            #print(item)
+            album_imgs_ids.append(postImage(album_path, item))
+            i += 1
+            pass
+        album = prepareAlbum(album_imgs_ids)
+        albumList = [album]
+        if len(albumList) == 0:
+            return "no_album"
+        rest.album = albumList
+        pass
+    else:
+        return "no_album"
+    headers = {
+        'Authorization': 'Bearer 5V2EABW0ODofJAaQqaz5ifkB'
+    }
+    album_add = requests.patch(postResponse, json=rest.album, headers=headers)
+    album_add_text = album_add.text
+    return album_add.status_code
+
+
 t1 = {"timetable": [
         "Fr 16:00-20:00",
         "Sa 11:30-13:30",
@@ -388,7 +499,8 @@ t2 = { "timetable": [
 def prepareRestForPost(rest):
     rest.category = getCategoryId(rest)
     rest.city = prepareCityId(rest)
-    rest.timetable = prepareTimetable(rest.timetable)
+    if rest.timetable != "no_info":
+        rest.timetable = prepareTimetable(rest.timetable)
     rest.check = prepareCheck(rest.avg_check)
     rest.features = prepareFeatures(rest.features)
 
@@ -407,16 +519,24 @@ for letter in letter_cities:
             rests_in_city = os.listdir(city_path)
             for rest in rests_in_city:
                 rest_path = city_path+"/"+rest
-                print(rest_path)
+                #print(rest_path)
+
+
+                rest = Restraunt_from_guru("", "", 1,rest_path)
+                category = rest.category
+                prepareRestForPost(rest)
+                rest.address = prepareAddress(rest.address)
+                postResponse = postRest(rest)
+                patchResponse = patchRest(rest,postResponse,category)
+
+                album = patchAlbum(rest, postResponse)
+                if album == 200:
+                    pass
+                menu = patchMenu(rest,postResponse)
+
+
+
+                print(postResponse)
+
                 pass
-
-
-
-rest = Restraunt_from_guru("", "", 1)
-category = rest.category
-prepareRestForPost(rest)
-rest.address = prepareAddress(rest.address)
-postResponse = postRest(rest)
-patchResponse = patchRest(rest,postResponse,category)
-print(postResponse)
 pass

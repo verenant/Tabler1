@@ -19,6 +19,7 @@ class Restraunt_from_guru:
     #subcategory = ""
     main_image_url = ""
     city = ""
+    menu = ""
     category_str = ""
     qty_in_city = 0
     network = ""
@@ -30,7 +31,7 @@ class Restraunt_from_guru:
     last_publication = ""
     city = ""
 
-    def __init__(self, object,city, typeOfConstructor):
+    def __init__(self, object,city, typeOfConstructor,rest_path):
         if typeOfConstructor == 0:  # для парсинга
             if ("address" in object) and ( "streetAddress" in object["address"]):
                 #address = object["address"]['streetAddress'].split(" ")
@@ -95,12 +96,13 @@ class Restraunt_from_guru:
         """
         #конструктор для загрузчика
         if typeOfConstructor == 1:
-            json_file = "Czech-Republic/A_cities/adamov-south-moravian-region-czech-republic/Asia-Bistro-Skalni-Sklep-Adamov/json.txt"
+            #json_file = "Czech-Republic/A_cities/adamov-south-moravian-region-czech-republic/Asia-Bistro-Skalni-Sklep-Adamov/json.txt"
+            json_file = rest_path+"/json.txt"
             f = open(json_file, encoding="UTF-8")
             t = f.read()
             j = json.loads(t)
             f.close()
-            self.filename = json_file
+            self.filename = rest_path
             self.name = j["name"]
             self.latin_name = j["latinName"]
             self.city = j["city"]
