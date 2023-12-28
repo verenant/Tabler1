@@ -1096,3 +1096,7 @@
 18-9	{"name": "http://KYnuR3:ux5MWJL6uR@188.130.137.217:1050", "isBlocked": true, "isPaused": false, "qtyOfUsage": 1, "blockedAt": 1}
 18-10	{"name": "http://KYnuR3:ux5MWJL6uR@109.248.204.31:1050", "isBlocked": true, "isPaused": false, "qtyOfUsage": 1, "blockedAt": 1}
 18-10	{"name": "http://KYnuR3:ux5MWJL6uR@185.181.246.143:1050", "isBlocked": true, "isPaused": false, "qtyOfUsage": 1, "blockedAt": 1}
+11-36	{"name": "http://DDA3HB:9P2fiX6ULt@188.130.128.120:1050", "isBlocked": true, "isPaused": false, "qtyOfUsage": 1, "blockedAt": 1}
+11-39	{"name": "http://DDA3HB:9P2fiX6ULt@188.130.128.120:1050", "isBlocked": true, "isPaused": false, "qtyOfUsage": 1, "blockedAt": 1}
+11-45	{"name": "http://DDA3HB:9P2fiX6ULt@188.130.128.120:1050", "isBlocked": true, "isPaused": false, "qtyOfUsage": 1, "blockedAt": 1}
+11-49	{"name": "http://KYnuR3:ux5MWJL6uR@109.248.13.180:1050", "isBlocked": true, "isPaused": false, "qtyOfUsage": 1, "blockedAt": 1}

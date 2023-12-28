@@ -5,7 +5,7 @@ import city
 from Category import categories
 from restraunt import Restraunt
 from Cuisines import cuisines
-
+from anyascii import anyascii
 from tablerObject import TablerObject
 import json
 import re
@@ -439,7 +439,7 @@ def patchMenu(rest,postResponse):
         menuList = [menu]
         if len(menuList) == 0:
             return "no_menu"
-        rest.menu = menuList
+        rest.menu = {"menus":menuList}
         pass
     else:
         return "no_menu"
@@ -466,7 +466,7 @@ def patchAlbum(rest,postResponse):
         albumList = [album]
         if len(albumList) == 0:
             return "no_album"
-        rest.album = albumList
+        rest.album = {"albums":albumList}
         pass
     else:
         return "no_album"
@@ -477,6 +477,16 @@ def patchAlbum(rest,postResponse):
     album_add_text = album_add.text
     return album_add.status_code
 
+def prepareText(text):
+    text = anyascii(text)
+    text_split = text.split(". ")
+    new_text = ""
+    for t in text_split:
+        if "Google" in t or "Facebook" in t :
+            continue
+        if len(t)>3:
+            new_text+=t+". "
+    return new_text
 
 t1 = {"timetable": [
         "Fr 16:00-20:00",
@@ -498,6 +508,8 @@ t2 = { "timetable": [
 
 def prepareRestForPost(rest):
     rest.category = getCategoryId(rest)
+    rest.description = prepareText(rest.description)
+    rest.short_description = prepareText(rest.description)
     rest.city = prepareCityId(rest)
     if rest.timetable != "no_info":
         rest.timetable = prepareTimetable(rest.timetable)
@@ -506,7 +518,7 @@ def prepareRestForPost(rest):
 
     pass
 
-
+#prepareText("Locals recommend Czech dishes at this restaurant. Guests don't highly appreciate kama at Hotel - Restaurace Ple&scaron;ivec. The staff is said to be accommodating here. This place is remarkable for its fast service. This spot is rated on Google 4.1 by its visitors.")
 #получить адрес папки ресторана
 country = "Czech-Republic"
 letter_cities = os.listdir(country)
@@ -529,12 +541,12 @@ for letter in letter_cities:
                 postResponse = postRest(rest)
                 patchResponse = patchRest(rest,postResponse,category)
 
-                album = patchAlbum(rest, postResponse)
-                if album == 200:
-                    pass
+
                 menu = patchMenu(rest,postResponse)
 
-
+                album = patchAlbum(rest, postResponse)
+                if menu == 200 and postResponse != "" and patchResponse:
+                    responsePublish = requests.post(postResponse + "/moderation-status/published", headers=headers)
 
                 print(postResponse)
 

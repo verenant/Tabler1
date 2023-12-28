@@ -185,6 +185,8 @@ def parser():
                         continue
                    # rest_guru_json_object = json.loads( parsing.get_json_restraunt("https://restaurantguru.com/Osteria-La-Baracca-Frydek-Mistek", good_proxies)) # пример для разработки
                     rest_guru_json_object["features"] = prepare_features(rest_guru_json_object["features"])
+                    if "review" in rest_guru_json_object:
+                        del rest_guru_json_object["review"]
                     #Вариант конструктора до создания загрузчика
                     #restraunt_object = restraunt_guru.Restraunt_from_guru(rest_guru_json_object,city_guru, 0 )
                     # Вариант конструктора подходящий и для работы загрузчика

@@ -47,7 +47,7 @@ class Restraunt_from_guru:
             self.name = object["name"]
             self.check = object["avg_check"]
             self.features = object["features"]
-
+            """
             if ("review" in object) and ("description" in object["review"]):
                 self.description = object["review"]["description"]
                 first_point = object["review"]["description"].find(".")
@@ -55,6 +55,15 @@ class Restraunt_from_guru:
             else:
                 self.description = "no_info"
                 self.short_description = "no_info"
+            """
+            if "new_description" in object:
+                self.description = object["new_description"]
+                first_point = object["new_description"].find(".")
+                self.short_description = object["new_description"][:first_point + 1]
+            else:
+                self.description = "no_info"
+                self.short_description = "no_info"
+
             self.menu_href = object["menu"]
 
             if not("telephone" in object):

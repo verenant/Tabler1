@@ -322,6 +322,10 @@ def get_json_restraunt(href,good_proxies):
     else:
         #print(f"{href} -> no json -> bad restraunt")
         return "no_json"
+    description_for_dict = ""
+    if soup.find("div",class_="description"):
+        description = soup.find("div",class_="description").text.strip()
+        description_for_dict = '  "new_description":"'+description +'",'
     # добавлять в строку данные после "{"
     # print(guru_restraunt_json)
     guru_restraunt_json = guru_restraunt_json.replace("@type","type")
@@ -362,7 +366,7 @@ def get_json_restraunt(href,good_proxies):
         f.close()
 
     if sub_category != "":
-        guru_restraunt_json=guru_restraunt_json.replace("{","{\n"+href_for_dict+add_href_for_dict+avg_price+features_str+sub_category+url_instagramm_for_dict,1)
+        guru_restraunt_json=guru_restraunt_json.replace("{","{"+description_for_dict+href_for_dict+add_href_for_dict+avg_price+features_str+sub_category+url_instagramm_for_dict,1)
         #print(guru_restraunt_json)
         return guru_restraunt_json
     else:
