@@ -133,8 +133,8 @@ def prepareTimetable(timetable):
 def prepareFeatures(fts):
     dictFts = {}
 
-    dictFts["wifi"] = True if ('Wi-Fi' in fts) else False
-    dictFts["cashfree"] = False
+    dictFts["wifi"] = False if ('No Wi-Fi' in fts) else True
+    dictFts["cashfree"] = True
     if ('Cash only' in fts):
         dictFts["cashfree"] = False
     if ('Сredit cards accepted' in fts):
@@ -165,6 +165,52 @@ def prepareFeatures(fts):
     return dictFts
 
 def prepareAddress(address):
+    address = address.strip()
+    new_address = []
+    # print(address)
+    address = address.replace(",", "")
+    raw_address = address.split(" ")
+    string_without_number = ""
+    number = ""
+    # print(raw_address)
+    for el in raw_address:
+        #print(el)
+
+        if "/" in el:
+            number = re.findall(r'\d+/\d+', el)
+            if len(number) > 0:
+                #print("number = ", number)
+                new_address.append(number[0])
+                continue
+
+        elif "-" in el:
+            number = re.findall(r'\d+-\d+', el)
+            if len(number) > 0:
+                #print("number = ", number)
+                new_address.append(number[0])
+                continue
+        elif "_" in el:
+            number = re.findall(r'\d+_\d+', el)
+            if len(number) > 0:
+                #print("number = ", number)
+                new_address.append(number[0])
+                continue
+        else:
+            number = re.findall('\d+', el)
+            if len(number) > 0:
+                #print("number = ", number[0])
+                new_address.append(number[0])
+                continue
+
+        string_without_number += el + " "
+    if string_without_number == "":
+        string_without_number = number[0]
+    if len(number) == 0:
+        new_address.append(string_without_number.strip())
+    new_address.append(string_without_number.strip())
+    #print(new_address)
+    pass
+    """
     new_address = []
     number = re.findall('\d+', address)
     string_without_number = re.sub(r'\d+', '', address).strip()
@@ -179,7 +225,14 @@ def prepareAddress(address):
         if len(number) > 0 and string_without_number == "":
             new_address[0] = number[0]
         #print("Number:", number[0])
+    """
     return new_address
+
+
+
+
+
+
 
 def getCategoryId(rest):
     restCat = rest.category
@@ -268,6 +321,95 @@ def getCityIdFromCity(city_dict):
     return city_id
 
 
+
+def prepareKitchenIds(rest):
+        kitchen_guru = rest.kitchen
+        if "no_info" in kitchen_guru:
+            return False
+        kitchen_tabler = []
+        kitchen_tabler_ids = []
+        for k in kitchen_guru:
+            if k == "Wine bars":
+                kitchen_tabler_ids.append(132)
+            if k == "New American":
+                kitchen_tabler_ids.append(10)
+            if k == 'Central European':
+                kitchen_tabler_ids.append(2)
+                kitchen_tabler_ids.append(28)
+            if k == 'Beer bars':
+                kitchen_tabler_ids.append(39)
+            if k == 'Asian':
+                kitchen_tabler_ids.append(5)
+            if k == "European":
+                kitchen_tabler_ids.append(2)
+                kitchen_tabler_ids.append(28)
+            if k == "German":
+                kitchen_tabler_ids.append(73)
+            if k == "Delis":
+                kitchen_tabler_ids.append(60)
+            if k == 'Fast food':
+                kitchen_tabler_ids.append(11)
+            if k == "Czech":
+                kitchen_tabler_ids.append(89)
+            if k == "Soups":
+                kitchen_tabler_ids.append(126)
+                kitchen_tabler_ids.append(98)
+            if k == "Mediterranean":
+                kitchen_tabler_ids.append(4)
+            if k == "International":
+                kitchen_tabler_ids.append(119)
+                kitchen_tabler_ids.append(62)
+            if k == "Sandwiches":
+                kitchen_tabler_ids.append(120)
+            if k == "Vietnamese":
+                kitchen_tabler_ids.append(19)
+            if k == "Ukrainian":
+                kitchen_tabler_ids.append(84)
+            if k == "Salads":
+                kitchen_tabler_ids.append(112)
+            if k == "Eastern European":
+                kitchen_tabler_ids.append(2)
+                kitchen_tabler_ids.append(28)
+            if k == "Greek":
+                kitchen_tabler_ids.append(57)
+            if k == "Grill":
+                kitchen_tabler_ids.append(40)
+            if k == "Cocktail bars":
+                kitchen_tabler_ids.append(125)
+            if k == "Barbecue":
+                kitchen_tabler_ids.append(102)
+                kitchen_tabler_ids.append(40)
+            if k == "Mexican":
+                kitchen_tabler_ids.append(32)
+            if k == "Contemporary":
+                kitchen_tabler_ids.append(62)
+            if k == "Sushi":
+                kitchen_tabler_ids.append(19)
+                kitchen_tabler_ids.append(27)
+            if k == "Vegetarian":
+                kitchen_tabler_ids.append(31)
+            if k == "Dessert":
+                kitchen_tabler_ids.append(123)
+            if k == "Seafood":
+                kitchen_tabler_ids.append(75)
+            if k == "Italian":
+                kitchen_tabler_ids.append(8)
+            if k == "Gluten-free":
+                kitchen_tabler_ids.append(112)
+            if k == "Steakhouses":
+                kitchen_tabler_ids.append(40)
+            if k == "Healthy food":
+                kitchen_tabler_ids.append(112)
+            if k == "South American":
+                kitchen_tabler_ids.append(10)
+            if k == "Pizza":
+                kitchen_tabler_ids.append(18)
+            if k == "Chinese":
+                kitchen_tabler_ids.append(5)
+            if k == "Turkish":
+                kitchen_tabler_ids.append(30)
+        return kitchen_tabler_ids
+
 def prepareCityId(rest):
     city_id = ""
     if rest.city == "":
@@ -297,15 +439,15 @@ def postRest(rest):
             "lon": rest.lon,  # месторасположение
             "lat": rest.lat,
             "city": rest.city,
-            "street": rest.address[0],  # улица
-            "building": rest.address[1],  # дом
+            "street": rest.address[1],  # улица
+            "building": rest.address[0],  # дом
             "phone_number": rest.phone[1:], #json.dumps(rest.phone),  # телефоны
             #"city_id": city_id, # город
             "city_id": rest.city,  # город
             "category_id": rest.category,
         }
     if rest.category == "no_info":
-        return "srt bad restraunt --closed(no category)"
+        return "sry bad restraunt --closed(no category)"
     if data["phone_number"] == "o_info":
         del data["phone_number"]
     #if data["subcategory"] == "":
@@ -314,27 +456,34 @@ def postRest(rest):
     response = requests.request("POST", url, headers=headers, data=json.dumps(data))
     #responseCreation = requests.post(postUrl, data=json.dumps(data), headers=headers)
     patchUrl = response.text
+    rest.id = patchUrl[patchUrl.find("latinName") + len("latinName") + 3:patchUrl.find("city") - 3]
     patchUrl = postUrl + "/" + patchUrl[patchUrl.find("latinName") + len("latinName") + 3:patchUrl.find("city") - 3]
     return patchUrl
 
 
-def patchRest(rest, url,category):
+def patchRest(rest, url):
     patchUrl = url
     headers = {
         'Authorization': 'Bearer 5V2EABW0ODofJAaQqaz5ifkB'
     }
+
+    #Обработка кухонь
+    cuisine_id = prepareKitchenIds(rest)
+
     data = {
         # "phones": rest.phone,  # телефоны
-        #    "avatar_id": avatar_id,
+        #    "avatar_id": avatar_id, # загрузка основного фото
         #    "background_id": avatar_id,
         "average_check": rest.avg_check,  # средний чек
-        #  "latin_name" : rest.latin_name,   # краткая ссылка
+        #"latinName" : (rest.latin_name).lower(),   # краткая ссылка
+        "latin_name": (rest.latin_name).lower()+"--99992",
         "description": rest.description,  # описание
         "short_description": rest.short_description,
         #"cuisine_ids": prepareKitchen(rest.kitchen),  # кухни_id
         "subcategory": rest.subcategory,
         # особенности
         "wifi": rest.features["wifi"],
+        "cuisine_ids" : cuisine_id,
         "cashfree": rest.features["cashfree"],
         "terrace": rest.features["terrace"],
         "alcohol": rest.features["alcohol"],  # уточнить по поводу заполнения
@@ -354,24 +503,56 @@ def patchRest(rest, url,category):
 
         "schedules": rest.timetable,  # расписание
     }
+    links = prepareLinks(rest)
+    if links:
+        data["links"] = links
+    #Если кухонь нет, то убираем их
+    if data["cuisine_ids"] == False or len(data["cuisine_ids"]) == 0:
+        del data["cuisine_ids"]
     if data["average_check"] == "no_info":
         del data["average_check"]
     if data["schedules"] == "no_info":
         del data["schedules"]
-    if data["subcategory"] == "" :#or data["no_info"] != rest.category_str:
+
+    category_id = rest.category
+    for c in categories:
+        if c["id"] == category_id:
+            category = c["latinName"]
+            break
+    if data["subcategory"] == category :#or data["no_info"] != rest.category_str:
         del data["subcategory"]
-    if data["subcategory"] == category:
+    if data["subcategory"] == "":
         del data["subcategory"]
     if data["description"] == "no_info":
         del data["description"]
     if data["description"] == "no_info":
         del data["short_description"]
 
+    if (data["description"] == "" or data["short_description"] =="") and rest.last_publication != "" and (">" in rest.last_publication):
+        desc =  (rest.last_publication).split(">")
+        if len(desc) == 2:
+            data["description"] = desc[0] + desc[1][2:]
+            data["short_description"] = desc[0]
+        else:
+            data["description"] = desc[0]
+            data["short_description"] = desc[0]
+    if  "no_info" in data["description"]:
+        del data["description"]
+    if "no_info" in data["short_description"]:
+        del data["short_description"]
+
+    if prepareOrganisationId(rest):
+        data["organisation_id"] = rest.organisation_id
+
     patchResponse = requests.patch(patchUrl, json=data, headers=headers)
 
     #patchResponse = requests.patch(patchUrl, data=json.dumps(data,ensure_ascii=False), headers=headers)
 
     patchResponse_text = patchResponse.text
+    if patchResponse.status_code != 200:
+        print(patchResponse_text)
+    else:
+        print("https://tabler.pub/"+(data["latin_name"]).lower())
 
     return patchResponse_text
 
@@ -391,9 +572,14 @@ def postImage(dir,name):
     mainImagePostResponseText = mainImagePostResponse.text
 
     pattern = r'"imageSet":{".*"}'
-
-    photos = re.findall(pattern, mainImagePostResponseText)[0].replace('"imageSet":', "", 1)
-
+    if (len(re.findall(pattern, mainImagePostResponseText)) > 0):
+        photos = re.findall(pattern, mainImagePostResponseText)[0].replace('"imageSet":', "", 1)
+    else:# повтор загрузки --- потом отмена
+        mainImagePostResponse = requests.request("POST", url, headers=headers, data=payload, files=files)
+        mainImagePostResponseText = mainImagePostResponse.text
+        if (len(re.findall(pattern, mainImagePostResponseText)) == 0):
+            print("otkaz servera pri zagruzke")
+            return False
     photos_dict = json.loads(photos)
     cover_url = photos_dict["cover"]["url"]
     photos_dict["cover"]["path"] = cover_url
@@ -421,7 +607,12 @@ def getPhotoId(text):
 
 def prepareAlbum(photo_ids):
     cover_id = getPhotoId(json.dumps(photo_ids[-1]))
-    album = {"photos": photo_ids, "title": "Основной альбом",  "cover": cover_id}
+    album = {"photos": photo_ids, "title": "Main Album",  "cover": cover_id}
+    return album
+
+def prepareMenu(photo_ids):
+    cover_id = getPhotoId(json.dumps(photo_ids[-1]))
+    album = {"photos": photo_ids, "title": "Main Menu",  "cover": cover_id}
     return album
 
 def patchMenu(rest,postResponse):
@@ -435,7 +626,7 @@ def patchMenu(rest,postResponse):
             menu_imgs_ids.append(postImage(menu_path, item))
             i += 1
             pass
-        menu = prepareAlbum(menu_imgs_ids)
+        menu = prepareMenu(menu_imgs_ids)
         menuList = [menu]
         if len(menuList) == 0:
             return "no_menu"
@@ -488,28 +679,147 @@ def prepareText(text):
             new_text+=t+". "
     return new_text
 
-t1 = {"timetable": [
-        "Fr 16:00-20:00",
-        "Sa 11:30-13:30",
-        "Sa 16:00-20:00",
-        "Su 11:30-13:30",
-        "Su 16:00-20:00"
-]}
+#Тестировать
+def prepareOrganisationId(rest):
+    raw_index_path= (rest.filename).rfind("/")
+    city_rest_path = (rest.filename)[:raw_index_path]
+    chains_file = open(city_rest_path + "/networks.txt")
+    chains = chains_file.readlines()
+    for chain in chains:
+        json_chain = json.loads(chain)
+        if rest.name == json_chain["name"]:
+            rest.organisation_id = json_chain["organisationId"]
+            return True
+    return False
 
-t2 = { "timetable": [
-        "Mo 14:00-22:00",
-        "Tu 14:00-00:00",
-        "We 14:00-00:00",
-        "Th 14:00-00:00",
-        "Fr 14:00-03:00",
-        "Sa 13:00-03:00",
-        "Su 12:00-22:00"
-    ]}
+def prepareLinks(rest):
+    if rest.inst_url == "" and rest.place_url == "":
+        return False
+    links = []
+    if rest.inst_url != "":
+        inst_link = {"link":"https://www.instagram.com/"+rest.inst_url[1:]}
+        links.append(inst_link)
+    if rest.place_url != "":
+        if rest.place_url == "no_info":
+            return False
+        place_link = {"link":rest.place_url}
+        links.append(place_link)
+
+    #links_dict = {"links":links}
+    return links
+
+
+def postImageAndReturnId(dir,name):
+    url = "https://tabler.pub/api/v2/images"
+    payload = {}
+    files = [
+        ('image', (name, open(dir+"/"+name, 'rb'), 'image/jpeg'))
+    ]
+    headers = {
+        'Authorization': 'Bearer 5V2EABW0ODofJAaQqaz5ifkB'
+    }
+    mainImagePostResponse = requests.request("POST", url, headers=headers, data=payload, files=files)
+    mainImagePostResponseText = mainImagePostResponse.text
+    photo_json = json.loads(mainImagePostResponseText)
+    photo_id = photo_json["data"]["imageSet"]["id"]
+    return photo_id
+
+
+# Протестировать!
+def createNews():
+    #загрузка текста
+    #старый формат до публикаций
+    #img_index = rest.last_publication[:2]
+
+    #Разделение текста описания и текста поста из инстаграмма
+    desc_and_last_publication = rest.last_publication
+    if ">" in rest.last_publication:
+        index_arrow = desc_and_last_publication.find(">")
+        text_before_arrow = desc_and_last_publication[:index_arrow]
+        text_after_arrow = desc_and_last_publication[index_arrow+1:]
+        img_index = text_after_arrow[:2]
+
+        if img_index == "0_":
+            img_name = "Album/0.jpg"
+        elif img_index == "1_":
+            img_name = "Album/1.jpg"
+        elif img_index == "2_":
+            img_name = "Album/2.jpg"
+        else:
+            print("no ready text for publication")
+            return False
+    else:
+        print("no ready text for publication")
+        return False
+    ##text = rest.last_publication[2:]
+    text = text_after_arrow[2:]
+    # загрузка фотографии и получение ее id
+    imageSetIds = [postImageAndReturnId(rest.filename,img_name)]
+    placeId = rest.id
+    type = "news"
+    #url = "https://tabler.pub/posts/create"
+    url = "https://tabler.pub/api/v2/posts"
+    data = {
+        "imageSetIds": imageSetIds,
+        "placeId": placeId,
+        "type": type,
+        "text": text,
+    }
+
+
+    #Post запрос на создание новости (Поста)
+    headers = {
+        'Authorization': 'Bearer 5V2EABW0ODofJAaQqaz5ifkB'
+    }
+    create_post_response = requests.post(url, json=data, headers=headers)
+    response_text = create_post_response.text
+    #print(response_text)
+    return create_post_response.status_code
+
+#Тестировать
+def postMainImage(rest):
+    url = "https://tabler.pub/api/v2/images"
+
+    if os.path.exists(rest.filename+"/Album"):
+        if len(os.listdir(rest.filename+"/Album"))>0:
+            payload = {}
+            files = [
+                ('image', ('0.jpg', open(rest.filename+"/Album/0.jpg", 'rb'), 'image/jpeg'))
+            ]
+            headers = {
+                'Authorization': 'Bearer 5V2EABW0ODofJAaQqaz5ifkB'
+
+            }
+            mainImagePostresponse = requests.request("POST", url, headers=headers, data=payload, files=files)
+            mainImagePostresponseText = mainImagePostresponse.text
+            pattern = r'"id":".*"'
+            result = re.findall(pattern, mainImagePostresponseText)[0]
+            avatar_id = result[result.find(":")+2:len(result)-1]
+            data = {
+                "avatar_id": avatar_id,
+                "background_id": avatar_id,
+            }
+            tabler_url = "https://tabler.pub/api/v1/places/"+rest.id
+            post_main_image = requests.patch(tabler_url, json=data, headers=headers)
+            return avatar_id
+        else:
+            return False
+    else:
+        return False
 
 def prepareRestForPost(rest):
     rest.category = getCategoryId(rest)
     rest.description = prepareText(rest.description)
-    rest.short_description = prepareText(rest.description)
+    rest.short_description = prepareText(rest.short_description)
+    #тестировать
+    if (rest.short_description == "" or ("no_info" in rest.short_description) or ("no_info" in rest.description)) and rest.last_publication != ">":
+        rest.description = (rest.last_publication)[:((rest.last_publication).find(">"))]
+        first_point = (rest.description).find(".")
+        if first_point > 1:
+            rest.short_description = (rest.description)[:first_point + 1]
+        else:
+            rest.short_description = rest.description
+
     rest.city = prepareCityId(rest)
     if rest.timetable != "no_info":
         rest.timetable = prepareTimetable(rest.timetable)
@@ -523,32 +833,55 @@ def prepareRestForPost(rest):
 country = "Czech-Republic"
 letter_cities = os.listdir(country)
 for letter in letter_cities:
+    print(letter+"_cities")
+    if letter == "A_cities":
+        pass
     letter_path = country + "/" + letter
     cities = os.listdir(letter_path)
     if len(cities)>0:
         for c in cities:
             city_path = letter_path+"/"+c
             rests_in_city = os.listdir(city_path)
+            print(city_path)
             for rest in rests_in_city:
                 rest_path = city_path+"/"+rest
                 #print(rest_path)
+                print("============================================")
 
-
-                rest = Restraunt_from_guru("", "", 1,rest_path)
-                category = rest.category
+                if os.path.exists(rest_path + "/json.txt" ):
+                    rest = Restraunt_from_guru("", "", 1,rest_path)
+                else:
+                    print(rest_path + " =-> no_json_file")
+                    continue
+                #category = rest.category
+                #подготовка ресторана
                 prepareRestForPost(rest)
+                #подготовка адреса
                 rest.address = prepareAddress(rest.address)
+                #пред загрузка ресторана(POST)
                 postResponse = postRest(rest)
-                patchResponse = patchRest(rest,postResponse,category)
+                print("https://tabler.pub/"+rest.id)
+                #загрузка ресторана (Patch)
+                patchResponse = patchRest(rest,postResponse)
+
 
 
                 menu = patchMenu(rest,postResponse)
 
                 album = patchAlbum(rest, postResponse)
-                if menu == 200 and postResponse != "" and patchResponse:
-                    responsePublish = requests.post(postResponse + "/moderation-status/published", headers=headers)
+                #Если альбом загрузился, то загружаем главное изображение
+                if album == 200:
+                    postMainImage(rest)
+                if album == 200 and rest.last_publication != "":
+                    create_post_result = createNews()
+                    print("Создание первого поста для заведения = " + str(create_post_result))
 
-                print(postResponse)
+                #Публикация ресторана, только если меню загрузилось
+                if menu == 200 and postResponse != "" and patchResponse:
+                    pass
+                    #responsePublish = requests.post(postResponse + "/moderation-status/published", headers=headers)
+                    #print("Результат публикации ресторана " + rest.latin_name + " = " + str(responsePublish.status_code))
+                #print(postResponse)
 
                 pass
 pass

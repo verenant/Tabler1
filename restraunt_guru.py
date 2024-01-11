@@ -3,6 +3,7 @@ import json
 
 class Restraunt_from_guru:
     name = ""
+    id = ""
     latin_name = ""
     additional_url = ""
     lon = 0.0
@@ -21,15 +22,14 @@ class Restraunt_from_guru:
     city = ""
     menu = ""
     category_str = ""
-    qty_in_city = 0
-    network = ""
     guru_url = ""
     inst_url = ""
     sub_category = ""
     network =""
     qty_in_city = ""
+    organisation_id = ""
     last_publication = ""
-    city = ""
+    place_url = ""
 
     def __init__(self, object,city, typeOfConstructor,rest_path):
         if typeOfConstructor == 0:  # для парсинга
@@ -121,10 +121,12 @@ class Restraunt_from_guru:
             self.phone = j["phone"]
             self.address = j["street"]
             self.category = j["category"]
+            self.kitchen = j["kitchen"]
             self.description = j["description"]
             self.short_description = j["short_description"]
             self.timetable = j["timetable"]
             self.inst_url = j["inst_url"]
+            self.place_url = j["place_url"]
             self.last_publication = j["last_publication"]
             self.sub_category = j["sub_category"]
             if "network" in j:

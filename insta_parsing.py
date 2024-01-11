@@ -281,6 +281,7 @@ def get_album_and_last_publication_pikacu(inst_restraunt,album_path):
     global_attemps = 0
     global_ok = True
     last_publication = ""
+    inst_description = ">"
     while(global_ok):
         try:# загрузка зеркала инстаграмма с фотографиями
             good_proxy = get_inst_proxy()
@@ -289,6 +290,11 @@ def get_album_and_last_publication_pikacu(inst_restraunt,album_path):
             #posts = photo_page.findAll("div", class_="box-photo")
             posts = photo_page.findAll("div", class_="box-photo")
 
+            try:
+                if photo_page.find("div",class_="profile-description"):
+                    inst_description = (photo_page.find("div",class_="profile-description").text).strip() + inst_description
+            except AttributeError:
+                print(f"{inst_restraunt} no profile description")
             i = 0
             k = 0
             for post in posts:
@@ -322,7 +328,7 @@ def get_album_and_last_publication_pikacu(inst_restraunt,album_path):
                     break
             if last_publication == None:
                 last_publication = ""
-            return last_publication
+            return inst_description+last_publication
         except AttributeError:
             print(f"{inst_restraunt} didn't allow to download photos, attemp = {global_attemps}")
             global_attemps +=1
